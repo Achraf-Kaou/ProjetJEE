@@ -1,4 +1,7 @@
 package com.example.backend.Service;
 
-public class ReservationServiceImp {
+import org.springframework.stereotype.Service;
+
+@Service
+public class ReservationServiceImp implements ReservationService {
 }

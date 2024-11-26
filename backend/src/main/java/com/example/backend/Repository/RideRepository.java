@@ -1,4 +1,9 @@
 package com.example.backend.Repository;
 
-public class RideRepository {
+import com.example.backend.Entity.Reservation;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface RideRepository extends JpaRepository<Reservation,Long> {
 }

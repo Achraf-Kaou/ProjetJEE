@@ -1,4 +1,7 @@
 package com.example.backend.Service;
 
-public class RideServiceImp {
+import org.springframework.stereotype.Service;
+
+@Service
+public class RideServiceImp implements RideService{
 }
