@@ -19,10 +19,10 @@ public class Review {
     private Long idReview;
     @ManyToOne
     @JoinColumn(name = "idReviwer")
-    private User Reviewer;
+    private User reviewer;
     @ManyToOne
     @JoinColumn(name = "idReviwed")
-    private User Reviewed;
+    private User reviewed;
     @ManyToOne
     @JoinColumn(name = "idRide")
     private Ride ride;

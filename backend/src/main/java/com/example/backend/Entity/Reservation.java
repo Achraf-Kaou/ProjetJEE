@@ -22,7 +22,7 @@ public class Reservation {
     private Ride ride;
     @ManyToOne
     @JoinColumn(name = "idPassenger")
-    private User Passenger;
+    private User passenger;
     @Column
     private Timestamp dateReservation;
     @Column

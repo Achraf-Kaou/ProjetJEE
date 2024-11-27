@@ -10,7 +10,7 @@ public interface RideService {
     ResponseEntity<List<Ride>> getAllRideByUser(Long idUser);
     ResponseEntity<Ride> updateRidePlaces(Long idRide, int index );
     ResponseEntity<String> deleteRide(Long idRide);
-    ResponseEntity<Ride> updateRide(Ride ride);
+    ResponseEntity<Ride> updateRide(Ride ride );
     ResponseEntity<List<Ride>> getAllRides();
     ResponseEntity<Ride> addRide(Ride  ride,Long idDriver);
 }

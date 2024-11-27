@@ -2,14 +2,13 @@ package com.example.backend.Controller;
 
 
 import com.example.backend.Entity.Ride;
-import com.example.backend.Repository.RideRepository;
 import com.example.backend.Service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
+@RequestMapping("/ride")
 @RestController
 public class RideController {
     @Autowired
@@ -25,7 +24,7 @@ public class RideController {
         return rService.getAllRides();
     }
     @PutMapping("/updateRide")
-    public ResponseEntity<Ride> updateRide(@RequestBody Ride ride) {
+    public ResponseEntity<Ride> updateRide(@RequestBody Ride ride ) {
         return rService.updateRide(ride);
     }
     @DeleteMapping("/deleteRide/{idRide}")

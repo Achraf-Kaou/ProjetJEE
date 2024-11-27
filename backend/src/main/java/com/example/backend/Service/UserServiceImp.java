@@ -14,11 +14,11 @@ import java.util.Optional;
 @Service
 public class UserServiceImp implements UserService{
     @Autowired
-    private UserRepository uRepository;
+    private UserRepository userRepository;
 
     @Override
     public ResponseEntity<User> signIn(String email, String password) {
-        Optional<User> userOptional =uRepository.findUserByEmail(email);
+        Optional<User> userOptional =userRepository.findUserByEmail(email);
         if(userOptional.isPresent()) {
             User user = userOptional.get();
             return ResponseEntity.ok().body(user);
@@ -28,8 +28,8 @@ public class UserServiceImp implements UserService{
 
     @Override
     public ResponseEntity<List<User>> getUserByName(String firstName ,String lastName) {
-        List<User> oFN = uRepository.findUserByLastName(firstName);
-        List<User> oLN = uRepository.findUserByFirstName(lastName);
+        List<User> oFN = userRepository.findUserByLastName(firstName);
+        List<User> oLN = userRepository.findUserByFirstName(lastName);
         List<User> users = new ArrayList<>();
         users.addAll(oFN);
         users.addAll(oLN);
@@ -43,7 +43,7 @@ public class UserServiceImp implements UserService{
 
     @Override
     public ResponseEntity<User> getUserById(Long idUser) {
-        Optional<User> oUser = uRepository.findById(idUser);
+        Optional<User> oUser = userRepository.findById(idUser);
         if(oUser.isPresent()) {
             User user = oUser.get();
             return ResponseEntity.ok().body(user);
@@ -54,26 +54,26 @@ public class UserServiceImp implements UserService{
 
     @Override
     public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.status(HttpStatus.OK).body(uRepository.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAll());
     }
 
     @Override
     public ResponseEntity<?> signUp(User user) {
-        Optional<User> oUser = uRepository.findUserByEmail(user.getEmail());
+        Optional<User> oUser = userRepository.findUserByEmail(user.getEmail());
         if(oUser.isPresent()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email already exist");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(uRepository.save(user));
+        return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(user));
     }
 
     @Override
     public ResponseEntity<User> updateUser(User user) {
-        return ResponseEntity.status(HttpStatus.OK).body(uRepository.save(user));
+        return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(user));
     }
 
     @Override
     public ResponseEntity<String> deleteUser(Long idUser) {
-        uRepository.deleteById(idUser);
+        userRepository.deleteById(idUser);
         return ResponseEntity.ok().body("Adherent not found");
     }
 
