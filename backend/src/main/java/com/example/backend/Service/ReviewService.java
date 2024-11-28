@@ -2,7 +2,6 @@ package com.example.backend.Service;
 
 import com.example.backend.Entity.Review;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
