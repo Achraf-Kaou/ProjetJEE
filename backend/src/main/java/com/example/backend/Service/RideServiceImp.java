@@ -1,5 +1,6 @@
 package com.example.backend.Service;
 
+import com.example.backend.Entity.Reservation;
 import com.example.backend.Entity.Ride;
 import com.example.backend.Entity.User;
 import com.example.backend.Repository.RideRepository;
@@ -8,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class RideServiceImp implements RideService{
     @Autowired
     private RideRepository rideRepository;
     private UserRepository userRepository;
+    private ReservationHelperService reservationHelperService;
 
     @Override
     public ResponseEntity<List<Ride>> getAllRideByUser(Long idUser) {
@@ -43,6 +46,7 @@ public class RideServiceImp implements RideService{
             }else{
                 ride.setPlaces(ride.getPlaces()+1);
             }
+            reservationHelperService.notifyDriverAboutRidePlaces(ride);
             return ResponseEntity.status(HttpStatus.OK).body(rideRepository.save(ride));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -50,12 +54,14 @@ public class RideServiceImp implements RideService{
 
     @Override
     public ResponseEntity<String> deleteRide(Long idRide) {
+        reservationHelperService.notifyPassengersAboutRideDelete(idRide);
         rideRepository.deleteById(idRide);
         return ResponseEntity.status(HttpStatus.OK).body("Ride deleted Successfully");
     }
 
     @Override
     public ResponseEntity<Ride> updateRide(Ride ride) {
+        reservationHelperService.notifyPassengersAboutRideUpdate(ride);
         return ResponseEntity.status(HttpStatus.OK).body(rideRepository.save(ride));
     }
 

@@ -34,4 +34,8 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> getAllReservationByRide(@PathVariable Long idRide) {
         return reservationService.getAllReservationByRide(idRide);
     }
+    @GetMapping("/getAllReservationByRideAndStatus/{idRide}")
+    public ResponseEntity<List<Reservation>> getAllReservationByRideAndStatus(@PathVariable Long idRide,@RequestParam String status) {
+        return reservationService.getAllReservationByRideAndStatus(idRide, status);
+    }
 }

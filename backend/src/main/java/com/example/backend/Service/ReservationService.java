@@ -11,4 +11,5 @@ public interface ReservationService {
     ResponseEntity<Reservation> cancelReservation(Long idReservation);
     ResponseEntity<List<Reservation>> getAllReservationByUser(Long idUser);
     ResponseEntity<List<Reservation>> getAllReservationByRide(Long idRide);
+    ResponseEntity<List<Reservation>> getAllReservationByRideAndStatus(Long idRide, String status);
 }

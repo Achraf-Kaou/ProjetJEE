@@ -84,4 +84,15 @@ public class ReservationServiceImp implements ReservationService {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
+    @Override
+    public ResponseEntity<List<Reservation>> getAllReservationByRideAndStatus(Long idRide, String status) {
+        Optional<Ride> oRide = rideRepository.findById(idRide);
+        if(oRide.isPresent()){
+            Ride ride = oRide.get();
+            List<Reservation> reservations =reservationRepository.findReservationsByRideAndStatus(ride, status);
+            return ResponseEntity.status(HttpStatus.OK).body(reservations);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
 }
