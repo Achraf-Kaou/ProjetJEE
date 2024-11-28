@@ -1,0 +1,55 @@
+@if (error) {
+    <div class="container fixed-top mt-2">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+            <ngb-alert #selfClosingAlert class=" text-center" type="danger" (closed)="error = ''">{{ error }}</ngb-alert>
+        </div>
+      </div>
+    </div>
+  }
+  
+  <section class="vh-100" style="background-color: #5f6268;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong" style="border-radius: 1rem;">
+          <div class="card-body p-5">
+            <h3 class="text-center">Sign in</h3>
+            <hr class="mb-4">
+            <form id="loginForm" (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+              <div data-mdb-input-init class="form-outline mb-4">
+                <label class="form-label" for="email">Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter email" formControlName="email" required>
+                <div *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)"
+                  class="text-danger">
+                  <div *ngIf="loginForm.get('email')?.hasError('required')">
+                    Email is required.
+                  </div>
+                  <div *ngIf="loginForm.get('email')?.hasError('email')">
+                    Invalid email address.
+                  </div>
+                </div>
+              </div>
+              <div data-mdb-input-init class="form-outline mb-4">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Password" formControlName="password" required>
+                <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
+                  class="text-danger">
+                  <div *ngIf="loginForm.get('password')?.hasError('required')">
+                    Password is required.
+                  </div>
+                  <div *ngIf="loginForm.get('password')?.hasError('minlength')">
+                    Password must be at least 8 characters long.
+                  </div>
+                </div>
+              </div>
+              <div class="text-center">
+                <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-secondary btn-lg btn-block " id="submitButton">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
