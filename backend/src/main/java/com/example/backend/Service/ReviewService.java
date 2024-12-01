@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface ReviewService {
-    ResponseEntity<Review> addReview(Review review, Long idReviewer, Long idRide, Long idReviewed);
+    ResponseEntity<Review> addReview(Review review);
     ResponseEntity<Review> updateReview(Review review);
     ResponseEntity<Double> getMeanReviewByUser(Long idUser);
     ResponseEntity<Double> getMeanReviewByRide(Long idRide);

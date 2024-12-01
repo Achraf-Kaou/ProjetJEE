@@ -15,12 +15,12 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    @PostMapping("/addReview/{idReviewer}/{idReviewed}/{idRide}")
-    public ResponseEntity<Review> addReview(@RequestBody Review review, @PathVariable Long idReviewer, @PathVariable Long idRide, @PathVariable Long idReviewed) {
-        return reviewService.addReview(review,idReviewed,idReviewer,idRide);
+    @PostMapping("/addReview")
+    public ResponseEntity<Review> addReview(@RequestBody Review review) {
+        return reviewService.addReview(review);
     }
 
-    @PostMapping("/updateReview")
+    @PutMapping("/updateReview")
     public ResponseEntity<Review> updateReview(@RequestBody Review review) {
         return reviewService.updateReview(review);
     }
@@ -34,7 +34,7 @@ public class ReviewController {
         return reviewService.getMeanReviewByRide(idRide);
     }
 
-    @GetMapping("/deleteReview/{idReview}")
+    @DeleteMapping("/deleteReview/{idReview}")
     public ResponseEntity<String> deleteReview(@PathVariable Long idReview) {
         return reviewService.deleteReview(idReview);
     }

@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,18 +27,8 @@ public class ReviewServiceImp implements ReviewService {
     private RideRepository rideRepository;
 
     @Override
-    public ResponseEntity<Review> addReview(Review review, Long idReviewer, Long idRide, Long idReviewed) {
-        Optional<User> reviewer = userRepository.findById(idReviewer);
-        Optional<User> reviewed = userRepository.findById(idReviewed);
-        Optional<Ride> ride = rideRepository.findById(idRide);
-        if(reviewer.isPresent() && reviewed.isPresent() && ride.isPresent()) {
-            review.setReviewer(reviewer.get());
-            review.setRide(ride.get());
-            review.setReviewed(reviewed.get());
-            review.setDateReview(Timestamp.valueOf(LocalDateTime.now()));
-            return ResponseEntity.status(HttpStatus.OK).body(reviewRepository.save(review));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    public ResponseEntity<Review> addReview(Review review) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewRepository.save(review));
     }
 
     @Override

@@ -9,14 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ReservationHelperServiceImp implements ReservationHelperService {
-    @Autowired
-    private ReservationRepository reservationRepository;
+public class NotificationServiceImp implements NotificationService {
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private ReservationRepository reservationRepository;
     @Autowired
     private RideRepository rideRepository;
 
