@@ -19,12 +19,23 @@ export class NavbarComponent {
  
  
   onSearch() {
-    console.log('onSearch() called'); 
+    console.log('onSearch() called');
     const searchValue = this.searchControl.value;
-    console.log('Search Value:', searchValue); 
-    if (searchValue != null && searchValue.trim() !== '') { 
-      console.log('Sending search request...');
-      this.userService.searchForUser(searchValue, searchValue)
+    console.log('Search Value:', searchValue);
+  
+    if (searchValue != null && searchValue.trim() !== '') {
+      
+      const searchWords = searchValue.split(' ').filter(word => word.trim() !== '');  
+  
+      console.log('Separated Search Words:', searchWords);
+  
+      const firstName = searchWords[0]; 
+      const lastName = searchWords[0];
+      if (searchWords.length >= 2) {
+        const lastName = searchWords[1];  
+      }
+
+      this.userService.searchForUser(firstName, lastName)
         .subscribe(
           (response: any) => {
             console.log('Search Results:', response);
@@ -33,9 +44,11 @@ export class NavbarComponent {
             console.error('Search Error:', error);
           }
         );
+      
     } else {
       console.warn('Search value is empty!');
     }
   }
+  
   
 }

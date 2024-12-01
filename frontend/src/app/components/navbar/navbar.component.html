@@ -13,16 +13,16 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
-        <form class="d-flex me-auto w-40 ms-5" (ngSubmit)="onSearch()" role="search">
+        <form class="d-flex me-auto w-40 ms-5"  role="search">
             <input
               class="form-control me-2"
               type="search"
-              placeholder="Search"
+              placeholder="John Doe"
               aria-label="Search"
               [formControl]="searchControl"
               id="searsh"
             />
-            <button class="btn btn-outline-success" type="submit" >Search</button>
+            <button class="btn btn-outline-success" type="button" (click)="onSearch()" >Search</button>
           </form>
           
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ">
