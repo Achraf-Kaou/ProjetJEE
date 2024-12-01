@@ -16,7 +16,11 @@ import { Router } from '@angular/router';
 export class NavbarComponent {
   constructor(private userService: UserService, private router: Router){}
   searchControl = new FormControl('');
- 
+  isNavbarOpen = false; 
+  toggleNavbar() {
+    this.isNavbarOpen = !this.isNavbarOpen; 
+    console.log('navbar open:',this.isNavbarOpen);
+  }
  
   onSearch() {
     console.log('onSearch() called');

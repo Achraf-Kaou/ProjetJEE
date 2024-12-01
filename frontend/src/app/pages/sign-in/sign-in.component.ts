@@ -7,7 +7,7 @@ import { NgbAlert, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, debounceTime, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {UserService} from '../../services/user.service'
-import { User } from '../../models/User';
+
 @Component({
   selector: 'app-sign-in',
   standalone: true,
