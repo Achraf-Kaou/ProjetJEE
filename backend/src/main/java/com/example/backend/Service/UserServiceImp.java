@@ -21,7 +21,10 @@ public class UserServiceImp implements UserService{
         Optional<User> userOptional =userRepository.findUserByEmail(email);
         if(userOptional.isPresent()) {
             User user = userOptional.get();
-            return ResponseEntity.ok().body(user);
+            if(user.getPassword().equals(password)) {
+                return ResponseEntity.ok().body(user);
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }else{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }}

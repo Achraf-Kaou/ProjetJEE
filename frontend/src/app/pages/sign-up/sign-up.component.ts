@@ -9,18 +9,20 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {UserService} from '../../services/user.service'
 import { User } from '../../models/User';
 @Component({
-  selector: 'app-sign-in',
+  selector: 'app-sign-up',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterLink, RouterLinkActive, RouterOutlet, NgbAlertModule],
-  templateUrl: './sign-in.component.html',
-  styleUrl: './sign-in.component.css'
+  templateUrl: './sign-up.component.html',
+  styleUrl: './sign-up.component.css'
 })
-export class SignInComponent {
-  loginForm!: FormGroup;
+export class SignUpComponent {
+  RegisterForm!: FormGroup;
   showPassword!: boolean;
+  user!: User;
   @ViewChild('selfClosingAlert', { static: false }) selfClosingAlert: NgbAlert | undefined;
   private _message$ = new Subject<string>();
   error = '';
+  formError: boolean = false;
 
   constructor(private userService: UserService, private router: Router) { 
     this._message$
@@ -32,32 +34,44 @@ export class SignInComponent {
 			.subscribe(() => this.selfClosingAlert?.close());
   }
   ngOnInit(): void {
-    this.loginForm = new FormGroup({
+    this.RegisterForm = new FormGroup({
       email: new FormControl('',[Validators.required, Validators.email]),
       password: new FormControl('',[Validators.required ,Validators.minLength(8)]),
+      firstname: new FormControl('' , [Validators.required ]),
+      lastname: new FormControl('' , [Validators.required ]),
+      phone : new FormControl('' , [Validators.required,Validators.pattern(/^\d{8}$/)]),
+      address : new FormControl('' , [Validators.required]),
     });
     this.showPassword = false;
   }
 
   onSubmit() {
-    this.loginForm.markAllAsTouched();
-    if (this.loginForm.invalid) {
+    this.RegisterForm.markAllAsTouched();
+    if (this.RegisterForm.invalid) {
+      this.formError = true;
       return;
     }
 
-    const email= this.loginForm.get('email')?.value;
-    const password= this.loginForm.get('password')?.value;
+    this.user = {
+      email: this.RegisterForm.get('email')?.value,
+      password: this.RegisterForm.get('password')?.value,
+      firstName: this.RegisterForm.get('firstname')?.value,
+      lastName: this.RegisterForm.get('lastname')?.value,
+      phone: this.RegisterForm.get('phone')?.value,
+      address: this.RegisterForm.get('address')?.value
+    };
     
-    this.userService.login(email,password)
+    this.userService.register(this.user)
     .subscribe(
       (response: any) => {
         console.log(response);
         localStorage.setItem('user', JSON.stringify(response));
         this.router.navigateByUrl('/home');  
+        
       },
       (error: any) => {
-        console.error('SignIn error:', error);
-        this._message$.next(`Error user not found`);
+        console.error('Registration error:', error);
+        this._message$.next(`Email Already signed In`);
       }
     );
   }
