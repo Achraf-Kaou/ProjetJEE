@@ -30,6 +30,6 @@ public class Ride {
     @Column
     private Timestamp dateRide;
     @ManyToOne
-    @JoinColumn(name = "idDriver")
+    @JoinColumn(name = "idDriver", nullable = true)
     private User driver;
 }

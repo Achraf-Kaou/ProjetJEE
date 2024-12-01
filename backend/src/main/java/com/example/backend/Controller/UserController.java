@@ -36,7 +36,7 @@ public class UserController {
         return uService.signIn(email , password);
     }
     @PostMapping("/signUp")
-    public ResponseEntity<?> signIn(@RequestBody User user){
+    public ResponseEntity<?> signUp(@RequestBody User user){
         return uService.signUp(user);
     }
     @PutMapping("/updateUser")

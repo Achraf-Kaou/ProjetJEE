@@ -4,6 +4,7 @@ import com.example.backend.Entity.Ride;
 import org.springframework.http.ResponseEntity;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface RideService {
@@ -12,5 +13,6 @@ public interface RideService {
     ResponseEntity<String> deleteRide(Long idRide);
     ResponseEntity<Ride> updateRide(Ride ride );
     ResponseEntity<List<Ride>> getAllRides();
-    ResponseEntity<Ride> addRide(Ride  ride,Long idDriver);
+    ResponseEntity<Ride> addRide(Ride  ride);
+    ResponseEntity<List<Ride>> getFilteredRides(String depart, String destination, Double price, Timestamp dateRide);
 }

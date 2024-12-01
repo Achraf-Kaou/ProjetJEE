@@ -18,9 +18,9 @@ public class Review {
     @Column
     private Long idReview;
     @ManyToOne
-    @JoinColumn(name = "idReviwer")
+    @JoinColumn(name = "idReviwer", nullable = true)
     private User reviewer;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "idReviwed")
     private User reviewed;
     @ManyToOne
