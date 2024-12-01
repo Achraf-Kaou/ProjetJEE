@@ -12,12 +12,12 @@ body {
   }
   
   .btn-success {
-    background-color:#5272d1; /* #3ca678; #6569b5*/
-    border-color: #5272d1;
+    background-color:#7571be;
+    border-color: #7571be
   }
   
   .btn-success:hover {
-    background-color: #3960d4;
-    border-color: #3960d4;
+    background-color: #5a50dd;
+    border-color:  #5a50dd
   }
   
