@@ -13,7 +13,9 @@ import java.util.List;
 
 @Repository
 public interface RideRepository extends JpaRepository<Ride,Long> {
+    List<Ride> findByStatus(String status);
     List<Ride> findByDriver(User user);
+    List<Ride> findByDriverAndStatus(User user , String status);
     @Query("SELECT r FROM Ride r WHERE " +
             "(r.places > 0) AND " +
             "(r.dateRide > :dateRide) AND " +

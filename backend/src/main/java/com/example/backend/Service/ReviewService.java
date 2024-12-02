@@ -12,4 +12,5 @@ public interface ReviewService {
     ResponseEntity<Double> getMeanReviewByRide(Long idRide);
     ResponseEntity<String> deleteReview(Long idReview);
     ResponseEntity<List<Review>> getAllReviewByRide(Long idRide);
+
 }
