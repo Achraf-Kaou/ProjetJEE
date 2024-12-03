@@ -19,15 +19,18 @@ export class ReservationService {
   canceReservation(id: string ): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/canceReservation/${id}`,{})
   }
-  getAllReservationByUser(id : string): Observable<any>{
+  getAllReservationByUser(id : Object | undefined): Observable<any>{
     return this.http.get<any>(`${this.apiUrl}/getAllReservationByUser/${id}`)
   }
-  getAllReservationByRide(id : string): Observable<any>{
+  getAllReservationByRide(id : Object | undefined): Observable<any>{
     return this.http.get<any>(`${this.apiUrl}/getAllReservationByRide/${id}`)
   }
   getAllReservationByRideAndStatus(id : string , status : string): Observable<any>{
     const params = new HttpParams()
       .set('status', status)
     return this.http.get<any>(`${this.apiUrl}/getAllReservationByRideAndStatus/${id}?${params.toString()}`)
+  }
+  getAllReservationByPassangerAndRide(idPassanger: string, idRide: String): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getAllReservationByPassangerAndRide/${idPassanger}/${idRide}`)
   }
 }

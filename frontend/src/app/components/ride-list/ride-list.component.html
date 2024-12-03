@@ -1,0 +1,67 @@
+<div class="container mt-4 p-4">
+    <div *ngIf="isLoading">Loading rides...</div>
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    <div *ngFor="let ride of rides" class="card mb-3">
+      <div class="row g-0">
+        <div class="col-md-auto">
+          <img src="images/ride.png" alt="ride" class="img-fluid rounded-start" style="height: 150px; width: 200px" />
+        </div>
+        <div class="col-md">
+          <div class="card-body">
+            <!-- Title and User Info Row -->
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="card-title m-0">
+                From <strong> {{ ride.depart }} </strong> to <strong> {{ ride.destination }} </strong>
+              </h5>
+              <div class="d-flex align-items-center">
+                <!-- Profile image -->
+                <img
+                  src="images/profile.png"
+                  alt="profile"
+                  class="rounded-circle"
+                  style="width: 40px; height: 40px; margin-right: 10px"
+                />
+                <small class="text-muted">
+                  by {{ ride.driver.firstName || "Unknown" }}
+                  {{ ride.driver.lastName || "Driver" }}
+                </small>
+              </div>
+            </div>
+            <!-- Ride Details -->
+            <div class="row card-text mt-1">
+              <!-- Price and Available Seats -->
+              <div class="col-md-4">
+                <strong>Price:</strong> {{ ride.price }} dt <br />
+                <strong>Available Seats:</strong> {{ ride.places }}
+              </div>
+            
+              <!-- Date and Hour -->
+              <div class="col-md-4">
+                <strong>Date:</strong> {{ ride.dateRide | date: 'MMM d, y' }}<br />
+                <strong>Hour:</strong> {{ ride.dateRide | date: 'h:mm a' }}
+              </div>
+            
+              <!-- Book Button -->
+              <div class="col-md-4 text-end">
+                <div *ngIf="(hasReservation$ | async) === false">
+                  <button class="btn btn-primary" (click)="addReservation(ride)">
+                    Book a Ride
+                  </button>
+                </div>
+                <div *ngIf="(hasReservation$ | async) === true">
+                  <button class="btn btn-primary">
+                    cancel Ride
+                  </button>
+                </div>
+              </div>
+              <!-- Description (full-width row below other fields) -->
+              <div class="col-12 mt-1">
+                <strong>Description:</strong> {{ ride.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

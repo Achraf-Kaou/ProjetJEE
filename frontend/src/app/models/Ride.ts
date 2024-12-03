@@ -7,5 +7,6 @@ export interface Ride {
     places: number;
     price: number; 
     dateRide: Date; 
-    user: User;
+    description: string;
+    driver: User;
 }
