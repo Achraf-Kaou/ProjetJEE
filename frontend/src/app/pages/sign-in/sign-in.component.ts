@@ -23,7 +23,7 @@ export class SignInComponent {
   private _message$ = new Subject<string>();
   error = '';
 
-  constructor(private http: HttpClient, private userService: UserService, private router: Router) { 
+  constructor(private userService: UserService, private router: Router) { 
     this._message$
 			.pipe(
 				takeUntilDestroyed(),
