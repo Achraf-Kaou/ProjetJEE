@@ -30,6 +30,9 @@ public class RideController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String dateRide
     ) {
         Timestamp dateRideTimestamp = (dateRide != null) ? Timestamp.valueOf(dateRide) : null;
+        if (depart == null && destination == null && price == null && dateRideTimestamp == null) {
+            return rService.getAllRides();
+        }
         return rService.getFilteredRides(depart, destination, price, dateRideTimestamp); }
 
     @GetMapping("/getAllRides")

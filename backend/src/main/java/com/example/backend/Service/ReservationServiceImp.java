@@ -40,6 +40,10 @@ public class ReservationServiceImp implements ReservationService {
         if (oPassenger.isPresent() && oRide.isPresent()) {
             User passenger = oPassenger.get();
             Ride ride = oRide.get();
+            Reservation reservation0 = reservationRepository.findByPassengerAndRide(passenger, ride);
+            if(reservation0 != null) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(reservation0);
+            }
             Reservation reservation = new Reservation();
             reservation.setRide(ride);
             reservation.setPassenger(passenger);
@@ -95,4 +99,18 @@ public class ReservationServiceImp implements ReservationService {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
+    @Override
+    public ResponseEntity<Reservation> getReservationByPassangerAndRide (Long idPassenger, Long idRide){
+        Optional<User> oPassenger = userRepository.findById(idPassenger);
+        Optional<Ride> oRide = rideRepository.findById(idRide);
+        if(oPassenger.isPresent() && oRide.isPresent()){
+            User passenger = oPassenger.get();
+            Ride ride = oRide.get();
+            Reservation reservation =reservationRepository.findByPassengerAndRide(passenger,ride);
+            return ResponseEntity.status(HttpStatus.OK).body(reservation);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
 }

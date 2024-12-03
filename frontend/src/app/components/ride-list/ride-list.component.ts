@@ -1,12 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Ride } from '../../models/Ride';
 import { RideService } from '../../services/ride.service';
 import { User } from '../../models/User';
 import { ReservationService } from '../../services/reservation.service';
 import { Reservation } from '../../models/Reservation';
-import { catchError, map, Observable, of, switchMap } from 'rxjs';
-import { isPlatformBrowser } from '@angular/common';
+
 
 @Component({
   selector: 'app-ride-list',
@@ -20,7 +19,7 @@ export class RideListComponent implements OnInit{
   rides: Ride[] = [];
   isLoading: boolean = true;
   errorMessage: string = '';
-  hasReservation$!: Observable<boolean>;
+  reservationStatus: Map<object | undefined, boolean> = new Map();;
 
 
   constructor(private rideService: RideService, private reservationService: ReservationService){}
@@ -38,8 +37,7 @@ export class RideListComponent implements OnInit{
       next: (data) => {
         this.rides = data;
         this.isLoading = false;
-        console.log(data);
-        this.hasReservation$ = this.checkReservationByUser(data);
+        this.loadReservationStatuses();
       },
       error: (error) => {
         console.error('Error fetching rides:', error);
@@ -50,15 +48,7 @@ export class RideListComponent implements OnInit{
   }
 
   addReservation(ride: Ride) {
-    const currentDate: Date = new Date();
-    console.log(currentDate);
-    const reservation: Reservation = {
-      ride: ride,
-      passenger: this.user,
-      dateReservation: currentDate,
-      status: 1
-    }
-    this.reservationService.addReservation(reservation)
+    this.reservationService.addReservation(this.user.idUser,ride.idRide)
     .subscribe(
       (response: any) => {
         window.location.reload();
@@ -68,19 +58,37 @@ export class RideListComponent implements OnInit{
       }
     );
   }
-  checkReservationByUser(ride: Ride): Observable<boolean> {
-    console.log(this.user)
-    return this.reservationService.getAllReservationByUser(this.user.id).pipe(
-      map((userReservations: any[]) => {
-        return userReservations.some(
-          (reservation) => reservation.ride.id === ride.id
-        );
-      }),
-      catchError((error) => {
-        console.error('Error checking reservation:', error);
-        return of(false); // Default to false if there's an error
-      })
-    );
+
+  loadReservationStatuses() {
+    this.rides.forEach((ride) => {
+      this.reservationService
+        .getReservationByPassangerAndRide(this.user.idUser, ride.idRide)
+        .subscribe({
+          next: (reservation) => {
+            this.reservationStatus.set(ride.idRide, reservation !== null);
+          },
+          error: () => {
+            this.reservationStatus.set(ride.idRide, false);
+          },
+        });
+    });
   }
-  
+
+  hasReservation(ride: Ride): boolean {
+    return this.reservationStatus.get(ride.idRide) || false;
+  }
+
+  checkReservationByUserByPassangerAndRide(ride: Ride): boolean | undefined {
+    this.reservationService.getReservationByPassangerAndRide(this.user.idUser, ride.idRide).subscribe({
+      next: (reservation) => {
+        console.log(reservation);
+        if (reservation !== null) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+    });
+    return undefined;
+  }
 }

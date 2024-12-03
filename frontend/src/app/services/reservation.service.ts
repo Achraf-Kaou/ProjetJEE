@@ -10,11 +10,8 @@ export class ReservationService {
 
   private apiUrl = 'http://localhost:8080/reservation';
   constructor(private http: HttpClient) {} 
-  addReservation(reservation: Reservation ): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/addReservation`, reservation, {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })})
+  addReservation(idPassanger: Object | undefined, idRide: Object | undefined): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/addReservation/${idPassanger?.toString()}/${idRide?.toString()}`,{})
   }
   canceReservation(id: string ): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/canceReservation/${id}`,{})
@@ -30,7 +27,7 @@ export class ReservationService {
       .set('status', status)
     return this.http.get<any>(`${this.apiUrl}/getAllReservationByRideAndStatus/${id}?${params.toString()}`)
   }
-  getAllReservationByPassangerAndRide(idPassanger: string, idRide: String): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/getAllReservationByPassangerAndRide/${idPassanger}/${idRide}`)
+  getReservationByPassangerAndRide(idPassanger: Object | undefined, idRide: Object | undefined): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getReservationByPassangerAndRide/${idPassanger?.toString()}/${idRide?.toString()}`)
   }
 }

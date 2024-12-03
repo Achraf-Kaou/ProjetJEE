@@ -43,16 +43,19 @@
             
               <!-- Book Button -->
               <div class="col-md-4 text-end">
-                <div *ngIf="(hasReservation$ | async) === false">
-                  <button class="btn btn-primary" (click)="addReservation(ride)">
-                    Book a Ride
-                  </button>
-                </div>
-                <div *ngIf="(hasReservation$ | async) === true">
-                  <button class="btn btn-primary">
-                    cancel Ride
-                  </button>
-                </div>
+                <button
+                  class="btn btn-primary"
+                  *ngIf="!hasReservation(ride)"
+                  (click)="addReservation(ride)"
+                >
+                  Book a Ride
+                </button>
+                <button
+                  class="btn btn-danger"
+                  *ngIf="hasReservation(ride)"
+                >
+                  Cancel Ride
+                </button>
               </div>
               <!-- Description (full-width row below other fields) -->
               <div class="col-12 mt-1">

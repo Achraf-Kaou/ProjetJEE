@@ -41,10 +41,8 @@ public class RideServiceImp implements RideService{
 
     public ResponseEntity<List<Ride>> getFilteredRides(String depart, String destination, Double price, Timestamp dateRide) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        String formattedDepart = (depart != null) ? "%" + depart.trim() + "%" : null;
-        String formattedDestination = (destination != null) ? "%" + destination.trim() + "%" : null;
         return ResponseEntity.status(HttpStatus.OK)
-                .body(rideRepository.findRidesByFilters(formattedDepart, formattedDestination, price,  dateRide != null ? dateRide : now));
+                .body(rideRepository.findRidesByFilters(depart, destination, price,  dateRide != null ? dateRide : now));
     }
 
     @Override
