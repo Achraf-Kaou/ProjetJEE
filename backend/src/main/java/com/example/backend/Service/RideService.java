@@ -2,6 +2,7 @@ package com.example.backend.Service;
 
 import com.example.backend.Entity.Ride;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 import java.sql.Timestamp;
@@ -15,4 +16,8 @@ public interface RideService {
     ResponseEntity<List<Ride>> getAllRides();
     ResponseEntity<Ride> addRide(Ride  ride);
     ResponseEntity<List<Ride>> getFilteredRides(String depart, String destination, Double price, Timestamp dateRide);
+    ResponseEntity<List<Ride>> getNotReviewedRides(Long idUser);
+    ResponseEntity<?> terminateRides();
+
+
 }

@@ -13,7 +13,7 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     List<Reservation>  findReservationsByPassenger(User passenger);
     List<Reservation>  findReservationsByRide(Ride ride);
     List<Reservation> findReservationsByRideAndStatus(Ride ride, String status);
-
+    
     List<Reservation> findReservationsByPassengerAndStatus(User passenger, String status);
     Reservation findByPassengerAndRide(User passenger, Ride ride);
 }

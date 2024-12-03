@@ -1,6 +1,7 @@
 package com.example.backend.Controller;
 
 
+import com.example.backend.Entity.Review;
 import com.example.backend.Entity.Ride;
 import com.example.backend.Service.RideService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,4 +54,13 @@ public class RideController {
     public ResponseEntity<List<Ride>> getAllRideByUser(@PathVariable Long idUser) {
         return rService.getAllRideByUser(idUser);
     }
+    @GetMapping("/getNotReviewedRides/{idUser}")
+    public ResponseEntity<List<Ride>> getNotReviewedRides(@PathVariable Long idUser) {
+        return rService.getNotReviewedRides(idUser);
+    }
+    @GetMapping("/terminateRides")
+    public  ResponseEntity<?> terminateRides() {
+        return rService.terminateRides();
+    }
+
 }
