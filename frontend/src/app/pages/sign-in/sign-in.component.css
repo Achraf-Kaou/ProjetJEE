@@ -1,0 +1,23 @@
+body {
+    background-color: #ebeeef;
+  }
+  
+  .card-header img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .card {
+    border-radius: 10px;
+  }
+  
+  .btn-success {
+    background-color:#5272d1; /* #3ca678; #6569b5*/
+    border-color: #5272d1;
+  }
+  
+  .btn-success:hover {
+    background-color: #3960d4;
+    border-color: #3960d4;
+  }
+  

@@ -18,24 +18,35 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> getAllReservations() {
         return reservationService.getAllReservations();
     }
+
     @PostMapping("/addReservation/{idPassenger}/{idRide}")
     public ResponseEntity<Reservation> addReservation(@PathVariable Long idPassenger,@PathVariable Long idRide) {
         return reservationService.addReservation(idPassenger,idRide);
     }
+
     @PutMapping("/cancelReservation/{idReservation}")
     public ResponseEntity<Reservation> cancelReservation(@PathVariable Long idReservation) {
         return reservationService.cancelReservation(idReservation);
     }
+
     @GetMapping("/getAllReservationByUser/{idUser}")
     public ResponseEntity<List<Reservation>> getAllReservationByUser(@PathVariable Long idUser) {
         return reservationService.getAllReservationByUser(idUser);
     }
+
     @GetMapping("/getAllReservationByRide/{idRide}")
     public ResponseEntity<List<Reservation>> getAllReservationByRide(@PathVariable Long idRide) {
         return reservationService.getAllReservationByRide(idRide);
     }
+
     @GetMapping("/getAllReservationByRideAndStatus/{idRide}")
     public ResponseEntity<List<Reservation>> getAllReservationByRideAndStatus(@PathVariable Long idRide,@RequestParam String status) {
         return reservationService.getAllReservationByRideAndStatus(idRide, status);
+    }
+
+    @GetMapping("/getReservationByPassangerAndRide/{idPassanger}/{idRide}")
+    public ResponseEntity<Reservation> getReservationByPassangerAndRide(@PathVariable Long idPassanger,@PathVariable Long idRide) {
+        System.out.println("passed");
+        return reservationService.getReservationByPassangerAndRide(idPassanger,idRide);
     }
 }

@@ -18,10 +18,10 @@ public class Reservation {
     @Column
     private Long idReservation;
     @ManyToOne
-    @JoinColumn(name = "idRide")
+    @JoinColumn(name = "idRide", nullable = true)
     private Ride ride;
     @ManyToOne
-    @JoinColumn(name = "idPassenger")
+    @JoinColumn(name = "idPassenger", nullable = true)
     private User passenger;
     @Column
     private Timestamp dateReservation;

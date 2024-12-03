@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg shadow" >
+  <div class="container-fluid">
+    <a class="navbar-brand ps-3" href="#">
+      <img
+        src="images/logo5.png"
+        alt="Header"
+        class="img-fluid rounded-top"
+        style="height: 40px; filter: brightness(1.1); object-fit: cover"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      class="collapse navbar-collapse justify-content-between"
+      id="navbarSupportedContent"  
+    >
+      <form class="d-flex me-auto w-40 " role="search">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="John Doe"
+          aria-label="Search"
+          [formControl]="searchControl"
+          id="searsh"
+        />
+        <button class="btn btn-outline-dark" type="button" (click)="onSearch()">Search</button>
+      </form>
+
+      <ul class="navbar-nav ms-auto  mb-lg-0 ">
+        <li class="nav-item me-3">
+          <a class="nav-link active" aria-current="page" href="/home">Home</a>
+        </li>
+        <li class="nav-item me-3">
+          <a class="nav-link" href="/profile">Profil</a>
+        </li>
+        <li class="nav-item me-3">
+          <a class="nav-link" href="/histRes">Historique de Reservation</a>
+        </li>
+        <li class="nav-item me-3">
+          <button class="btn btn-outline-dark ms-5" type="button">logout</button>
+        </li>
+      </ul>
+    </div>
+   
+    
+  </div>
+</nav>

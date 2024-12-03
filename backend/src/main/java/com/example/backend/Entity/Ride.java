@@ -29,7 +29,9 @@ public class Ride {
     private String description;
     @Column
     private Timestamp dateRide;
+    @Column
+    private String status;
     @ManyToOne
-    @JoinColumn(name = "idDriver")
+    @JoinColumn(name = "idDriver", nullable = true)
     private User driver;
 }

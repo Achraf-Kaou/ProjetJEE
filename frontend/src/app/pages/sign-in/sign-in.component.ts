@@ -7,18 +7,17 @@ import { NgbAlert, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, debounceTime, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {UserService} from '../../services/user.service'
-import { User } from '../../models/User';
+
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, RouterLinkActive, RouterOutlet, NgbAlertModule],
+  imports: [ReactiveFormsModule, CommonModule,  NgbAlertModule],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css'
 })
 export class SignInComponent {
   loginForm!: FormGroup;
   showPassword!: boolean;
-  user!: User;
   @ViewChild('selfClosingAlert', { static: false }) selfClosingAlert: NgbAlert | undefined;
   private _message$ = new Subject<string>();
   error = '';
@@ -48,19 +47,17 @@ export class SignInComponent {
 
     const email= this.loginForm.get('email')?.value;
     const password= this.loginForm.get('password')?.value;
+    
     this.userService.login(email,password)
     .subscribe(
       (response: any) => {
-        if(response.role==="Admin"){
-          localStorage.setItem('user', JSON.stringify(response));
-          this.router.navigateByUrl('/admin');  
-        }else {
-          localStorage.setItem('user', JSON.stringify(response));
-          this.router.navigateByUrl('/home');  
-        }
+        console.log(response);
+        localStorage.setItem('user', JSON.stringify(response));
+        this.router.navigateByUrl('/home');  
       },
       (error: any) => {
-        this._message$.next(`error user not found`);
+        console.error('SignIn error:', error);
+        this._message$.next(`Error user not found`);
       }
     );
   }

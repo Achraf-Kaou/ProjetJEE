@@ -1,0 +1,16 @@
+.navbar-collapse.collapse ul.navbar-nav {
+    display: flex; 
+    flex-direction: row;
+    justify-content: center;
+    
+}
+.navbar-collapse.collapse {
+
+    padding: 3px;
+  }
+
+
+.navbar-collapse .d-flex {
+    padding: 3px;
+}
+  
