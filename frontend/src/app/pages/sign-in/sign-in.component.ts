@@ -1,28 +1,28 @@
-import { Component, ViewChild } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, Inject, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { NgbAlert, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, debounceTime, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {UserService} from '../../services/user.service'
-
+import { UserService } from '../../services/user.service'
+import { User } from '../../models/User';
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule,  NgbAlertModule],
+  imports: [ReactiveFormsModule, CommonModule, NgbAlertModule],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css'
 })
 export class SignInComponent {
   loginForm!: FormGroup;
   showPassword!: boolean;
+  user!: User;
   @ViewChild('selfClosingAlert', { static: false }) selfClosingAlert: NgbAlert | undefined;
   private _message$ = new Subject<string>();
   error = '';
 
-  constructor(private userService: UserService, private router: Router) { 
+  constructor(@Inject(UserService) private userService: UserService, private router: Router) { 
     this._message$
 			.pipe(
 				takeUntilDestroyed(),
@@ -47,18 +47,21 @@ export class SignInComponent {
 
     const email= this.loginForm.get('email')?.value;
     const password= this.loginForm.get('password')?.value;
-    
     this.userService.login(email,password)
     .subscribe(
       (response: any) => {
-        console.log(response);
-        localStorage.setItem('user', JSON.stringify(response));
-        this.router.navigateByUrl('/home');  
+        if(response.role==="Admin"){
+          localStorage.setItem('user', JSON.stringify(response));
+          this.router.navigateByUrl('/admin');  
+        }else {
+          localStorage.setItem('user', JSON.stringify(response));
+          this.router.navigateByUrl('/home');  
+        }
       },
       (error: any) => {
-        console.error('SignIn error:', error);
-        this._message$.next(`Error user not found`);
+        this._message$.next(`error user not found`);
       }
     );
   }
 }
+

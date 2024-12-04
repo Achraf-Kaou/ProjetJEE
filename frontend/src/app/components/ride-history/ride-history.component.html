@@ -1,0 +1,39 @@
+<div *ngIf="isLoading && !errorMessage">
+    <p>Loading data...</p>
+</div>
+<div class="container mt-2" *ngFor="let ride of rides">
+    <div *ngIf="rides.length === 0"> no rides yett</div>
+    <div *ngIf="!isLoading && rides.length > 0">
+    <div ngbAccordion>
+        <div ngbAccordionItem>
+        <h2 ngbAccordionHeader>
+            <button ngbAccordionButton><span>Ride from <b> {{ride.ride.depart}} </b> to <b> {{ride.ride.destination}} </b> on <b> {{ride.ride.dateRide | date: 'short' }}</b></span></button>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+            <ng-template>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">passenger</th>
+                            <th scope="col">date</th>
+                            <th scope="col">status</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let res of ride.reservations; let i = index">
+                            <tr>
+                                <th scope="row">{{i}}</th>
+                                <td>{{res.passenger.firstName}} {{res.passenger.lastName}}</td>
+                                <td>{{res.dateReservation |date: 'short' }}</td>
+                                <td>{{res.status}}</td>
+                            </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>

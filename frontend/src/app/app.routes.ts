@@ -6,6 +6,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RideListComponent } from './components/ride-list/ride-list.component';
 import { ReviewComponent } from './components/review/review.component';
+import { RideHistoryComponent } from './components/ride-history/ride-history.component';
 
 export const routes: Routes = [
     { path: 'signIn', component: SignInComponent },
@@ -15,4 +16,6 @@ export const routes: Routes = [
     { path: 'footer', component: FooterComponent },
     { path: 'rides', component: RideListComponent },
     { path: 'review', component: ReviewComponent },
+    { path: 'rideshistory', component: RideHistoryComponent },
+
 ];
