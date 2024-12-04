@@ -50,13 +50,13 @@
           <div *ngIf="passengerList.length > 0">
             <ul class="list-group mb-3">
               <li 
-                *ngFor="let passenger of passengerList" 
+                *ngFor="let passenger of newPassengerList" 
                 class="list-group-item d-flex justify-content-between align-items-center">
                 
                 <!-- Passenger Name -->
                 <div class="d-flex justify-content-between w-50">
                   <span>{{ passenger.passenger.firstName }} {{ passenger.passenger.lastName }}</span>
-                  <ngb-rating [(rate)]="rating" [max]="5" class="me-2">
+                  <ngb-rating  [(rate)]="passenger.passenger.rate" [max]="5" (rateChange)="rate($event, passenger.passenger)" class="me-2">
                     <ng-template let-fill="fill" let-index="index">
                       <i class="bi-star{{ fill === 100 ? '-fill' : '' }}" [class.filled]="fill === 100"></i>
                     </ng-template>

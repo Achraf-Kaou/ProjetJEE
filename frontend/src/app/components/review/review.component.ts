@@ -22,28 +22,8 @@ export class ReviewComponent {
   reviewText: string = '';
   stars: boolean[] = [false, false, false, false, false];  
   isModalVisible: boolean = true;
-  isDriver : boolean=true;
+  isDriver : boolean=false;
   selectedPassenger: any = null;
-  ride: Ride =  {
-    idRide: 20,
-    depart: "Yasminette",
-    destination: "Ta7rir",
-    places: 3,
-    price: 5.0,
-    description: "Mar7baa mar7baa",
-    dateRide: new Date("2024-12-02T10:30:00.000+00:00"),
-    status: "Terminé",
-    driver: {
-      idUser: 21,
-      firstName: "flen",
-      lastName: "fouleni",
-      email: "satouriranim4@gmail.com",
-      password: "flenfouleni",
-      phone: "12345678",
-      address: "jandouba"
-    }
-  }
-  
   passengerList = [
     {
       "idReservation": 14,
@@ -177,13 +157,48 @@ export class ReviewComponent {
       "dateReservation": "2024-12-04T13:19:15.839+00:00",
       "status": "En-cours"
     }
-  ]; 
+  ];
+  newPassengerList: any= [];
+  ride: Ride =  {
+    idRide: 20,
+    depart: "Yasminette",
+    destination: "Ta7rir",
+    places: 3,
+    price: 5.0,
+    description: "Mar7baa mar7baa",
+    dateRide: new Date("2024-12-02T10:30:00.000+00:00"),
+    status: "Terminé",
+    driver: {
+      idUser: 21,
+      firstName: "flen",
+      lastName: "fouleni",
+      email: "satouriranim4@gmail.com",
+      password: "flenfouleni",
+      phone: "12345678",
+      address: "jandouba"
+    }
+  }
+  ngOnInit() {
+    // Exemple d'initialisation
+    this.newPassengerList = this.passengerList.map(reservation => ({
+      ...reservation,
+      passenger: {
+        ...reservation.passenger,
+        rate: 0 // Initialisez chaque `rate` à 0
+      }
+    }));
+  }
+  
+   
  
   closeModal() {
     this.isModalVisible = false;
   }
 
-  rate(starIndex: number) {
+  rate(starIndex: number , passenger : any) {
+    if(this.isDriver){
+      passenger.rate= starIndex
+    }
     this.rating = starIndex;
     this.stars = this.stars.map((_, index) => index < starIndex);
   }
