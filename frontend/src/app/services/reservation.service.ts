@@ -20,7 +20,7 @@ export class ReservationService {
     return this.http.get<any>(`${this.apiUrl}/getAllReservationByUser/${id}`)
   }
   getAllReservationByRide(id : Object | undefined): Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}/getAllReservationByRide/${id}`)
+    return this.http.get<any>(`${this.apiUrl}/getAllReservationByRide/${id?.toString()}`)
   }
   getAllReservationByRideAndStatus(id : string , status : string): Observable<any>{
     const params = new HttpParams()

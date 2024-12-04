@@ -33,8 +33,8 @@ export class RideService {
       .set('index', index)
     return this.http.delete<any>(`${this.apiUrl}/updateRidePlaces/${id}?${params.toString()}`);
   }
-  getAllRideByUser(id : string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/getAllRideByUser/${id}`);
+  getAllRideByUser(id : Object | undefined): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getAllRideByUser/${id?.toString()}`);
   }
 
 }
