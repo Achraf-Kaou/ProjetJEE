@@ -34,5 +34,7 @@ export class ReviewService {
   deleteReview(id : string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/deleteReview/${id}`);
   }
-
+  getNotReviewedRides(id : Object | undefined ): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getNotReviewedRides/${id?.toString()}`)
+  }
 }

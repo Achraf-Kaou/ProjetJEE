@@ -1,0 +1,90 @@
+<div *ngIf="isModalVisible" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog" style="max-width: 45%;">  <!-- Réduire la largeur de la modal -->
+      <div class="modal-content">
+        <div class="modal-header" style="height: 40px;">
+          <h5 class="modal-title" style="font-size: 18px;">Review Ride</h5> <!-- Diminuer la taille du titre -->
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body" style="padding: 15px;" *ngIf="!isDriver">
+          <!-- Affichage du message de trajet avec les détails et le nom du conducteur -->
+          <div class="ride-message" style="font-size: 14px;"  >
+            <p><strong>ranim satouri:</strong> "I hope you enjoyed your ride from {{ ride.depart }} to {{ ride.destination }} on {{ ride.dateRide| date:'short' }} with the driver {{ ride.driver.firstName }} {{ ride.driver.lastName }}. Please share your feedback!"</p>
+          </div>
+          
+          <!-- Section de notation en étoiles -->
+          <div style="font-size: 14px;"  >
+            <div class="star-rating d-flex flex-row ">
+              <h6 class="me-1 pt-1">Rate the Driver (Jane Smith):</h6>  
+              <!-- <ngb-rating [(rate)]="rating" [max]="5" class="large-rating"></ngb-rating> -->
+                <ngb-rating [(rate)]="rating" [max]="5" >
+                  <ng-template let-fill="fill" let-index="index">
+                    <i class="bi-star{{ fill === 100 ? '-fill' : '' }}" [class.filled]="fill === 100" ></i>
+                  </ng-template>
+                </ngb-rating>
+            </div>
+          </div>
+          
+          <!-- Section pour un commentaire -->
+          <div class="row" >
+            <div class="col-md-10">
+              <!-- <label for="reviewText" style="font-size: 14px;">Leave a Review:</label> -->
+              <input id="reviewText" class="form-control" [(ngModel)]="reviewText" placeholder="Write your review here..." style="font-size: 14px; padding: 5px;" >
+            </div>
+            <button type="button" class="btn btn-primary col-md-2 " (click)="submitReview(ride.driver)" style="font-size: 14px; ">Submit </button>
+          </div>
+        
+        
+        </div>
+        <div class="modal-body" style="padding: 15px;" *ngIf="isDriver">
+          <!-- Affichage du message de trajet avec les détails et le nom du conducteur -->
+          <div class="ride-message" style="font-size: 14px;"  >
+            <p>
+              <strong>ranim satouri:</strong> "We hope you enjoyed your ride from {{ ride.depart }} to {{ ride.destination }} on 
+              {{ ride.dateRide | date:'short' }}. Please take a moment to rate your experience with all passengers!"
+            </p>
+                     
+          </div>
+          
+          <!-- Section de notation en étoiles -->
+          
+          <div *ngIf="passengerList.length > 0">
+            <ul class="list-group mb-3">
+              <li 
+                *ngFor="let passenger of passengerList" 
+                class="list-group-item d-flex justify-content-between align-items-center">
+                
+                <!-- Passenger Name -->
+                <div class="d-flex justify-content-between w-50">
+                  <span>{{ passenger.passenger.firstName }} {{ passenger.passenger.lastName }}</span>
+                  <ngb-rating [(rate)]="rating" [max]="5" class="me-2">
+                    <ng-template let-fill="fill" let-index="index">
+                      <i class="bi-star{{ fill === 100 ? '-fill' : '' }}" [class.filled]="fill === 100"></i>
+                    </ng-template>
+                  </ngb-rating>
+                </div>
+                
+                <!-- Rating and Review Button on the right -->
+                <div class="d-flex justify-content-end align-items-center">
+                  <button class="btn btn-outline-primary btn-sm"  (click)="submitReview(passenger.passenger)">Review</button>
+                </div>
+          
+              </li>
+            </ul>
+          </div>
+          
+  
+         
+          <!-- <div class="d-flex justify-content-center mt-3">
+            <button 
+              type="button" 
+              class="btn btn-primary col-md-2" 
+              (click)="submitReview()" 
+              style="font-size: 14px;">
+              Submit
+            </button>
+          </div> -->
+          
+        </div>
+    </div>
+  </div>
+  

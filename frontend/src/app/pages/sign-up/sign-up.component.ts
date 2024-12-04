@@ -11,7 +11,7 @@ import { User } from '../../models/User';
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, RouterLinkActive, RouterOutlet, NgbAlertModule],
+  imports: [ReactiveFormsModule, CommonModule, NgbAlertModule],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.css'
 })

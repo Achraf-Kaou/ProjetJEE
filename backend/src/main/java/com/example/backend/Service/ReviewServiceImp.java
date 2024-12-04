@@ -28,7 +28,15 @@ public class ReviewServiceImp implements ReviewService {
 
     @Override
     public ResponseEntity<Review> addReview(Review review) {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewRepository.save(review));
+        Optional<User> managedReviewer = userRepository.findById(review.getReviewer().getIdUser());
+        Optional<User> managedReviewed = userRepository.findById(review.getReviewed().getIdUser());
+        if (managedReviewer.isPresent() && managedReviewed.isPresent()) {
+            review.setReviewer(managedReviewer.get());
+            review.setReviewed(managedReviewed.get());
+            return ResponseEntity.status(HttpStatus.OK).body(reviewRepository.save(review));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
     }
 
     @Override

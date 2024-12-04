@@ -1,0 +1,36 @@
+
+.modal-content {
+  border-radius: 10px;
+}
+
+
+#reviewText {
+  height: 40px; /* Hauteur du champ de texte */
+  overflow: hidden; /* Empêche le texte de déborder */
+  resize: none; /* Empêche le redimensionnement du champ */
+}
+.modal-lg {
+  max-width: 80%; /* Ajuste la largeur de la modal */
+  height: auto; /* Ajuste la hauteur */
+}
+
+.modal-body {
+  max-height: 400px; /* Limite la hauteur du corps de la modal */
+  overflow-y: auto; /* Ajoute un défilement vertical si nécessaire */
+}
+    /* Réduire la largeur de la modal */
+.modal-dialog {
+max-width: 60%; /* Ajuster la largeur de la modal */
+}
+
+
+i {
+  font-size: 1.1rem;
+  padding-right: 0.1rem;
+  color: #b0c4de;
+  
+}
+.filled {
+  color: #f8ed18;
+}
+

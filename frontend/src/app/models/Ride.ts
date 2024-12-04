@@ -9,4 +9,5 @@ export interface Ride {
     dateRide: Date; 
     description: string;
     driver: User;
+    status:string;
 }
