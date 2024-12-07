@@ -7,6 +7,7 @@ import { forkJoin, map, Observable, switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Reservation } from '../../models/Reservation';
 import { User } from '../../models/User';
+import { response } from 'express';
 
 @Component({
   selector: 'app-ride-history',
@@ -20,6 +21,8 @@ export class RideHistoryComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string = '';
   user!: User;
+  isDeleteModalOpen = false;
+  selectedRide: Ride | null = null;
 
   constructor(private rideService: RideService, private reservationService: ReservationService) {}
 
@@ -28,37 +31,72 @@ export class RideHistoryComponent implements OnInit {
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
     }
-    this.getRidesWithReservations().subscribe(
-      data => {
+    this.getRidesWithReservations().subscribe({
+      next: (data) => {
         this.rides = data;
         this.isLoading = false;
-        this.errorMessage = 'Failed to load rides. Please try again later.';
       },
-      error => {
+      error: (error) => {
         console.error('Error fetching rides with reservations:', error);
-        this.isLoading = false; // Désactiver le chargement même en cas d'erreur
+        this.errorMessage = 'Failed to load rides. Please try again later.';
+        this.isLoading = false;
       }
-    );
+    });  
   }
 
   getRidesWithReservations(): Observable<any[]> {
     return this.rideService.getAllRideByUser(this.user.idUser).pipe(
       switchMap((rides: any[]) => {
-        const requests = rides.map(ride =>
+        if (rides.length === 0) {
+          this.errorMessage = 'No rides found for this user.';
+          this.isLoading = false;
+          return [];  // Return an empty array to stop further requests
+        }
+
+        const requests = rides.map((ride) =>
           this.reservationService.getAllReservationByRide(ride.idRide).pipe(
-            map(reservations => ({
+            map((reservations) => ({
               ride,
-              reservations, // Combine the ride with its reservations
+              reservations,
+              errorMessage: reservations.length === 0 
+                ? 'No reservations found for this ride' 
+                : null,
             }))
-          ),
+          )
         );
         return forkJoin(requests);
       })
     );
   }
 
-  getRides(){
-    console.log(this.rides)
+  deleteRide(): void {
+    if (this.selectedRide) {
+      this.rideService.deleteRide(this.selectedRide.idRide).subscribe(
+        response => {
+          this.closeDeleteModal();
+          window.location.reload();
+        },
+        error => {
+          console.error('Failed to delete ride:', error);
+          if (error.status === 401){
+            this.errorMessage = "can not delete a passed ride";
+          }
+          if (error.status === 404){
+            this.errorMessage = "ride not found";
+          }
+          this.closeDeleteModal();
+        }
+      );}
+  }
+  // Opens the delete modal
+  openDeleteModal(ride: Ride): void {
+    this.selectedRide = ride; // Set the ride to be deleted
+    this.isDeleteModalOpen = true; // Open the modal
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalOpen = false;
+    this.selectedRide = null; // Clear the selected ride
   }
 }
 

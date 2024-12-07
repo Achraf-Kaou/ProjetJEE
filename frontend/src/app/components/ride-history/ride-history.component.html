@@ -1,14 +1,25 @@
-<div *ngIf="isLoading && !errorMessage">
-    <p>Loading data...</p>
-</div>
-<div class="container mt-2" *ngFor="let ride of rides">
-    <div *ngIf="rides.length === 0"> no rides yett</div>
-    <div *ngIf="!isLoading && rides.length > 0">
+<div class="container mt-2" >
+    <div *ngIf="isLoading">Loading data...</div>
+    <div *ngIf="errorMessage"> {{errorMessage}}</div>
+    <div *ngFor="let ride of rides">
     <div ngbAccordion>
         <div ngbAccordionItem>
-        <h2 ngbAccordionHeader>
-            <button ngbAccordionButton><span>Ride from <b> {{ride.ride.depart}} </b> to <b> {{ride.ride.destination}} </b> on <b> {{ride.ride.dateRide | date: 'short' }}</b></span></button>
-        </h2>
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton class="d-flex justify-content-between align-items-center w-100">
+                    <!-- Texte aligné à gauche -->
+                    <span class="text-start">
+                      Ride from <b>{{ ride.ride.depart }}</b> to <b>{{ ride.ride.destination }}</b> 
+                      on <b>{{ ride.ride.dateRide | date: 'short' }}</b>
+                    </span>
+                  
+                    <!-- Icône alignée à droite -->
+                    <i 
+                      class="bi bi-trash custom-delete-icon text-end ms-5" 
+                      (click)="openDeleteModal(ride.ride); $event.stopPropagation();" 
+                      title="Delete Ride">
+                    </i>
+                  </button>                  
+              </h2>              
         <div ngbAccordionCollapse>
             <div ngbAccordionBody>
             <ng-template>
@@ -36,4 +47,33 @@
         </div>
     </div>
     </div>
+</div>
+
+
+
+<!-- model delete-->
+<div
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  [class.show]="isDeleteModalOpen"
+  [ngStyle]="{ display: isDeleteModalOpen ? 'block' : 'none' }"
+  aria-hidden="true"
+  (click)="closeDeleteModal()"
+>
+  <div class="modal-dialog" role="document" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Deletion</h5>
+        <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete the ride from <b>{{ selectedRide?.depart }}</b> to <b>{{ selectedRide?.destination }}</b>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="deleteRide()">Delete</button>
+      </div>
+    </div>
+  </div>
 </div>
