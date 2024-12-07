@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -114,9 +115,19 @@ public class RideServiceImp implements RideService{
 
     @Override
     public ResponseEntity<String> deleteRide(Long idRide) {
-
-        rideRepository.deleteById(idRide);
-        return ResponseEntity.status(HttpStatus.OK).body("Ride deleted Successfully");
+        Optional<Ride> or = rideRepository.findById(idRide);
+        if (or.isPresent()) {
+            Ride ride = or.get();
+            LocalDateTime currentDate = LocalDateTime.now();
+            LocalDateTime rideDate = ride.getDateRide().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            if (rideDate.isAfter(currentDate)) {
+                rideRepository.deleteById(idRide);
+                return ResponseEntity.status(HttpStatus.OK).body("Ride deleted Successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't delete ride date passed");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @Override
