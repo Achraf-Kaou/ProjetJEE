@@ -25,7 +25,7 @@ export class RideService {
       'Content-Type': 'application/json'
     })})
   }
-  deleteRide(id : string): Observable<any> {
+  deleteRide(id : object | undefined): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/deleteRide/${id}`);
   }
   updateRidePlaces(id : string , index : number): Observable<any> {

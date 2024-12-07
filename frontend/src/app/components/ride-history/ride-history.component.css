@@ -1,0 +1,10 @@
+.custom-delete-icon {
+    color: red; /* Couleur personnalisée */
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out; /* Animation douce au survol */
+  }
+  
+  .custom-delete-icon:hover {
+    transform: scale(1.2); /* Agrandissement au survol */
+  }
+  

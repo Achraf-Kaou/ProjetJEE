@@ -7,6 +7,7 @@ import { forkJoin, map, Observable, switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Reservation } from '../../models/Reservation';
 import { User } from '../../models/User';
+import { response } from 'express';
 
 @Component({
   selector: 'app-ride-history',
@@ -20,6 +21,8 @@ export class RideHistoryComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string = '';
   user!: User;
+  isDeleteModalOpen = false;
+  selectedRide: Ride | null = null;
 
   constructor(private rideService: RideService, private reservationService: ReservationService) {}
 
@@ -30,7 +33,6 @@ export class RideHistoryComponent implements OnInit {
     }
     this.getRidesWithReservations().subscribe({
       next: (data) => {
-        console.log('Received rides and reservations:', data);
         this.rides = data;
         this.isLoading = false;
       },
@@ -67,8 +69,34 @@ export class RideHistoryComponent implements OnInit {
     );
   }
 
-  getRides(){
-    console.log(this.rides)
+  deleteRide(): void {
+    if (this.selectedRide) {
+      this.rideService.deleteRide(this.selectedRide.idRide).subscribe(
+        response => {
+          this.closeDeleteModal();
+          window.location.reload();
+        },
+        error => {
+          console.error('Failed to delete ride:', error);
+          if (error.status === 401){
+            this.errorMessage = "can not delete a passed ride";
+          }
+          if (error.status === 404){
+            this.errorMessage = "ride not found";
+          }
+          this.closeDeleteModal();
+        }
+      );}
+  }
+  // Opens the delete modal
+  openDeleteModal(ride: Ride): void {
+    this.selectedRide = ride; // Set the ride to be deleted
+    this.isDeleteModalOpen = true; // Open the modal
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalOpen = false;
+    this.selectedRide = null; // Clear the selected ride
   }
 }
 

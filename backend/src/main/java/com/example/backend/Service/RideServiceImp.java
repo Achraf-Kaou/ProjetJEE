@@ -124,7 +124,7 @@ public class RideServiceImp implements RideService{
                 rideRepository.deleteById(idRide);
                 return ResponseEntity.status(HttpStatus.OK).body("Ride deleted Successfully");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't delete ride date passed");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("can not delete ride date passed");
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
