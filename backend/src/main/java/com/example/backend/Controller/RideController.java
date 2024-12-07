@@ -54,10 +54,7 @@ public class RideController {
     public ResponseEntity<List<Ride>> getAllRideByUser(@PathVariable Long idUser) {
         return rService.getAllRideByUser(idUser);
     }
-    @GetMapping("/getNotReviewedRides/{idUser}")
-    public ResponseEntity<List<Ride>> getNotReviewedRides(@PathVariable Long idUser) {
-        return rService.getNotReviewedRides(idUser);
-    }
+
     @GetMapping("/terminateRides")
     public  ResponseEntity<?> terminateRides() {
         return rService.terminateRides();

@@ -1,9 +1,11 @@
 package com.example.backend.Service;
 
 import com.example.backend.Entity.Reservation;
+import com.example.backend.Entity.Review;
 import com.example.backend.Entity.Ride;
 import com.example.backend.Entity.User;
 import com.example.backend.Repository.ReservationRepository;
+import com.example.backend.Repository.ReviewRepository;
 import com.example.backend.Repository.RideRepository;
 import com.example.backend.Repository.UserRepository;
 import lombok.AccessLevel;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +30,7 @@ public class ReservationServiceImp implements ReservationService {
     private ReservationRepository reservationRepository;
     private RideRepository rideRepository;
     private UserRepository userRepository;
+    private ReviewRepository reviewRepository;
     private RideService rideService;
     @Override
     public ResponseEntity<List<Reservation>> getAllReservations() {
@@ -116,5 +120,6 @@ public class ReservationServiceImp implements ReservationService {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
 
 }

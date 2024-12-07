@@ -8,13 +8,13 @@
         <div class="modal-body" style="padding: 15px;" *ngIf="!isDriver">
           <!-- Affichage du message de trajet avec les détails et le nom du conducteur -->
           <div class="ride-message" style="font-size: 14px;"  >
-            <p><strong>ranim satouri:</strong> "I hope you enjoyed your ride from {{ ride.depart }} to {{ ride.destination }} on {{ ride.dateRide| date:'short' }} with the driver {{ ride.driver.firstName }} {{ ride.driver.lastName }}. Please share your feedback!"</p>
+            <p><strong>{{ user.firstName }} {{ user.lastName }}:</strong> "I hope you enjoyed your ride from {{ ride.depart }} to {{ ride.destination }} on {{ ride.dateRide| date:'short' }} with the driver {{ ride.driver.firstName }} {{ ride.driver.lastName }}. Please share your feedback!"</p>
           </div>
           
           <!-- Section de notation en étoiles -->
           <div style="font-size: 14px;"  >
             <div class="star-rating d-flex flex-row ">
-              <h6 class="me-1 pt-1">Rate the Driver (Jane Smith):</h6>  
+              <h6 class="me-1 pt-1">Rate the Driver ({{ ride.driver.firstName }} {{ ride.driver.lastName }}):</h6>  
               <!-- <ngb-rating [(rate)]="rating" [max]="5" class="large-rating"></ngb-rating> -->
                 <ngb-rating [(rate)]="rating" [max]="5" >
                   <ng-template let-fill="fill" let-index="index">
@@ -39,7 +39,7 @@
           <!-- Affichage du message de trajet avec les détails et le nom du conducteur -->
           <div class="ride-message" style="font-size: 14px;"  >
             <p>
-              <strong>ranim satouri:</strong> "We hope you enjoyed your ride from {{ ride.depart }} to {{ ride.destination }} on 
+              <strong>{{ user.firstName }} {{ user.lastName }}:</strong> "We hope you enjoyed your ride from {{ ride.depart }} to {{ ride.destination }} on 
               {{ ride.dateRide | date:'short' }}. Please take a moment to rate your experience with all passengers!"
             </p>
                      

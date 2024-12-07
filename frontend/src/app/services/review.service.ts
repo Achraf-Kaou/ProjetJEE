@@ -37,4 +37,7 @@ export class ReviewService {
   getNotReviewedRides(id : Object | undefined ): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/getNotReviewedRides/${id?.toString()}`)
   }
+  getNotReviewedPassengerByRide(idRide: Object | undefined): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getNotReviewedPassengerByRide/${idRide?.toString()}`)
+  }
 }

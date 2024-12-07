@@ -1,7 +1,9 @@
 package com.example.backend.Controller;
 
 
+import com.example.backend.Entity.Reservation;
 import com.example.backend.Entity.Review;
+import com.example.backend.Entity.Ride;
 import com.example.backend.Service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +45,13 @@ public class ReviewController {
     public ResponseEntity<List<Review>> getAllReviewByRide(@PathVariable Long idRide) {
         return reviewService.getAllReviewByRide(idRide);
     }
-
-
+    @GetMapping("/getNotReviewedPassengerByRide/{idRide}")
+    public ResponseEntity<List<Reservation>> getNotReviewedPassengerByRide(@PathVariable Long idRide) {
+        return reviewService.getNotReviewedPassengerByRide(idRide);
+    }
+    @GetMapping("/getNotReviewedRides/{idUser}")
+    public ResponseEntity<List<Ride>> getNotReviewedRides(@PathVariable Long idUser) {
+        return reviewService.getNotReviewedRides(idUser);
+    }
 
 }

@@ -1,10 +1,12 @@
 <div class="container mt-4 p-4">
     <div *ngIf="isLoading">Loading data...</div>
+<div class="container mt-4 p-4 d-flex flex-column align-items-center justify-content-center" >
+    <div *ngIf="isLoading">Loading rides...</div>
     <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-    <div *ngFor="let ride of rides" class="card mb-3">
-      <div class="row g-0">
+    <div *ngFor="let ride of rides" class="card mb-3 " style=" width: 70%">
+      <div class="row g-0" >
         <div class="col-md-auto">
-          <img src="images/ride.png" alt="ride" class="img-fluid rounded-start" style="height: 150px; width: 200px" />
+          <img src="images/ride3.png" alt="ride" class="img-fluid rounded-start" style="height: 150px; width: 220px" />
         </div>
         <div class="col-md">
           <div class="card-body">
