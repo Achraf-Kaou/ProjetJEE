@@ -13,8 +13,8 @@ export class ReservationService {
   addReservation(idPassanger: Object | undefined, idRide: Object | undefined): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/addReservation/${idPassanger?.toString()}/${idRide?.toString()}`,{})
   }
-  canceReservation(id: string ): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/canceReservation/${id}`,{})
+  cancelReservation(id: Object | undefined ): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/cancelReservation/${id?.toString()}`,{})
   }
   getAllReservationByUser(id : Object | undefined): Observable<any>{
     return this.http.get<any>(`${this.apiUrl}/getAllReservationByUser/${id}`)

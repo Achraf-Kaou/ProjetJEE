@@ -53,6 +53,7 @@
                 <button
                   class="btn btn-danger"
                   *ngIf="hasReservation(ride)"
+                  (click)="cancelReservation(ride)"
                 >
                   Cancel Ride
                 </button>

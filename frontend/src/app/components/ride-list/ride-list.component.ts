@@ -5,6 +5,7 @@ import { RideService } from '../../services/ride.service';
 import { User } from '../../models/User';
 import { ReservationService } from '../../services/reservation.service';
 import { Reservation } from '../../models/Reservation';
+import { error } from 'node:console';
 
 
 @Component({
@@ -57,6 +58,26 @@ export class RideListComponent implements OnInit{
         console.error(err);
       }
     );
+  }
+
+  cancelReservation(ride: Ride) {
+    let reservation!: Reservation ;
+    this.reservationService.getReservationByPassangerAndRide(this.user.idUser, ride.idRide)
+      .subscribe(
+        (response: Reservation) => {
+          console.log(response);
+          this.reservationService.cancelReservation(response.idReservation)
+            .subscribe(
+              res => {
+                window.location.reload();
+              },
+              error => {
+                console.error(error);
+              }
+            )
+          },
+          error => console.log(error),
+        )
   }
 
   loadReservationStatuses() {
