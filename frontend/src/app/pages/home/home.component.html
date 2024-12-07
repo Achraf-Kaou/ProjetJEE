@@ -1,0 +1,10 @@
+<app-review 
+  *ngIf="isModalVisible" 
+  [isModalVisible] ="isModalVisible"
+  [ride]="ride" 
+  [passengerList]="passengerList" 
+  [isDriver]="isDriver" 
+  [user]="user">
+</app-review>
+<app-navbar></app-navbar>
+<app-ride-list></app-ride-list>

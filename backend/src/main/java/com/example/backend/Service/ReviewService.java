@@ -1,6 +1,8 @@
 package com.example.backend.Service;
 
+import com.example.backend.Entity.Reservation;
 import com.example.backend.Entity.Review;
+import com.example.backend.Entity.Ride;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -12,5 +14,6 @@ public interface ReviewService {
     ResponseEntity<Double> getMeanReviewByRide(Long idRide);
     ResponseEntity<String> deleteReview(Long idReview);
     ResponseEntity<List<Review>> getAllReviewByRide(Long idRide);
-
+    ResponseEntity<List<Ride>> getNotReviewedRides(Long idUser);
+    ResponseEntity<List<Reservation>> getNotReviewedPassengerByRide(Long idRide);
 }

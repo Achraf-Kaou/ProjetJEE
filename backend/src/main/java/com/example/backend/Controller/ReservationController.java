@@ -1,6 +1,7 @@
 package com.example.backend.Controller;
 
 import com.example.backend.Entity.Reservation;
+import com.example.backend.Entity.Ride;
 import com.example.backend.Service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,4 +50,5 @@ public class ReservationController {
         System.out.println("passed");
         return reservationService.getReservationByPassangerAndRide(idPassanger,idRide);
     }
+
 }

@@ -34,6 +34,7 @@ public class RideServiceImp implements RideService{
     private ReservationRepository reservationRepository;
 
 
+
     @Override
     public ResponseEntity<List<Ride>> getAllRideByUser(Long idUser) {
         Optional<User> user = userRepository.findById(idUser);
@@ -50,32 +51,7 @@ public class RideServiceImp implements RideService{
                 .body(rideRepository.findRidesByFilters(depart, destination, price,  dateRide != null ? dateRide : now));
     }
 
-    @Override
-    public ResponseEntity<List<Ride>> getNotReviewedRides(Long idUser) {
-        terminateRides();
-        List<Ride> notReviewedRides = new ArrayList<>();
-        Optional<User> user = userRepository.findById(idUser);
-        if(user.isPresent()) {
-            List<Ride> rides = rideRepository.findByDriverAndStatus(user.get() , "Terminé" );
-            List<Reservation> reservations = reservationRepository.findReservationsByPassengerAndStatus(user.get() , "Terminé" );
-            for (Reservation reservation : reservations){
-                Optional<Ride> ride = rideRepository.findById(reservation.getRide().getIdRide());
-                if(ride.isPresent()) {
-                    Optional<Review> review = reviewRepository.findReviewByReviewerAndRide(user.get() , ride.get());
-                    if(review.isEmpty()) {
-                        notReviewedRides.add(ride.get());
-                    }
-                }
-            }
-            for (Ride ride : rides){
-                Optional<Review> review = reviewRepository.findReviewByReviewerAndRide(user.get() , ride);
-                if(review.isEmpty()) {
-                    notReviewedRides.add(ride);
-                }
-            }
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(notReviewedRides);
-    }
+
 
     @Override
     public ResponseEntity<?> terminateRides() {

@@ -30,4 +30,5 @@ export class ReservationService {
   getReservationByPassangerAndRide(idPassanger: Object | undefined, idRide: Object | undefined): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/getReservationByPassangerAndRide/${idPassanger?.toString()}/${idRide?.toString()}`)
   }
+  
 }

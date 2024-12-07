@@ -16,7 +16,6 @@ public interface RideService {
     ResponseEntity<List<Ride>> getAllRides();
     ResponseEntity<Ride> addRide(Ride  ride);
     ResponseEntity<List<Ride>> getFilteredRides(String depart, String destination, Double price, Timestamp dateRide);
-    ResponseEntity<List<Ride>> getNotReviewedRides(Long idUser);
     ResponseEntity<?> terminateRides();
 
 
