@@ -1,9 +1,7 @@
-<div *ngIf="isLoading && !errorMessage">
-    <p>Loading data...</p>
-</div>
-<div class="container mt-2" *ngFor="let ride of rides">
-    <div *ngIf="rides.length === 0"> no rides yett</div>
-    <div *ngIf="!isLoading && rides.length > 0">
+<div class="container mt-2" >
+    <div *ngIf="isLoading">Loading data...</div>
+    <div *ngIf="errorMessage"> {{errorMessage}}</div>
+    <div *ngFor="let ride of rides">
     <div ngbAccordion>
         <div ngbAccordionItem>
         <h2 ngbAccordionHeader>
