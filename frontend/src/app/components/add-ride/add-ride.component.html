@@ -1,0 +1,158 @@
+<div class="container-fluid min-vh-100 d-flex justify-content-center ">
+    <div class="row justify-content-center align-items-center w-100">
+      <div class="col-md-10">
+        <div class="card shadow">
+          <div class="card-header bg-primary text-white text-center">
+            <h3>Add a Ride</h3>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="addRideForm" (ngSubmit)="onSubmit()">
+              
+  
+              <div class="d-flex justify-content-between">
+                <!-- Depart -->
+                <div class="form-group mb-3 w-50 me-2">
+                  <label for="depart" class="form-label">Depart *</label>
+                  <input
+                    type="text"
+                    id="depart"
+                    class="form-control"
+                    formControlName="depart"
+                    placeholder="Enter departure location"
+                    [class.is-invalid]="
+                      addRideForm.get('depart')?.invalid &&
+                      addRideForm.get('depart')?.touched
+                    "
+                  />
+                  <div
+                    *ngIf="addRideForm.get('depart')?.invalid && addRideForm.get('depart')?.touched"
+                    class="invalid-feedback"
+                  >
+                    Depart is required.
+                  </div>
+                </div>
+  
+                <!-- Destination -->
+                <div class="form-group mb-3  w-50">
+                  <label for="destination" class="form-label">Destination *</label>
+                  <input
+                    type="text"
+                    id="destination"
+                    class="form-control"
+                    formControlName="destination"
+                    placeholder="Enter destination"
+                    [class.is-invalid]="
+                      addRideForm.get('destination')?.invalid &&
+                      addRideForm.get('destination')?.touched
+                    "
+                  />
+                  <div
+                    *ngIf="addRideForm.get('destination')?.invalid && addRideForm.get('destination')?.touched"
+                    class="invalid-feedback"
+                  >
+                    Destination is required.
+                  </div>
+                </div>
+              </div>
+  
+              <div class="d-flex justify-content-between">
+                <!-- Date -->
+                <div class="form-group mb-3 w-50 me-2">
+                  <label for="dateRide" class="form-label">Date *</label>
+                  <input
+                    type="date"
+                    id="dateRide"
+                    class="form-control"
+                    formControlName="dateRide"
+                    [class.is-invalid]="
+                      addRideForm.get('dateRide')?.invalid &&
+                      addRideForm.get('dateRide')?.touched
+                    "
+                  />
+                  <div
+                    *ngIf="addRideForm.get('dateRide')?.invalid && addRideForm.get('dateRide')?.touched"
+                    class="invalid-feedback"
+                  >
+                    Date is required.
+                  </div>
+                </div>
+  
+                <!-- Places -->
+                <div class="form-group mb-3  w-50 me-2">
+                    <label for="places" class="form-label">Places *</label>
+                    <input
+                      type="number"
+                      id="places"
+                      class="form-control"
+                      formControlName="places"
+                      min="1"
+                      max="10"
+                      step="1"
+                      placeholder="Enter number of places"
+                      [class.is-invalid]="
+                        addRideForm.get('places')?.invalid &&
+                        addRideForm.get('places')?.touched
+                      "
+                    />
+                    
+                    <div
+                      *ngIf="addRideForm.get('places')?.invalid && addRideForm.get('places')?.touched"
+                      class="text-danger"
+                    >
+                      Please select a valid number of places.
+                    </div>
+                  </div>
+                  
+                  
+  
+                <!-- Price -->
+                <div class="form-group mb-3 w-50">
+                    <label for="price" class="form-label">Price (in $) *</label>
+                    <input
+                    type="text"
+                    id="price"
+                    class="form-control"
+                    formControlName="price"
+                    placeholder="Enter ride price"
+                    [class.is-invalid]="
+                        addRideForm.get('price')?.invalid && addRideForm.get('price')?.touched
+                    "
+                    />
+                    <div
+                    *ngIf="addRideForm.get('price')?.invalid && addRideForm.get('price')?.touched"
+                    class="invalid-feedback"
+                    >
+                    Price is required.
+                    </div>
+                </div>
+  
+              </div>
+  
+              <!-- Description -->
+              <div class="form-group mb-3">
+                <label for="description" class="form-label">Description (optional)</label>
+                <textarea
+                  id="description"
+                  class="form-control"
+                  formControlName="description"
+                  placeholder="Add any additional details about the ride"
+                ></textarea>
+              </div>
+  
+              <!-- Submit Button -->
+              <div class="form-group text-center">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg"
+                  [disabled]="addRideForm.invalid"
+                >
+                  Add Ride
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
