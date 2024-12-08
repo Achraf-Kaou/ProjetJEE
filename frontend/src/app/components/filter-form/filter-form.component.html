@@ -1,0 +1,83 @@
+<div class="w-100 col-md-2 mt-3">
+    <div class="card">
+      <div class="card-header text-center">
+        <h4>Filter Rides</h4>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+          
+            <!-- Departure -->
+            <div class=" mb-2">
+              <label for="depart" class="form-label">Departure</label>
+              <input
+                type="text"
+                id="depart"
+                class="form-control"
+                formControlName="depart"
+                placeholder="Enter departure location"
+              />
+            </div>
+  
+            <!-- Destination -->
+            <div class="mb-2">
+              <label for="destination" class="form-label">Destination</label>
+              <input
+                type="text"
+                id="destination"
+                class="form-control"
+                formControlName="destination"
+                placeholder="Enter destination"
+              />
+            </div>
+  
+            <!-- Max Price -->
+            <div class="mb-2">
+              <label for="maxPrice" class="form-label">Max Price</label>
+              <input
+                type="text"
+                id="maxPrice"
+                class="form-control"
+                formControlName="maxPrice"
+                placeholder="Enter max price"
+              />
+            </div>
+  
+            <!-- Date -->
+            <div class="mb-2">
+              <label for="dateRide" class="form-label">Date</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  ngbDatepicker
+                  #d="ngbDatepicker"
+                  class="form-control"
+                  formControlName="dateRide"
+                  placeholder="YYYY-MM-DD"
+                />
+                <button (click)="d.toggle()" type="button" class="btn btn-primary">📅</button>
+              </div>
+            </div>
+  
+            <!-- Time -->
+            <div class="mb-2 ">
+              <label for="timeRide" class="form-label">Time</label>
+              <ngb-timepicker
+                class=" d-flex align-items-center justify-content-center"
+                formControlName="timeRide"
+                [spinners]="true"
+                [meridian]="false"
+              ></ngb-timepicker>
+            </div>
+          
+          <div class="text-center">
+            <button
+              type="submit"
+              class="btn btn-primary"
+            >
+              Apply Filters
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

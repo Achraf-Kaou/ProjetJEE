@@ -1,18 +1,19 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbAlert, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbAlertModule, NgbDatepickerModule, NgbInputDatepicker, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { debounceTime, Subject, tap } from 'rxjs';
 import { Ride } from '../../models/Ride';
 import { RideService } from '../../services/ride.service';
 import { User } from '../../models/User';
+import { NavbarComponent } from "../../components/navbar/navbar.component";
 
 @Component({
   selector: 'app-add-ride',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NgbAlertModule],
+  imports: [ReactiveFormsModule, CommonModule, NgbAlertModule, NgbTimepickerModule, NgbDatepickerModule, NavbarComponent],
   templateUrl: './add-ride.component.html',
   styleUrl: './add-ride.component.css'
 })
@@ -21,14 +22,15 @@ export class AddRideComponent {
     ride!:Ride;
     user !: User ;
     constructor(private rideService: RideService) {}
-  
+   
     ngOnInit(): void {
       this.addRideForm = new FormGroup({
         depart: new FormControl('', [Validators.required]),
         destination: new FormControl('', [Validators.required]),
-        places: new FormControl('',[Validators.required, Validators.min(1), Validators.max(4)]),
+        places: new FormControl('',[Validators.required, Validators.min(1), Validators.max(4),Validators.pattern('^[0-9]*$')]),
         price: new FormControl('', [Validators.required, Validators.min(0)]),
         dateRide: new FormControl('', Validators.required),
+        timeRide: new FormControl('', Validators.required),
         description: new FormControl(''),
       });
     }
@@ -40,17 +42,26 @@ export class AddRideComponent {
         this.user = JSON.parse(userFromLocalStorage);
       }
       if (this.addRideForm.valid) {
-        // Créer l'objet ride en récupérant les données du formulaire
+        const date = this.addRideForm.get('dateRide')?.value; 
+        const time = this.addRideForm.get('timeRide')?.value; 
+        
+        const formattedDate = `${date.year}-${date.month.toString().padStart(2, '0')}-${date.day.toString().padStart(2, '0')}`;
+        const formattedTime = `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}:00`;
+
+        const dateTimeString = `${formattedDate}T${formattedTime}`;
+        console.log(dateTimeString )
+       
         this.ride = {
           depart: this.addRideForm.get('depart')?.value,
           destination: this.addRideForm.get('destination')?.value,
           places: this.addRideForm.get('places')?.value,
           price: this.addRideForm.get('price')?.value,
-          dateRide: this.addRideForm.get('dateRide')?.value,
+          dateRide: new Date(dateTimeString),
           description: this.addRideForm.get('description')?.value || '',
           status: '',
           driver : this.user 
         };
+        console.log(this.ride.dateRide)
         this.rideService.addRide(this.ride)
         .subscribe(
           (response: any) => {

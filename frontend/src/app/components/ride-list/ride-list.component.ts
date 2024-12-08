@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Ride } from '../../models/Ride';
 import { RideService } from '../../services/ride.service';
 import { User } from '../../models/User';
 import { ReservationService } from '../../services/reservation.service';
 import { Reservation } from '../../models/Reservation';
-import { error } from 'node:console';
+
 
 
 @Component({
@@ -20,17 +20,28 @@ export class RideListComponent implements OnInit{
   rides: Ride[] = [];
   isLoading: boolean = true;
   errorMessage: string = '';
-  reservationStatus: Map<object | undefined, boolean> = new Map();;
-
+  reservationStatus: Map<object | undefined, boolean> = new Map();
+  @Input() ListRides !: Ride[]
 
   constructor(private rideService: RideService, private reservationService: ReservationService){}
-
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['ListRides']) {
+      this.rides=this.ListRides
+      console.log('Les données ont été mises à jour:', this.rides);
+    }
+  }
   ngOnInit() {
+    console.log("list fel rideLIts",this.ListRides);
     const userFromLocalStorage = localStorage.getItem('user');
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
     }
-    this.getAllRide();
+    if(this.ListRides.length === 0){
+      this.getAllRide();
+    }else{
+      this.rides=this.ListRides
+      this.loadReservationStatuses();
+    }
   }
 
   getAllRide() {

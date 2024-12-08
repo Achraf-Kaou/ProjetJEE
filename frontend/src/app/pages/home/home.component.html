@@ -7,4 +7,13 @@
   [user]="user">
 </app-review>
 <app-navbar></app-navbar>
-<app-ride-list></app-ride-list>
+<div class="d-flex flex-row">
+
+  <div class="filter-form" >
+    <app-filter-form (onListRidesUpdate)="handleListRidesUpdate($event)"></app-filter-form>
+  </div>
+
+  <div class="ride-list" >
+    <app-ride-list [ListRides] ="ListRides"></app-ride-list>
+  </div>
+</div>

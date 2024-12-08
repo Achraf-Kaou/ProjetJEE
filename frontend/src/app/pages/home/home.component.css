@@ -1,0 +1,25 @@
+.d-flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.filter-form {
+  flex: 0 0 20%; /* Prend 25% de la largeur de l'écran */
+  max-width: 20%; /* Limite à 25% pour un aspect constant */
+  padding: 1rem; /* Espacement interne */
+  background-color: #f8f9fa; /* Couleur de fond pour différencier */
+  border-right: 1px solid #ddd; /* Ligne pour séparer visuellement */
+  height: 100vh; /* Hauteur pleine page pour un effet fixe */
+  overflow-y: auto; /* Permet le défilement si le contenu dépasse */
+  
+}
+
+.ride-list {
+  flex: 1; /* Prend le reste de l'espace disponible */
+  padding: 1rem; /* Espacement interne */
+  height: 100vh; /* Hauteur pleine page */
+  overflow-y: auto; /* Permet le défilement si nécessaire */
+}

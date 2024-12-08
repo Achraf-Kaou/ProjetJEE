@@ -36,5 +36,10 @@ export class RideService {
   getAllRideByUser(id : Object | undefined): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/getAllRideByUser/${id?.toString()}`);
   }
+  all(params: HttpParams ): Observable<any> {
+    
+    return this.http.get<any>(`${this.apiUrl}/all`,{ params });
+  }
+
 
 }

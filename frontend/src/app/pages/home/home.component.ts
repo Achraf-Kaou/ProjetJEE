@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { User } from '../../models/User';
 import {ReviewService} from '../../services/review.service'
 import { ReviewComponent } from "../../components/review/review.component";
@@ -8,11 +8,12 @@ import { ReservationService } from '../../services/reservation.service';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from "../../components/navbar/navbar.component";
 import { RideListComponent } from "../../components/ride-list/ride-list.component";
+import { FilterFormComponent } from "../../components/filter-form/filter-form.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ReviewComponent, CommonModule, NavbarComponent, RideListComponent],
+  imports: [ReviewComponent, CommonModule, NavbarComponent, RideListComponent, FilterFormComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -23,6 +24,8 @@ export class HomeComponent {
   passengerList: Reservation[] = [];
   ride !: Ride 
   isModalVisible: boolean = false;
+  ListRides : Ride[] = []
+  
   openModal() {
     this.isModalVisible = true;
   }
@@ -70,5 +73,8 @@ export class HomeComponent {
     );
     
   }
-  
+  handleListRidesUpdate(rides: Ride[]) {
+    this.ListRides = rides;
+    console.log(this.ListRides);
+  }
 }

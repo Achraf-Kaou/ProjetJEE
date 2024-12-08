@@ -47,9 +47,15 @@ public class RideServiceImp implements RideService{
     }
     @Override
     public ResponseEntity<List<Ride>> getFilteredRides(String depart, String destination, Double price, Timestamp dateRide) {
+        System.out.println("depart="+depart);
+        System.out.println("destination="+destination);
+        System.out.println("price="+price);
+        System.out.println("dateRide="+dateRide);
+
         Timestamp now = new Timestamp(System.currentTimeMillis());
+        Timestamp finalDateRide = (dateRide != null && dateRide.after(now)) ? dateRide : now;
         return ResponseEntity.status(HttpStatus.OK)
-                .body(rideRepository.findRidesByFilters(depart, destination, price,  dateRide != null ? dateRide : now));
+                .body(rideRepository.findRidesByFilters(depart, destination, price, finalDateRide));
     }
 
 
