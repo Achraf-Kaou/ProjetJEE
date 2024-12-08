@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { User } from '../../models/User';
 import {ReviewService} from '../../services/review.service'
 import { ReviewComponent } from "../../components/review/review.component";

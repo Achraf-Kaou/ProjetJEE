@@ -88,6 +88,7 @@ public class UserServiceImp implements UserService{
 
     @Override
     public ResponseEntity<User> updateUser(User user) {
+        System.out.println(user);
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(user));
     }
 

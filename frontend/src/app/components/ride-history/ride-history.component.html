@@ -4,7 +4,7 @@
   </div>
 </div>
 <ng-template #loaded>
-  <div class="container mt-2" >
+  <div class="container" >
     <!-- Error message -->
     <div *ngIf="errorMessage" class="alert alert-danger my-3">{{ errorMessage }}</div>
     
@@ -81,6 +81,11 @@
     (click)="closeDeleteModal()"
   >
     <div class="modal-dialog" role="document" (click)="$event.stopPropagation()">
+      <div *ngIf="isProcessing" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Processing...</span>
+        </div>
+      </div>
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Confirm Deletion</h5>

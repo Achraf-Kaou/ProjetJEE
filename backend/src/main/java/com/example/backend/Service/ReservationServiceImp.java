@@ -45,6 +45,9 @@ public class ReservationServiceImp implements ReservationService {
             if(oRide.get().getPlaces() > 0){
                 User passenger = oPassenger.get();
                 Ride ride = oRide.get();
+                if (ride.getDateRide().before(Timestamp.valueOf(LocalDateTime.now()))){
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+                }
                 Reservation reservation0 = reservationRepository.findByPassengerAndRideAndStatus(passenger, ride, "En-cours");
                 if(reservation0 != null) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body(reservation0);

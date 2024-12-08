@@ -1,0 +1,19 @@
+i.bi-star {
+    font-size: 24px;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 1.2em;
+    height: 1.2em;
+    color: #e4e5e9;
+  }
+i.bi-star-fill {
+    color: #ffc107; /* Couleur de l'étoile remplie */
+  }
+.hover-color-yellow:hover {
+  background-color: #ffc107 !important; /* Yellow */
+}
+  
+.hover-color-red:hover {
+  background-color: #dc3545 !important; /* Red */
+}

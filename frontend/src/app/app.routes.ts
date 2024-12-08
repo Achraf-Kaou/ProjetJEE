@@ -8,11 +8,13 @@ import { RideListComponent } from './components/ride-list/ride-list.component';
 import { ReviewComponent } from './components/review/review.component';
 import { RideHistoryComponent } from './components/ride-history/ride-history.component';
 import { ReservationHistoryComponent } from './components/reservation-history/reservation-history.component';
+import { ProfilComponent } from './pages/profil/profil.component';
 
 export const routes: Routes = [
     { path: 'signIn', component: SignInComponent },
     { path: 'signUp', component: SignUpComponent },
     { path: 'home', component: HomeComponent },
+    { path: 'profil/:id', component: ProfilComponent },
     { path: 'nav', component: NavbarComponent },
     { path: 'footer', component: FooterComponent },
     { path: 'rides', component: RideListComponent },

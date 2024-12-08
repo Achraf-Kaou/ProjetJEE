@@ -31,7 +31,7 @@ export class UserService {
       'Content-Type': 'application/json'
     })})
   }
-  deleteUser(id : string): Observable<any> {
+  deleteUser(id : object | undefined): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/deleteUser/${id}`);
   }
   getUserById(id : string): Observable<any> {
