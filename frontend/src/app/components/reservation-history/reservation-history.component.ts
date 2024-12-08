@@ -15,10 +15,17 @@ export class ReservationHistoryComponent {
   reservations: Reservation[] = [];
   /* @Input()  */user!: User;
   isLoading: boolean = true;
+  isProcessing: boolean = false;
   errorMessage: string = '';
+  successMessage: string | null = null;
 
   constructor(private reservationService: ReservationService){}
   ngOnInit(): void {
+    const message = localStorage.getItem('successMessage');
+    if (message) {
+      this.successMessage = message;
+      localStorage.removeItem('successMessage');
+    }
     const userFromLocalStorage = localStorage.getItem('user');
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
@@ -40,10 +47,19 @@ export class ReservationHistoryComponent {
     });
   }
   cancelReservation(reservation: Reservation) {
+    this.isProcessing = true;
     this.reservationService.cancelReservation(reservation.idReservation)
-      .subscribe(
-        response => window.location.reload(),
-        error => console.error(error)
-    )
+      .subscribe({
+        next : () => {
+          localStorage.setItem('successMessage', 'Reservation canceled successfully!');
+          this.isProcessing = false;
+          window.location.reload();
+        },
+        error:() => {
+          this.isProcessing = false;
+          this.errorMessage = 'Failed to cancel the reservation. Please try again.';
+        }
+      }
+    );
   }
 }

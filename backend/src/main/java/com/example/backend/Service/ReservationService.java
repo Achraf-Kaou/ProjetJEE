@@ -13,6 +13,6 @@ public interface ReservationService {
     ResponseEntity<List<Reservation>> getAllReservationByUser(Long idUser);
     ResponseEntity<List<Reservation>> getAllReservationByRide(Long idRide);
     ResponseEntity<List<Reservation>> getAllReservationByRideAndStatus(Long idRide, String status);
-    ResponseEntity<Reservation> getReservationByPassangerAndRide (Long idPassenger, Long idRide);
+    ResponseEntity<List<Reservation>> getReservationByPassangerAndRide (Long idPassenger, Long idRide);
 
 }
