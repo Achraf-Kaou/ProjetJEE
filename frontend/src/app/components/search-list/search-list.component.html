@@ -1,0 +1,14 @@
+<ul class="list-group mt-5  d-flex " style=" width: 86%" >
+    <li *ngFor="let user of users" class="list-group-item d-flex justify-content-between align-items-center my-2 border rounded w-100">
+       <div>
+            <img
+                src="images/profile.png"
+                alt="profile"
+                class="rounded-circle"
+                style="width: 40px; height: 40px; margin-right: 10px"
+            />
+            <a href="/home">{{ user.firstName }} {{ user.lastName }}</a>
+       </div>
+      
+    </li>
+</ul>

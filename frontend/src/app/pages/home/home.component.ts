@@ -9,11 +9,12 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from "../../components/navbar/navbar.component";
 import { RideListComponent } from "../../components/ride-list/ride-list.component";
 import { FilterFormComponent } from "../../components/filter-form/filter-form.component";
+import { SearchListComponent } from "../../components/search-list/search-list.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ReviewComponent, CommonModule, NavbarComponent, RideListComponent, FilterFormComponent],
+  imports: [ReviewComponent, CommonModule, NavbarComponent, RideListComponent, FilterFormComponent, SearchListComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -25,7 +26,8 @@ export class HomeComponent {
   ride !: Ride 
   isModalVisible: boolean = false;
   ListRides : Ride[] = []
-  
+  ListUser : User[] = []
+  isSearching : boolean = false;
   openModal() {
     this.isModalVisible = true;
   }
@@ -76,5 +78,10 @@ export class HomeComponent {
   handleListRidesUpdate(rides: Ride[]) {
     this.ListRides = rides;
     console.log(this.ListRides);
+  }
+  handleListUsersUpdate(users: User[]) {
+    this.ListUser = users;
+    this.isSearching=true;
+    console.log(this.ListUser);
   }
 }

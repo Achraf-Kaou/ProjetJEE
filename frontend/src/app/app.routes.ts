@@ -9,6 +9,7 @@ import { ReviewComponent } from './components/review/review.component';
 import { RideHistoryComponent } from './components/ride-history/ride-history.component';
 import { AddRideComponent } from './pages/add-ride/add-ride.component';
 import { FilterFormComponent } from './components/filter-form/filter-form.component';
+import { SearchListComponent } from './components/search-list/search-list.component';
 
 export const routes: Routes = [
     { path: 'signIn', component: SignInComponent },
@@ -21,5 +22,6 @@ export const routes: Routes = [
     { path: 'rideshistory', component: RideHistoryComponent },
     { path: 'addRide', component: AddRideComponent },
     { path: 'filterform', component: FilterFormComponent },
+    { path: 'searchlist', component: SearchListComponent },
 
 ];

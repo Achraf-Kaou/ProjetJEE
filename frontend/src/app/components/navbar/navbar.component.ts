@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output, output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
+import { User } from '../../models/User';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class NavbarComponent {
   constructor(private userService: UserService, private router: Router){}
   searchControl = new FormControl('');
   isNavbarOpen = false; 
+  @Output() onListUsersUpdate = new EventEmitter<User[]>();
   toggleNavbar() {
     this.isNavbarOpen = !this.isNavbarOpen; 
     console.log('navbar open:',this.isNavbarOpen);
@@ -43,6 +45,7 @@ export class NavbarComponent {
         .subscribe(
           (response: any) => {
             console.log('Search Results:', response);
+            this.onListUsersUpdate.emit(response);
           },
           (error: any) => {
             console.error('Search Error:', error);
