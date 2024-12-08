@@ -32,7 +32,7 @@
           <a class="nav-link active" aria-current="page" href="/home">Home</a>
         </li>
         <li class="nav-item me-3">
-          <a class="nav-link" href="/profile">Profil</a>
+          <a class="nav-link" [routerLink]="['/profil', user.idUser]">Profil</a>
         </li>
         <li class="nav-item me-3">
           <a class="nav-link" href="/histRes">Historique Reservation</a>

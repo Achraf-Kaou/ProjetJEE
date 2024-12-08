@@ -6,6 +6,7 @@ import { User } from '../../models/User';
 import { ReservationService } from '../../services/reservation.service';
 import { Reservation } from '../../models/Reservation';
 
+import { dateTimestampProvider } from 'rxjs/internal/scheduler/dateTimestampProvider';
 
 
 @Component({
@@ -19,8 +20,10 @@ export class RideListComponent implements OnInit{
   /* @Input()  */user!: User
   rides: Ride[] = [];
   isLoading: boolean = true;
+  isProcessing: boolean = false;
   errorMessage: string = '';
-  reservationStatus: Map<object | undefined, boolean> = new Map();
+  successMessage: string | null = null;
+  reservationStatus: Map<object | undefined, string | null> = new Map();
   @Input() ListRides !: Ride[]
 
   constructor(private rideService: RideService, private reservationService: ReservationService){}
@@ -31,7 +34,11 @@ export class RideListComponent implements OnInit{
     }
   }
   ngOnInit() {
-    console.log("list fel rideLIts",this.ListRides);
+    const message = localStorage.getItem('successMessage');
+    if (message) {
+      this.successMessage = message;
+      localStorage.removeItem('successMessage');
+    }
     const userFromLocalStorage = localStorage.getItem('user');
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
@@ -46,9 +53,12 @@ export class RideListComponent implements OnInit{
 
   getAllRide() {
     this.rideService.getAllRide().subscribe({
-      next: (data) => {
-        this.rides = data;
-        this.isLoading = false;
+      next: (data: Ride[]) => {
+        const now = Date.now();
+        this.rides = data.filter((ride: Ride) => {
+          const rideDate = new Date(ride.dateRide).getTime(); 
+          return rideDate > now;
+        });
         this.loadReservationStatuses();
       },
       error: (error) => {
@@ -58,69 +68,71 @@ export class RideListComponent implements OnInit{
       },
     });
   }
+  
 
   addReservation(ride: Ride) {
+    this.isProcessing = true;
     this.reservationService.addReservation(this.user.idUser,ride.idRide)
-    .subscribe(
-      (response: any) => {
+    .subscribe({
+      next : () => {
+        localStorage.setItem('successMessage', 'Reservation added successfully!');
+        this.isProcessing = false;
         window.location.reload();
       },
-      (err: any) => {
+      error:(err: any) => {
         console.error(err);
+        this.isProcessing = false;
+        this.errorMessage = 'Failed to add the reservation';
       }
-    );
+    });
   }
 
   cancelReservation(ride: Ride) {
+    this.isProcessing = true;
     let reservation!: Reservation ;
     this.reservationService.getReservationByPassangerAndRide(this.user.idUser, ride.idRide)
-      .subscribe(
-        (response: Reservation) => {
-          console.log(response);
-          this.reservationService.cancelReservation(response.idReservation)
-            .subscribe(
-              res => {
+      .subscribe({
+        next:(response: Reservation[]) => {
+          this.reservationService.cancelReservation(response[response.length - 1].idReservation)
+            .subscribe({
+              next :(res) => {
+                localStorage.setItem('successMessage', 'Reservation canceled successfully!');
+                this.isProcessing = false;
                 window.location.reload();
               },
-              error => {
-                console.error(error);
+              error: (err) => {
+                console.error(err)
+                this.isProcessing = false;
+                this.errorMessage = 'Failed to cancel the reservation. Please try again.';
               }
-            )
+            });
           },
-          error => console.log(error),
-        )
+        error:() => {
+          this.isProcessing = false;
+          this.errorMessage = 'Failed to get reservation by your id and this ride. Please try again.';
+        },
+      })
   }
 
   loadReservationStatuses() {
     this.rides.forEach((ride) => {
-      this.reservationService
-        .getReservationByPassangerAndRide(this.user.idUser, ride.idRide)
+      this.reservationService.getReservationByPassangerAndRide(this.user.idUser, ride.idRide)
         .subscribe({
           next: (reservation) => {
-            this.reservationStatus.set(ride.idRide, reservation !== null);
+            this.reservationStatus.set(ride.idRide, reservation[reservation.length - 1] ? reservation[reservation.length - 1].status : null);
+            this.isLoading = false;
           },
           error: () => {
-            this.reservationStatus.set(ride.idRide, false);
+            this.reservationStatus.set(ride.idRide, null);
+            this.isLoading = false;
+            this.errorMessage = 'Failed to check the status of the ride and reservation. Please try again.';
+
           },
         });
     });
   }
 
-  hasReservation(ride: Ride): boolean {
-    return this.reservationStatus.get(ride.idRide) || false;
-  }
-
-  checkReservationByUserByPassangerAndRide(ride: Ride): boolean | undefined {
-    this.reservationService.getReservationByPassangerAndRide(this.user.idUser, ride.idRide).subscribe({
-      next: (reservation) => {
-        console.log(reservation);
-        if (reservation !== null) {
-          return false;
-        } else {
-          return true;
-        }
-      },
-    });
-    return undefined;
+  hasReservation(ride: Ride): string | null {
+    return this.reservationStatus.get(ride.idRide) || null;
   }
 }

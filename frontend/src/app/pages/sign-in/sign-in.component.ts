@@ -50,13 +50,8 @@ export class SignInComponent {
     this.userService.login(email,password)
     .subscribe(
       (response: any) => {
-        if(response.role==="Admin"){
-          localStorage.setItem('user', JSON.stringify(response));
-          this.router.navigateByUrl('/admin');  
-        }else {
-          localStorage.setItem('user', JSON.stringify(response));
-          this.router.navigateByUrl('/home');  
-        }
+        localStorage.setItem('user', JSON.stringify(response));
+        this.router.navigateByUrl('/home');  
       },
       (error: any) => {
         this._message$.next(`error user not found`);

@@ -45,7 +45,10 @@ public class ReservationServiceImp implements ReservationService {
             if(oRide.get().getPlaces() > 0){
                 User passenger = oPassenger.get();
                 Ride ride = oRide.get();
-                Reservation reservation0 = reservationRepository.findByPassengerAndRide(passenger, ride);
+                if (ride.getDateRide().before(Timestamp.valueOf(LocalDateTime.now()))){
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+                }
+                Reservation reservation0 = reservationRepository.findByPassengerAndRideAndStatus(passenger, ride, "En-cours");
                 if(reservation0 != null) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body(reservation0);
                 }
@@ -109,13 +112,13 @@ public class ReservationServiceImp implements ReservationService {
     }
 
     @Override
-    public ResponseEntity<Reservation> getReservationByPassangerAndRide (Long idPassenger, Long idRide){
+    public ResponseEntity<List<Reservation>> getReservationByPassangerAndRide (Long idPassenger, Long idRide){
         Optional<User> oPassenger = userRepository.findById(idPassenger);
         Optional<Ride> oRide = rideRepository.findById(idRide);
         if(oPassenger.isPresent() && oRide.isPresent()){
             User passenger = oPassenger.get();
             Ride ride = oRide.get();
-            Reservation reservation =reservationRepository.findByPassengerAndRide(passenger,ride);
+            List<Reservation> reservation =reservationRepository.findByPassengerAndRide(passenger,ride);
             return ResponseEntity.status(HttpStatus.OK).body(reservation);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

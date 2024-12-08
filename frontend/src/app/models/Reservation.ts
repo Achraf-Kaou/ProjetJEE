@@ -6,5 +6,5 @@ export interface Reservation {
     ride: Ride;
     passenger: User;
     dateReservation: Date;
-    status: number;
+    status: string;
 }

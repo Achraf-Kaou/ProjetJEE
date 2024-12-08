@@ -22,7 +22,7 @@ export class ReviewService {
       'Content-Type': 'application/json'
     })})
   }
-  getMeanReviewByUser(id : string): Observable<any>{
+  getMeanReviewByUser(id : object|undefined): Observable<any>{
     return this.http.get<any>(`${this.apiUrl}/getMeanReviewByUser/${id}`)
   }
   getMeanReviewByRide(id : string): Observable<any>{

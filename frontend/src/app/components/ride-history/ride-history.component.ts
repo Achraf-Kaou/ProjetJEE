@@ -12,21 +12,28 @@ import { response } from 'express';
 @Component({
   selector: 'app-ride-history',
   standalone: true,
-  imports: [NgbAccordionModule, CommonModule ],
+  imports: [NgbAccordionModule, CommonModule],
   templateUrl: './ride-history.component.html',
   styleUrl: './ride-history.component.css'
 })
 export class RideHistoryComponent implements OnInit {
   rides: {ride: Ride; reservations: Reservation[]}[] = [];
   isLoading: boolean = true;
+  isProcessing: boolean = false;
   errorMessage: string = '';
-  user!: User;
+  successMessage: string | null = null;
+  /* @Input()  */ user!: User;
   isDeleteModalOpen = false;
   selectedRide: Ride | null = null;
 
   constructor(private rideService: RideService, private reservationService: ReservationService) {}
 
   ngOnInit(): void {
+    const message = localStorage.getItem('successMessage');
+    if (message) {
+      this.successMessage = message;
+      localStorage.removeItem('successMessage');
+    }
     const userFromLocalStorage = localStorage.getItem('user');
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
@@ -70,13 +77,16 @@ export class RideHistoryComponent implements OnInit {
   }
 
   deleteRide(): void {
+    this.isProcessing = true;
     if (this.selectedRide) {
-      this.rideService.deleteRide(this.selectedRide.idRide).subscribe(
-        response => {
+      this.rideService.deleteRide(this.selectedRide.idRide).subscribe({
+        next: (response) => {
           this.closeDeleteModal();
+          localStorage.setItem('successMessage', 'Reservation added successfully!');
+          this.isProcessing = false;
           window.location.reload();
         },
-        error => {
+        error :(error) => {
           console.error('Failed to delete ride:', error);
           if (error.status === 401){
             this.errorMessage = "can not delete a passed ride";
@@ -84,9 +94,10 @@ export class RideHistoryComponent implements OnInit {
           if (error.status === 404){
             this.errorMessage = "ride not found";
           }
+          this.isProcessing = false;
           this.closeDeleteModal();
         }
-      );}
+      });}
   }
   // Opens the delete modal
   openDeleteModal(ride: Ride): void {

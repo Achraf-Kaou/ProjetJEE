@@ -46,8 +46,7 @@ public class ReservationController {
     }
 
     @GetMapping("/getReservationByPassangerAndRide/{idPassanger}/{idRide}")
-    public ResponseEntity<Reservation> getReservationByPassangerAndRide(@PathVariable Long idPassanger,@PathVariable Long idRide) {
-        System.out.println("passed");
+    public ResponseEntity<List<Reservation>> getReservationByPassangerAndRide(@PathVariable Long idPassanger,@PathVariable Long idRide) {
         return reservationService.getReservationByPassangerAndRide(idPassanger,idRide);
     }
 

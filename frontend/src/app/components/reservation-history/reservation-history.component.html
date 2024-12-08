@@ -1,0 +1,49 @@
+<div *ngIf="isLoading; else loaded" class="d-flex justify-content-center align-items-center my-3">
+	<div class="spinner-border text-primary me-3" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
+</div>
+<ng-template #loaded>
+	<div class="container">
+		<div *ngIf="errorMessage" class="alert alert-danger my-3">{{ errorMessage }}</div>
+		<div 
+			*ngIf="isProcessing" 
+			class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-2">
+			<div class="spinner-border text-primary" role="status">
+				<span class="visually-hidden">Processing...</span>
+			</div>
+		</div>
+		<div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+			{{ successMessage }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		<table class="table table-striped" [class.table-hover]="!isProcessing">
+			<thead>
+				<tr>
+					<th scope="col">Made on </th>
+					<th scope="col">Ride Date</th>
+					<th scope="col">Ride</th>
+					<th scope="col">Status</th>
+					<th scope="col">Action</th>
+				</tr>
+			</thead>
+			<tbody *ngFor="let reservation of reservations">
+					<tr>
+						<td>{{reservation.dateReservation | date:'short'}}</td>
+						<td>{{reservation.ride.dateRide | date:'short'}}</td>
+						<td>from {{reservation.ride.depart}} to {{reservation.ride.destination}}</td>
+						<td>{{reservation.status}}</td>
+						<td>
+							<button 
+								*ngIf="reservation.status === 'En-cours'" 
+								class="btn btn-danger btn-sm"
+								(click)="cancelReservation(reservation)"
+								[disabled]="isProcessing">
+									Cancel
+						  	</button>
+						</td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+</ng-template>

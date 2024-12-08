@@ -1,6 +1,25 @@
-<div class="container mt-2" >
-    <div *ngIf="isLoading">Loading data...</div>
-    <div *ngIf="errorMessage"> {{errorMessage}}</div>
+<div *ngIf="isLoading; else loaded" class="d-flex justify-content-center align-items-center my-3">
+  <div class="spinner-border text-primary me-3" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<ng-template #loaded>
+  <div class="container" >
+    <!-- Error message -->
+    <div *ngIf="errorMessage" class="alert alert-danger my-3">{{ errorMessage }}</div>
+    
+    <!-- Success message -->
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ successMessage }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Loading state for the entire page -->
+    <div *ngIf="isProcessing" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-2">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Processing...</span>
+      </div>
+    </div>
     <div *ngFor="let ride of rides">
     <div ngbAccordion>
         <div ngbAccordionItem>
@@ -47,33 +66,39 @@
         </div>
     </div>
     </div>
-</div>
+  </div>
 
 
 
-<!-- model delete-->
-<div
-  class="modal fade"
-  tabindex="-1"
-  role="dialog"
-  [class.show]="isDeleteModalOpen"
-  [ngStyle]="{ display: isDeleteModalOpen ? 'block' : 'none' }"
-  aria-hidden="true"
-  (click)="closeDeleteModal()"
->
-  <div class="modal-dialog" role="document" (click)="$event.stopPropagation()">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Confirm Deletion</h5>
-        <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
+  <!-- model delete-->
+  <div
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    [class.show]="isDeleteModalOpen"
+    [ngStyle]="{ display: isDeleteModalOpen ? 'block' : 'none' }"
+    aria-hidden="true"
+    (click)="closeDeleteModal()"
+  >
+    <div class="modal-dialog" role="document" (click)="$event.stopPropagation()">
+      <div *ngIf="isProcessing" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Processing...</span>
+        </div>
       </div>
-      <div class="modal-body">
-        <p>Are you sure you want to delete the ride from <b>{{ selectedRide?.depart }}</b> to <b>{{ selectedRide?.destination }}</b>?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
-        <button type="button" class="btn btn-danger" (click)="deleteRide()">Delete</button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Deletion</h5>
+          <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete the ride from <b>{{ selectedRide?.depart }}</b> to <b>{{ selectedRide?.destination }}</b>?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+          <button type="button" class="btn btn-danger" (click)="deleteRide()">Delete</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</ng-template>

@@ -1,11 +1,31 @@
+<div *ngIf="isLoading; else loaded" class="d-flex justify-content-center align-items-center my-3">
+  <div class="spinner-border text-primary me-3" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
 
-<div *ngIf="isLoading">Loading data...</div>
-<div *ngIf="!rides">No Rides</div>
-<div class="container mt-3 p-4 d-flex flex-column align-items-center justify-content-center" >
-    <div *ngIf="isLoading">Loading rides...</div>
-    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-    <div *ngFor="let ride of rides" class="card mb-3 " style=" width: 90%">
-      <div class="row g-0" >
+<ng-template #loaded>
+  <div class="container d-flex flex-column align-items-center justify-content-center">
+    
+    <!-- Error message -->
+    <div *ngIf="errorMessage" class="alert alert-danger my-3">{{ errorMessage }}</div>
+    
+    <!-- Success message -->
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ successMessage }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Loading state for the entire page -->
+    <div *ngIf="isProcessing" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-2">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Processing...</span>
+      </div>
+    </div>
+
+    <!-- Ride Cards -->
+    <div *ngFor="let ride of rides" class="card mb-3" style="width: 70%">
+      <div class="row g-0">
         <div class="col-md-auto">
           <img src="images/ride3.png" alt="ride" class="img-fluid rounded-start" style="height: 150px; width: 220px" />
         </div>
@@ -14,22 +34,16 @@
             <!-- Title and User Info Row -->
             <div class="d-flex justify-content-between align-items-center">
               <h5 class="card-title m-0">
-                From <strong> {{ ride.depart }} </strong> to <strong> {{ ride.destination }} </strong>
+                From <strong>{{ ride.depart }}</strong> to <strong>{{ ride.destination }}</strong>
               </h5>
               <div class="d-flex align-items-center">
-                <!-- Profile image -->
-                <img
-                  src="images/profile.png"
-                  alt="profile"
-                  class="rounded-circle"
-                  style="width: 40px; height: 40px; margin-right: 10px"
-                />
+                <img src="images/profile.png" alt="profile" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px" />
                 <small class="text-muted">
-                  by {{ ride.driver.firstName || "Unknown" }}
-                  {{ ride.driver.lastName || "Driver" }}
+                  by {{ ride.driver.firstName || "Unknown" }} {{ ride.driver.lastName || "Driver" }}
                 </small>
               </div>
             </div>
+
             <!-- Ride Details -->
             <div class="row card-text mt-1">
               <!-- Price and Available Seats -->
@@ -43,24 +57,26 @@
                 <strong>Date:</strong> {{ ride.dateRide | date: 'MMM d, y' }}<br />
                 <strong>Hour:</strong> {{ ride.dateRide | date: 'h:mm a' }}
               </div>
-            
-              <!-- Book Button -->
+
+              <!-- Book/Cancel Button -->
               <div class="col-md-4 text-end">
+
                 <button
                   class="btn btn-primary"
-                  *ngIf="!hasReservation(ride)"
+                  *ngIf="hasReservation(ride) !== 'En-cours'"
                   (click)="addReservation(ride)"
-                >
+                  [disabled]="isProcessing">
                   Book a Ride
                 </button>
                 <button
                   class="btn btn-danger"
-                  *ngIf="hasReservation(ride)"
+                  *ngIf="hasReservation(ride) === 'En-cours'"
                   (click)="cancelReservation(ride)"
-                >
+                  [disabled]="isProcessing">
                   Cancel Ride
                 </button>
               </div>
+
               <!-- Description (full-width row below other fields) -->
               <div class="col-12 mt-1">
                 <strong>Description:</strong> {{ ride.description }}
@@ -70,5 +86,5 @@
         </div>
       </div>
     </div>
-</div>
+  </div>
   
