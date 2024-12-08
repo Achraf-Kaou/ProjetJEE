@@ -9,6 +9,8 @@ import { ReviewComponent } from './components/review/review.component';
 import { RideHistoryComponent } from './components/ride-history/ride-history.component';
 import { ReservationHistoryComponent } from './components/reservation-history/reservation-history.component';
 import { ProfilComponent } from './pages/profil/profil.component';
+import { AddRideComponent } from './pages/add-ride/add-ride.component';
+import { FilterFormComponent } from './components/filter-form/filter-form.component';
 
 export const routes: Routes = [
     { path: 'signIn', component: SignInComponent },
@@ -21,6 +23,7 @@ export const routes: Routes = [
     { path: 'review', component: ReviewComponent },
     { path: 'rideshistory', component: RideHistoryComponent },
     { path: 'reservationhistory', component: ReservationHistoryComponent },
-
+    { path: 'addRide', component: AddRideComponent },
+    { path: 'filterform', component: FilterFormComponent },
 
 ];

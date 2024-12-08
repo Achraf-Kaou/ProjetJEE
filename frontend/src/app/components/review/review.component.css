@@ -27,10 +27,10 @@ max-width: 60%; /* Ajuster la largeur de la modal */
 i {
   font-size: 1.1rem;
   padding-right: 0.1rem;
-  color: #b0c4de;
+  color: #7ea0cc;
   
 }
 .filled {
-  color: #f8ed18;
+  color:#045bdd /* #171ac4; */
 }
 

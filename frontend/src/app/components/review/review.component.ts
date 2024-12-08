@@ -75,6 +75,7 @@ export class ReviewComponent {
     .subscribe(
       (response: any) => {
         console.log(response);
+        this.closeModal()
         this.router.navigate(['/home']);
       },
       (error: any) => {
