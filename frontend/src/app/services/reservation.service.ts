@@ -17,7 +17,7 @@ export class ReservationService {
     return this.http.put<any>(`${this.apiUrl}/cancelReservation/${id?.toString()}`,{})
   }
   getAllReservationByUser(id : Object | undefined): Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}/getAllReservationByUser/${id}`)
+    return this.http.get<any>(`${this.apiUrl}/getAllReservationByUser/${id?.toString()}`)
   }
   getAllReservationByRide(id : Object | undefined): Observable<any>{
     return this.http.get<any>(`${this.apiUrl}/getAllReservationByRide/${id?.toString()}`)

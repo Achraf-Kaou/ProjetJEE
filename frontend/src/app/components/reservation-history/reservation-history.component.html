@@ -1,0 +1,30 @@
+<div class="container my-5">
+	<div *ngIf="isLoading">Loading rides...</div>
+    <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Made on </th>
+				<th scope="col">Ride Date</th>
+				<th scope="col">Ride</th>
+				<th scope="col">Status</th>
+				<th scope="col">Action</th>
+			</tr>
+		</thead>
+		<tbody *ngFor="let reservation of reservations">
+				<tr>
+					<td>{{reservation.dateReservation | date:'short'}}</td>
+					<td>{{reservation.ride.dateRide | date:'short'}}</td>
+					<td>from {{reservation.ride.depart}} to {{reservation.ride.destination}}</td>
+					<td>{{reservation.status}}</td>
+					<td><i 
+						*ngIf="reservation.status === 'En-cours'"
+						class="bi bi-trash custom-delete-icon ms-3" 
+						(click)="cancelReservation(reservation)"
+						title="cancel reservation">
+					  </i></td>
+
+				</tr>
+		</tbody>
+	</table>
+</div>
