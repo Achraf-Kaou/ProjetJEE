@@ -28,10 +28,17 @@ export class HomeComponent {
   ListRides : Ride[] = []
   ListUser : User[] = []
   isSearching : boolean = false;
+  isLoading: boolean = true;
+  successMessage: string | null = null;
   openModal() {
     this.isModalVisible = true;
   }
   ngOnInit() {
+    const message = localStorage.getItem('successMessage');
+    if (message) {
+      this.successMessage = message;
+      localStorage.removeItem('successMessage');
+    }
     const userFromLocalStorage = localStorage.getItem('user');
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
@@ -56,8 +63,7 @@ export class HomeComponent {
                 }
               },
               (error: any) => {
-                console.error('SignIn error:', error);
-              
+                console.error('fetching not review error:', error);
               }
             );
           }else{
@@ -67,10 +73,11 @@ export class HomeComponent {
         } else {
           console.log('Aucun ride non évalué trouvé.');
         }
+        this.isLoading = false;
       },
       (error: any) => {
         console.error('SignIn error:', error);
-       
+        this.isLoading = false;
       }
     );
     

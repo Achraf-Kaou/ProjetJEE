@@ -27,7 +27,9 @@ export class ReviewComponent {
   selectedPassenger: any = null;
   @Input() passengerList!: Reservation[] ;
   newPassengerList: any= [];
-  @Input() ride !: Ride 
+  @Input() ride !: Ride ;
+  isProcessing: boolean = false;
+  errorMessage: string = '';
   ngOnInit() {
     // Exemple d'initialisation
     console.log("affichage fel review",this.passengerList)
@@ -55,7 +57,7 @@ export class ReviewComponent {
   }
 
   submitReview(reviewed : User) {
-    console.log(this.review);
+    this.isProcessing = true;
     const userFromLocalStorage = localStorage.getItem('user');
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
@@ -74,12 +76,14 @@ export class ReviewComponent {
     this.reviewService.addReview(this.review)
     .subscribe(
       (response: any) => {
-        console.log(response);
+        localStorage.setItem('successMessage', 'review added successfully!');
+        this.isProcessing = false;
         this.closeModal()
         this.router.navigate(['/home']);
       },
       (error: any) => {
-        console.error('SignIn error:', error);  
+        this.isProcessing = false;
+        this.errorMessage = 'Failed to add the review. Please try again.'; 
       }
     );
   }

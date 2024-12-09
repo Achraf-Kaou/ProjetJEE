@@ -7,15 +7,26 @@
   [user]="user">
 </app-review>
 <app-navbar (onListUsersUpdate)="handleListUsersUpdate($event)"></app-navbar>
-<div class="d-flex flex-row" >
-
-  <div class="filter-form" >
-    <app-filter-form (onListRidesUpdate)="handleListRidesUpdate($event)"></app-filter-form>
-  </div>
-
-  <div class="ride-list" >
-    <app-search-list *ngIf="isSearching" [users]="ListUser" class="d-flex justify-content-center"></app-search-list>
-    <app-ride-list [ListRides] ="ListRides"></app-ride-list>
-  </div>
+<div *ngIf="isLoading; else loaded" class="d-flex justify-content-center align-items-center my-3">
+	<div class="spinner-border text-primary me-3" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
 </div>
+<ng-template #loaded>
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ successMessage }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <div class="d-flex flex-row" >
+
+    <div class="filter-form" >
+      <app-filter-form (onListRidesUpdate)="handleListRidesUpdate($event)"></app-filter-form>
+    </div>
+
+    <div class="ride-list" >
+      <app-search-list *ngIf="isSearching" [users]="ListUser" class="d-flex justify-content-center"></app-search-list>
+      <app-ride-list [ListRides] ="ListRides"></app-ride-list>
+    </div>
+  </div>
+</ng-template>
 
