@@ -42,4 +42,8 @@ export class RideService {
   }
 
 
+  terminateRides(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/terminateRides`);
+  }
+
 }
