@@ -104,7 +104,7 @@
       </div>
   
       <!-- Second Row: List Group and Assignment -->
-      <div class="row">
+      <div *ngIf="isOwnerProfile" class="row">
         <!-- List Group -->
         <div class="col-lg-6 mb-4">
           <div class="card mb-6">
@@ -125,7 +125,20 @@
           </div>
         </div>
       </div>
+
+      <div *ngIf="!isOwnerProfile"class="row">
+        <div class="col-lg-12 mb-4">
+          <div class="card mb-6">
+            <div class="card-body p-3">
+              <h5 class="card-title">Ride history</h5><hr>
+              <app-ride-list-no-details [user]="user"></app-ride-list-no-details>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    
 </section>
 
 

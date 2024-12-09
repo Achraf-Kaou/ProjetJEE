@@ -67,9 +67,9 @@ public class RideServiceImp implements RideService{
         Timestamp now = new Timestamp(System.currentTimeMillis());
         for(Ride ride : rides){
             if (ride.getDateRide().before(now)) {
+                List<Reservation> reservations = reservationRepository.findReservationsByRide(ride);
                 ride.setStatus("Terminé");
                 rideRepository.save(ride);
-                List<Reservation> reservations = reservationRepository.findReservationsByRide(ride);
                 for (Reservation reservation : reservations){
                     reservation.setStatus("Terminé");
                     reservationRepository.save(reservation);

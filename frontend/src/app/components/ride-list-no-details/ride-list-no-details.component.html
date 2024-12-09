@@ -1,0 +1,47 @@
+<div *ngIf="isLoading; else loaded" class="d-flex justify-content-center align-items-center my-3">
+	<div class="spinner-border text-primary me-3" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
+</div>
+<ng-template #loaded>
+	<div class="container">
+		<div *ngIf="errorMessage" class="alert alert-danger my-3">{{ errorMessage }}</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Ride Date</th>
+					<th scope="col">Ride</th>
+                    <th scope="col">price</th>
+					<th scope="col">Status</th>
+					<th scope="col">stars</th>
+				</tr>
+			</thead>
+			<tbody *ngFor="let ride of rides">
+					<tr>
+						<td>{{ride.ride.dateRide| date:'short'}}</td>
+						<td>from {{ride.ride.depart}} to {{ride.ride.destination}}</td>
+						<td>{{ride.ride.price}}</td>
+						<td>{{ride.ride.status}}</td>
+						<td>
+                            <ngb-rating 
+                                [(rate)]="ride.review"
+                                [max]="5" 
+                                [readonly]="true">
+                                <ng-template let-fill="fill" let-index="index">
+                                    <i
+                                    class="bi-star-fill"
+                                    [ngStyle]="{
+                                        background: 'linear-gradient(to right, #ffc107 ' + fill + '%, #e4e5e9 ' + fill + '%)',
+                                        '-webkit-background-clip': 'text',
+                                        '-webkit-text-fill-color': 'transparent',
+                                        'font-size': '1.5em'
+                                    }"
+                                    ></i> 
+                                </ng-template>    
+                            </ngb-rating>
+                        </td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+</ng-template>

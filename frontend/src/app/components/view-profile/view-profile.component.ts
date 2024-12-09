@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { User } from '../../models/User';
 import { RideHistoryComponent } from "../ride-history/ride-history.component";
 import { ReservationHistoryComponent } from "../reservation-history/reservation-history.component";
@@ -8,15 +8,18 @@ import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RideListNoDetailsComponent } from "../ride-list-no-details/ride-list-no-details.component";
 
 @Component({
   selector: 'app-view-profile',
   standalone: true,
-  imports: [RideHistoryComponent, ReservationHistoryComponent, CommonModule, NgbRatingModule,RouterModule, ReactiveFormsModule],
+  imports: [RideHistoryComponent, ReservationHistoryComponent, CommonModule, NgbRatingModule, RouterModule, ReactiveFormsModule, RideListNoDetailsComponent],
   templateUrl: './view-profile.component.html',
   styleUrl: './view-profile.component.css'
 })
 export class ViewProfileComponent {
+  @Input() storedUser!: User;
+  userFromUrl!: User;
   user!: User;
   userReview!: number;
   isLoading: boolean = true;
@@ -47,10 +50,6 @@ export class ViewProfileComponent {
       this.successMessage = message;
       localStorage.removeItem('successMessage');
     }
-    const userFromLocalStorage = localStorage.getItem('user');
-    if (userFromLocalStorage) {
-      this.user = JSON.parse(userFromLocalStorage);
-    }
     let profileId = '';
     this.route.params.subscribe(params => {
       profileId = params['id']; // This gets the 'id' param from the URL
@@ -59,17 +58,31 @@ export class ViewProfileComponent {
     if (!this.isOwnerProfile) {
       this.userService.getUserById(profileId).subscribe({
         next: (user: User) => {
+          console.log(user)
           this.user = user;
+          this.getMeanReviewByUser(user);
         },
         error: (err: any) => {
           this.errorMessage = "can't find user"
         }
       })
+    } else {
+      this.user = this.storedUser
+      this.getMeanReviewByUser(this.storedUser);
     }
-    this.getMeanReviewByUser();
+    
   }
 
-  getMeanReviewByUser() {
+
+  isOwner(profileId: string): boolean {
+    if (this.storedUser && this.storedUser.idUser) {
+      return this.storedUser.idUser.toString() === profileId;
+    }
+    // If storedUser or storedUser.idUser is not defined, return false
+    return false;
+  }
+
+  getMeanReviewByUser(user : User) {
     this.reviewService.getMeanReviewByUser(this.user.idUser).subscribe({
       next: (response) => {
         console.log(response);
@@ -82,17 +95,7 @@ export class ViewProfileComponent {
       }
     })
   }
-  isOwner(profileId: string): boolean {
-    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
   
-    // Check if storedUser and storedUser.idUser exist before comparing
-    if (storedUser && storedUser.idUser) {
-      return storedUser.idUser.toString() === profileId;
-    }
-  
-    // If storedUser or storedUser.idUser is not defined, return false
-    return false;
-  }
   
   deleteProfile() {
     this.isProcessing = true;
