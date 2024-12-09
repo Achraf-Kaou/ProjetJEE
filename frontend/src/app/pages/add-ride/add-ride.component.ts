@@ -1,14 +1,12 @@
-import { CommonModule, JsonPipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { NgbAlert, NgbAlertModule, NgbDatepickerModule, NgbInputDatepicker, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { debounceTime, Subject, tap } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgbAlertModule, NgbDatepickerModule, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { Ride } from '../../models/Ride';
 import { RideService } from '../../services/ride.service';
 import { User } from '../../models/User';
 import { NavbarComponent } from "../../components/navbar/navbar.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-ride',
@@ -21,7 +19,10 @@ export class AddRideComponent {
     addRideForm !: FormGroup ;
     ride!:Ride;
     user !: User ;
-    constructor(private rideService: RideService) {}
+    isProcessing!: boolean;
+    errorMessage: string = "";
+    successMessage: string | null = null;
+    constructor(private rideService: RideService, private router: Router) {}
    
     ngOnInit(): void {
       this.addRideForm = new FormGroup({
@@ -36,6 +37,7 @@ export class AddRideComponent {
     }
   
     onSubmit(): void {
+      this.isProcessing = true;
       this.addRideForm.markAllAsTouched();
       const userFromLocalStorage = localStorage.getItem('user');
       if (userFromLocalStorage) {
@@ -63,15 +65,17 @@ export class AddRideComponent {
         };
         console.log(this.ride.dateRide)
         this.rideService.addRide(this.ride)
-        .subscribe(
-          (response: any) => {
-            console.log(response);
-            
+        .subscribe({
+          next: (response: any) => {
+            this.isProcessing = false;
+            localStorage.setItem('successMessage', 'ride added successfully!');
+            this.router.navigateByUrl('/home'); 
           },
-          (error: any) => {
-            console.error('Registration error:', error);
+          error: (error: any) => {
+            this.isProcessing = false;
+            this.errorMessage = "failed to add ride try again later!";
           }
-        );
+        });
         
       }
     }
