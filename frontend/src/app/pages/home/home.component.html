@@ -6,7 +6,7 @@
   [isDriver]="isDriver" 
   [user]="user">
 </app-review>
-<app-navbar (onListUsersUpdate)="handleListUsersUpdate($event)"></app-navbar>
+<app-navbar ></app-navbar>
 <div class="d-flex flex-row" >
 
   <div class="filter-form" >
@@ -14,8 +14,11 @@
   </div>
 
   <div class="ride-list" >
-    <app-search-list *ngIf="isSearching" [users]="ListUser" class="d-flex justify-content-center"></app-search-list>
     <app-ride-list [ListRides] ="ListRides"></app-ride-list>
   </div>
 </div>
 
+<button class="add-button" (click)="navigateToAddRide()">
+  <span class="tooltip">Add a Ride</span>
+  +
+</button>

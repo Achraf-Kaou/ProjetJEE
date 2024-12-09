@@ -36,11 +36,16 @@ public class ReviewServiceImp implements ReviewService {
     public ResponseEntity<Review> addReview(Review review) {
         Optional<User> managedReviewer = userRepository.findById(review.getReviewer().getIdUser());
         Optional<User> managedReviewed = userRepository.findById(review.getReviewed().getIdUser());
-        if (managedReviewer.isPresent() && managedReviewed.isPresent()) {
-            review.setReviewer(managedReviewer.get());
-            review.setReviewed(managedReviewed.get());
-            review.setDateReview((Timestamp.valueOf(LocalDateTime.now())));
-            return ResponseEntity.status(HttpStatus.OK).body(reviewRepository.save(review));
+        Optional<Ride> oRide = rideRepository.findById(review.getRide().getIdRide());
+        if (managedReviewer.isPresent() && managedReviewed.isPresent() && oRide.isPresent()) {
+            Optional<Review> testReview = reviewRepository.findReviewByReviewerAndReviewedAndRide(review.getReviewer(),review.getReviewed(),review.getRide());
+            System.out.println(testReview.isPresent());
+            if(testReview.isEmpty()){
+                review.setReviewer(managedReviewer.get());
+                review.setReviewed(managedReviewed.get());
+                review.setDateReview((Timestamp.valueOf(LocalDateTime.now())));
+                return ResponseEntity.status(HttpStatus.OK).body(reviewRepository.save(review));
+            }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
@@ -125,7 +130,6 @@ public class ReviewServiceImp implements ReviewService {
 
     @Override
     public ResponseEntity<List<Ride>> getNotReviewedRides(Long idUser) {
-        ///terminateRides();
         List<Ride> notReviewedRides = new ArrayList<>();
         Optional<User> user = userRepository.findById(idUser);
         if(user.isPresent()) {
@@ -135,26 +139,25 @@ public class ReviewServiceImp implements ReviewService {
             for (Reservation reservation : reservations){
                 Optional<Ride> ride = rideRepository.findById(reservation.getRide().getIdRide());
                 if(ride.isPresent()) {
-                    Optional<Review> review = reviewRepository.findReviewByReviewerAndRide(user.get() , ride.get());
-                    if(review.isEmpty()) {
-                        notReviewedRides.add(ride.get());
+                    if(ride.get().getDriver() != null){
+                        Optional<Review> review = reviewRepository.findReviewByReviewerAndRide(user.get() , ride.get());
+                        if(review.isEmpty()) {
+                            notReviewedRides.add(ride.get());
+                        }
                     }
                 }
             }
-
             for (Ride ride : rides){
-                ResponseEntity<List<Reservation>> response = getNotReviewedPassengerByRide(ride.getIdRide());
-                if (response.getStatusCode() == HttpStatus.OK) {
-
-                    List<Reservation> res = response.getBody();
-                    if (res != null && !res.isEmpty()) {
-                        notReviewedRides.add(ride);
+                if(ride.getDriver() != null){
+                    ResponseEntity<List<Reservation>> response = getNotReviewedPassengerByRide(ride.getIdRide());
+                    if (response.getStatusCode() == HttpStatus.OK) {
+                        List<Reservation> res = response.getBody();
+                        if (res != null && !res.isEmpty() ){
+                            notReviewedRides.add(ride);
+                        }
                     }
                 }
-                //Optional<Review> review = reviewRepository.findReviewByReviewerAndRide(user.get() , ride);
-                //if(review.isEmpty()) {
-                //   notReviewedRides.add(ride);
-                //}
+
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body(notReviewedRides);

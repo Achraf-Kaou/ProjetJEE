@@ -40,6 +40,12 @@
                 formControlName="maxPrice"
                 placeholder="Enter max price"
               />
+              <!-- Message d'erreur -->
+              <div *ngIf="filterForm.get('maxPrice')?.invalid && filterForm.get('maxPrice')?.touched" class="text-danger">
+                <small *ngIf="filterForm.get('maxPrice')?.errors?.['min']">
+                  The price must be positive.
+                </small>
+              </div>
             </div>
   
             <!-- Date -->

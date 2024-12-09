@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, SimpleChanges } from '@angular/core';
 import { User } from '../../models/User';
 import { RideHistoryComponent } from "../ride-history/ride-history.component";
 import { ReservationHistoryComponent } from "../reservation-history/reservation-history.component";
@@ -8,11 +8,12 @@ import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
   selector: 'app-view-profile',
   standalone: true,
-  imports: [RideHistoryComponent, ReservationHistoryComponent, CommonModule, NgbRatingModule,RouterModule, ReactiveFormsModule],
+  imports: [RideHistoryComponent, ReservationHistoryComponent, CommonModule, NgbRatingModule, RouterModule, ReactiveFormsModule],
   templateUrl: './view-profile.component.html',
   styleUrl: './view-profile.component.css'
 })
@@ -29,10 +30,24 @@ export class ViewProfileComponent {
   editUserForm!: FormGroup;
   showPassword!: boolean;
   formError: boolean = false;
-
+  profileId : string ='';
   constructor(private reviewService: ReviewService, private route: ActivatedRoute, private router: Router, private userService: UserService){}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['profileId']) {
+      // Si l'ID de l'utilisateur change, rechargez les données de l'utilisateur
+      this.loadUserData(this.profileId);
+    }
+  }
+  ngOnInit(): void {
+    
+    this.route.params.subscribe(params => {
+      this.profileId = params['id']; 
+      this.isOwnerProfile = this.isOwner(this.profileId);
+      this.loadUserData(this.profileId);
+    });
 
-  ngOnInit() {
+  }
+  loadUserData(profileId : string): void {
     this.editUserForm = new FormGroup({
       email: new FormControl('',[Validators.required, Validators.email]),
       password: new FormControl('',[Validators.required ,Validators.minLength(8)]),
@@ -51,11 +66,7 @@ export class ViewProfileComponent {
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
     }
-    let profileId = '';
-    this.route.params.subscribe(params => {
-      profileId = params['id']; // This gets the 'id' param from the URL
-      this.isOwnerProfile = this.isOwner(profileId);
-    });
+    
     if (!this.isOwnerProfile) {
       this.userService.getUserById(profileId).subscribe({
         next: (user: User) => {

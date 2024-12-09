@@ -10,6 +10,7 @@ import { RideHistoryComponent } from './components/ride-history/ride-history.com
 import { ReservationHistoryComponent } from './components/reservation-history/reservation-history.component';
 import { ProfilComponent } from './pages/profil/profil.component';
 import { AddRideComponent } from './pages/add-ride/add-ride.component';
+import { UpdateRideComponent } from './components/update-ride/update-ride.component';
 import { FilterFormComponent } from './components/filter-form/filter-form.component';
 import { SearchListComponent } from './components/search-list/search-list.component';
 
@@ -25,6 +26,7 @@ export const routes: Routes = [
     { path: 'rideshistory', component: RideHistoryComponent },
     { path: 'reservationhistory', component: ReservationHistoryComponent },
     { path: 'addRide', component: AddRideComponent },
+    { path: 'updateRide', component: UpdateRideComponent },
     { path: 'filterform', component: FilterFormComponent },
     { path: 'searchlist', component: SearchListComponent },
 

@@ -51,11 +51,16 @@ public class RideServiceImp implements RideService{
         System.out.println("destination="+destination);
         System.out.println("price="+price);
         System.out.println("dateRide="+dateRide);
-
+        List<Ride> ListRide = new ArrayList<>();
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Timestamp finalDateRide = (dateRide != null && dateRide.after(now)) ? dateRide : now;
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(rideRepository.findRidesByFilters(depart, destination, price, finalDateRide));
+        List<Ride> rides  = rideRepository.findRidesByFilters(depart, destination, price, finalDateRide);
+        for(Ride ride : rides) {
+            if(ride.getDriver()!=null){
+                ListRide.add(ride);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ListRide);
     }
 
 
@@ -63,13 +68,13 @@ public class RideServiceImp implements RideService{
     @Override
     public ResponseEntity<?> terminateRides() {
         List<Ride> rides = rideRepository.findByStatus("En-Cours");
-        System.out.println(rides);
+        System.out.println("terminate rides :"+rides);
         Timestamp now = new Timestamp(System.currentTimeMillis());
         for(Ride ride : rides){
             if (ride.getDateRide().before(now)) {
+                List<Reservation> reservations = reservationRepository.findReservationsByRide(ride);
                 ride.setStatus("Terminé");
                 rideRepository.save(ride);
-                List<Reservation> reservations = reservationRepository.findReservationsByRide(ride);
                 for (Reservation reservation : reservations){
                     reservation.setStatus("Terminé");
                     reservationRepository.save(reservation);
@@ -89,7 +94,7 @@ public class RideServiceImp implements RideService{
             }else{
                 ride.setPlaces(ride.getPlaces()+1);
             }
-            notificationService.notifyDriverAboutRidePlaces(ride);
+
             return ResponseEntity.status(HttpStatus.OK).body(rideRepository.save(ride));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -114,8 +119,11 @@ public class RideServiceImp implements RideService{
 
     @Override
     public ResponseEntity<Ride> updateRide(Ride ride) {
-        notificationService.notifyPassengersAboutRideUpdate(ride);
-        return ResponseEntity.status(HttpStatus.OK).body(rideRepository.save(ride));
+        if(ride.getStatus().equals("En-Cours")){
+            notificationService.notifyPassengersAboutRideUpdate(ride);
+            return ResponseEntity.status(HttpStatus.OK).body(rideRepository.save(ride));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
     @Override
@@ -125,7 +133,11 @@ public class RideServiceImp implements RideService{
 
     @Override
     public ResponseEntity<Ride> addRide(Ride ride) {
-        ride.setStatus("En-Cours");
-        return ResponseEntity.status(HttpStatus.OK).body(rideRepository.save(ride));
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        if (ride.getDateRide().after(now)) {
+            ride.setStatus("En-Cours");
+            return ResponseEntity.status(HttpStatus.OK).body(rideRepository.save(ride));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 }

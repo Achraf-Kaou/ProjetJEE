@@ -1,4 +1,4 @@
- .container-fluid {
+.container-fluid {
     height: 90vh; /* Prend 90% de la hauteur de la fenêtre */
     display: flex;
     flex-direction: column;
@@ -11,4 +11,3 @@
     color: #dc3545;
     display: block;
   }
-  

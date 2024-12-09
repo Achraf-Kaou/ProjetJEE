@@ -76,7 +76,7 @@ export class ReviewComponent {
       (response: any) => {
         console.log(response);
         this.closeModal()
-        this.router.navigate(['/home']);
+        window.location.reload();
       },
       (error: any) => {
         console.error('SignIn error:', error);  

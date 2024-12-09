@@ -7,6 +7,7 @@ import { ReservationService } from '../../services/reservation.service';
 import { Reservation } from '../../models/Reservation';
 
 import { dateTimestampProvider } from 'rxjs/internal/scheduler/dateTimestampProvider';
+import { HttpParams } from '@angular/common/http';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class RideListComponent implements OnInit{
   constructor(private rideService: RideService, private reservationService: ReservationService){}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['ListRides']) {
-      this.rides=this.ListRides
+      this.rides = this.ListRides.filter((ride: Ride) => ride.driver.idUser !== this.user.idUser);
       console.log('Les données ont été mises à jour:', this.rides);
     }
   }
@@ -45,6 +46,7 @@ export class RideListComponent implements OnInit{
     }
     if(this.ListRides.length === 0){
       this.getAllRide();
+      
     }else{
       this.rides=this.ListRides
       this.loadReservationStatuses();
@@ -52,13 +54,16 @@ export class RideListComponent implements OnInit{
   }
 
   getAllRide() {
-    this.rideService.getAllRide().subscribe({
+    let params = new HttpParams();
+    this.rideService.all(params).subscribe({
       next: (data: Ride[]) => {
         const now = Date.now();
         this.rides = data.filter((ride: Ride) => {
           const rideDate = new Date(ride.dateRide).getTime(); 
-          return rideDate > now;
+          console.log(ride.idRide,ride.status)
+          return rideDate > now  && ride.driver.idUser !== this.user.idUser;
         });
+        console.log(this.rides)
         this.loadReservationStatuses();
       },
       error: (error) => {

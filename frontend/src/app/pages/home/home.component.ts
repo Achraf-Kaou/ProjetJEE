@@ -9,17 +9,17 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from "../../components/navbar/navbar.component";
 import { RideListComponent } from "../../components/ride-list/ride-list.component";
 import { FilterFormComponent } from "../../components/filter-form/filter-form.component";
-import { SearchListComponent } from "../../components/search-list/search-list.component";
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ReviewComponent, CommonModule, NavbarComponent, RideListComponent, FilterFormComponent, SearchListComponent],
+  imports: [ReviewComponent, CommonModule, NavbarComponent, RideListComponent, FilterFormComponent ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  constructor(private reviewService: ReviewService,private reservationService: ReservationService){}
+  constructor(private reviewService: ReviewService,private router: Router){}
   user !: User ;
   isDriver : boolean=false;
   passengerList: Reservation[] = [];
@@ -79,9 +79,7 @@ export class HomeComponent {
     this.ListRides = rides;
     console.log(this.ListRides);
   }
-  handleListUsersUpdate(users: User[]) {
-    this.ListUser = users;
-    this.isSearching=true;
-    console.log(this.ListUser);
+  navigateToAddRide() {
+    this.router.navigate(['/addRide']); 
   }
 }
