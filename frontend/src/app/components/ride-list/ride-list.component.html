@@ -8,7 +8,7 @@
   <div class="container d-flex flex-column align-items-center justify-content-center">
     
     <!-- Error message -->
-    <div *ngIf="errorMessage" class="alert alert-danger my-3">{{ errorMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger fade show" role="alert">{{ errorMessage }}</div>
     
     <!-- Success message -->
     <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">

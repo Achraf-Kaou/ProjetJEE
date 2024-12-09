@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Ride } from '../../models/Ride';
 import { RideService } from '../../services/ride.service';
@@ -16,7 +16,7 @@ import { dateTimestampProvider } from 'rxjs/internal/scheduler/dateTimestampProv
   templateUrl: './ride-list.component.html',
   styleUrl: './ride-list.component.css'
 })
-export class RideListComponent implements OnInit{
+export class RideListComponent implements OnInit, OnChanges{
   /* @Input()  */user!: User
   rides: Ride[] = [];
   isLoading: boolean = true;
@@ -24,13 +24,17 @@ export class RideListComponent implements OnInit{
   errorMessage: string = '';
   successMessage: string | null = null;
   reservationStatus: Map<object | undefined, string | null> = new Map();
-  @Input() ListRides !: Ride[]
+  @Input() ListRides : Ride[] = [];
+  changes: number = 0;
 
   constructor(private rideService: RideService, private reservationService: ReservationService){}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['ListRides']) {
       this.rides=this.ListRides
       console.log('Les données ont été mises à jour:', this.rides);
+      if (this.ListRides.length === 0 && this.changes>0) {
+        this.errorMessage = "no Ride found with this filter!";
+      }
     }
   }
   ngOnInit() {
@@ -43,12 +47,8 @@ export class RideListComponent implements OnInit{
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
     }
-    if(this.ListRides.length === 0){
-      this.getAllRide();
-    }else{
-      this.rides=this.ListRides
-      this.loadReservationStatuses();
-    }
+    this.getAllRide();
+    this.changes ++;
   }
 
   getAllRide() {

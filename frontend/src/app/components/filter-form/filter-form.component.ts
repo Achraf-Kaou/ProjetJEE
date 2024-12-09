@@ -20,7 +20,8 @@ export class FilterFormComponent {
   constructor(private rideService: RideService) {}
   // Time model for the timepicker
   time = { hour: 12, minute: 0 };
-  onListRidesUpdate = output<Ride[]>();
+  @Output() onListRidesUpdate = new EventEmitter<Ride[]>();
+  isProcessing: boolean = false;
   
   ngOnInit(): void {
     this.filterForm = new FormGroup({
@@ -33,7 +34,7 @@ export class FilterFormComponent {
   }
 
   onSubmit(): void {
-     
+     this.isProcessing = true;
     const depart = this.filterForm.get("depart")?.value || '';
     const destination = this.filterForm.get("destination")?.value || '';
     const maxPrice = this.filterForm.get("maxPrice")?.value || '';
@@ -67,9 +68,11 @@ export class FilterFormComponent {
         next:(response) => {
           console.log(response);
           this.onListRidesUpdate.emit(response); 
+          this.isProcessing = false;
         },
         error:(error) => {
           console.error('filter error:', error);
+          this.isProcessing = false;
         },
     });
     
