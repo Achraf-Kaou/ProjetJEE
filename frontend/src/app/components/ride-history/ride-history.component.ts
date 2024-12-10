@@ -68,7 +68,7 @@ export class RideHistoryComponent implements OnInit {
   }
   getRidesWithReservations() {
     const defaultReview: Review = {
-      id: 0,
+      idReview: 0,
       ride: {} as Ride, // Provide an empty object cast as `Ride`
       reviewer: null,
       reviewed: null,

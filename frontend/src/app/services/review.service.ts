@@ -45,4 +45,5 @@ export class ReviewService {
     const url = `${this.apiUrl}/getReviewByReviewedAndRide/${idPassenger?.toString()}/${idRide?.toString()}`;
     return this.http.get<Review>(url);
   }
+  
 }
