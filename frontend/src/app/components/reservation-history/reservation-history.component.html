@@ -29,12 +29,16 @@
 				</tr>
 			</thead>
 			<tbody *ngFor="let reservation of reservations">
-					<tr>
-						<td>{{reservation.reservation.dateReservation| date:'short'}}</td>
-						<td>{{reservation.reservation.ride.dateRide | date:'short'}}</td>
-						<td>from {{reservation.reservation.ride.depart}} to {{reservation.reservation.ride.destination}}</td>
-						<td>{{reservation.reservation.status}}</td>
-						<td>
+				<tr>
+					<td>{{ reservation.reservation.dateReservation | date: 'short' }}</td>
+					<td>
+						{{ reservation.reservation.ride?.dateRide ? (reservation.reservation.ride.dateRide | date: 'short') : 'deleted' }}					</td>
+					<td>
+						from {{ reservation.reservation.ride?.depart || 'unknown' }} 
+						to {{ reservation.reservation.ride?.destination || 'unknown' }}
+					</td>
+					<td>{{ reservation.reservation.status }}</td>
+					<td>
 							<button 
 								*ngIf="reservation.reservation.status === 'En-cours'" 
 								class="btn btn-danger btn-sm"

@@ -59,7 +59,6 @@ export class RideListComponent implements OnInit, OnChanges{
     this.rideService.all(params).subscribe({
       next: (data: Ride[]) => {
         const now = Date.now();
-        console.log(data);
         this.rides = data.filter((ride: Ride) => {
           console.log(ride)
           if (!ride || !ride.dateRide) return false;
@@ -67,7 +66,11 @@ export class RideListComponent implements OnInit, OnChanges{
           console.log(ride.idRide,ride.status)
           return rideDate > now  && ride.driver?.idUser !== this.user.idUser;
         });
-        console.log(this.rides)
+        if (data.length === 0) {
+          this.errorMessage = "no rides found"
+          this.isLoading = false;
+          return
+        }
         this.loadReservationStatuses();
       },
       error: (error) => {

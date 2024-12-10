@@ -139,7 +139,7 @@
           <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
         </div>
         <div class="modal-body">
-          <p>Are you sure you want to delete the ride from <b>{{ selectedRide.depart }}</b> to <b>{{ selectedRide.destination }}</b>?</p>
+          <p>Are you sure you want to delete the ride from <b>{{ selectedRide?.depart || ""}}</b> to <b>{{ selectedRide?.destination || "" }}</b>?</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>

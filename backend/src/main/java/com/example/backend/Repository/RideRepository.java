@@ -1,6 +1,7 @@
 package com.example.backend.Repository;
 
 
+import com.example.backend.Entity.Review;
 import com.example.backend.Entity.Ride;
 import com.example.backend.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

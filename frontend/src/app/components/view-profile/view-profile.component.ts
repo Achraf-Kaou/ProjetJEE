@@ -113,12 +113,18 @@ export class ViewProfileComponent {
     this.userService.deleteUser(this.user.idUser).subscribe({
       next: () => {
         this.closeDeleteModal();
-        window.location.reload();
+        localStorage.removeItem('user');
+        this.router.navigateByUrl('/signIn');
         this.isProcessing = false;
       },
       error: (err: any) => {
+        if (err.status === 200){
+          localStorage.removeItem('user');
+          this.router.navigateByUrl('/signIn');
+        }else {
+          this.errorMessage = "can't delete, try again later"
+        }
         this.isProcessing = false;
-        this.errorMessage = "can't delete, try again later"
         this.closeDeleteModal();
       }
     });

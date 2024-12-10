@@ -49,7 +49,7 @@ export class ReservationHistoryComponent {
   
         // Use forkJoin to fetch reviews for each reservation
         const reservationWithReviews$ = reservations.map((reservation) =>
-          this.reviewService.getReviewByReviewedAndRide(user.idUser, reservation.ride.idRide).pipe(
+          this.reviewService.getReviewByReviewedAndRide(user.idUser, reservation.ride?.idRide).pipe(
             catchError(() => 
               // Return a default review in case of error
               of({
@@ -69,8 +69,8 @@ export class ReservationHistoryComponent {
         forkJoin(reservationWithReviews$).subscribe({
           next: (results) => {
             this.reservations = results.sort((a, b) => {
-              const dateA = new Date(a.reservation.ride.dateRide).getTime() ; // Convert to Date object
-              const dateB = new Date(b.reservation.ride.dateRide).getTime() ; // Convert to Date object
+              const dateA = new Date(a.reservation.ride?.dateRide).getTime() ; // Convert to Date object
+              const dateB = new Date(b.reservation.ride?.dateRide).getTime() ; // Convert to Date object
               return dateB - dateA; // Sort in ascending order
             });;
             this.isLoading = false;

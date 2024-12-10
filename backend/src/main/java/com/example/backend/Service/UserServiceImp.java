@@ -97,42 +97,48 @@ public class UserServiceImp implements UserService{
         Optional<User> ouser = userRepository.findById(idUser);
         if (ouser.isPresent()) {
             User user = ouser.get();
+            // setting user null where he is a reviewer or a reviewed to keep track
+            List<Review> reviewer = reviewRepository.findReviewByReviewer(user);
+            if (!reviewer.isEmpty()) {
+                for (Review review : reviewer) {
+                    review.setReviewer(null);
+                    reviewRepository.save(review);
+                }
+            }
+            List<Review> reviewed = reviewRepository.findReviewByReviewed(user);
+            if (!reviewed.isEmpty()) {
+                for (Review review : reviewed) {
+                    review.setReviewed(null);
+                    reviewRepository.save(review);
+                }
+            }
             // canceling all reservations for this user and setting value of passanger null
             List<Reservation> reservations = reservationRepository.findReservationsByPassenger(user);
-            for (Reservation reservation : reservations) {
-                if (reservation.getStatus().equals("En-cours")) {
-                    reservationService.cancelReservation(reservation.getIdReservation());
+            if (!reservations.isEmpty()) {
+                for (Reservation reservation : reservations) {
+                    if (reservation.getStatus().equals("En-cours")) {
+                        reservationService.cancelReservation(reservation.getIdReservation());
+                    }
+                    reservation.setPassenger(null);
+                    reservationRepository.save(reservation);
                 }
-                reservation.setPassenger(null);
-                reservationRepository.save(reservation);
             }
             // deleting rides that did not happen
             // or keeping the ride setting the driver for null if the ride happened (bch yo3ed lel user acces lel historique)
             List<Ride> rides = rideRepository.findByDriver(user);
             Timestamp now = new Timestamp(System.currentTimeMillis());
-            for (Ride ride : rides) {
-                if (ride.getDateRide().before(now)) {
-                    ride.setDriver(null);
-                    rideRepository.save(ride);
+            if (!reviewer.isEmpty()) {
+                for (Ride ride : rides) {
+                    if (ride.getDateRide().before(now)) {
+                        ride.setDriver(null);
+                        rideRepository.save(ride);
 
-                } else {
-                    System.out.println("Ride " + ride);
-                    rideService.deleteRide(ride.getIdRide());
-                    System.out.println("ok2");
+                    } else {
+                        System.out.println("Ride " + ride);
+                        rideService.deleteRide(ride.getIdRide());
 
+                    }
                 }
-            }
-            System.out.println("ok");
-            // setting user null where he is a reviewer or a reviewed to keep track
-            List<Review> reviewer = reviewRepository.findReviewByReviewer(user);
-            for (Review review : reviewer) {
-                review.setReviewer(null);
-                reviewRepository.save(review);
-            }
-            List<Review> reviewed = reviewRepository.findReviewByReviewed(user);
-            for (Review review : reviewed) {
-                review.setReviewed(null);
-                reviewRepository.save(review);
             }
             userRepository.deleteById(idUser);
             return ResponseEntity.ok().body("User deleted successfully");

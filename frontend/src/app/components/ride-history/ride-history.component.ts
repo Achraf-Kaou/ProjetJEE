@@ -11,6 +11,7 @@ import { User } from '../../models/User';
 import { ReviewService } from '../../services/review.service';
 import { Review } from '../../models/Review';
 import { UpdateRideComponent } from "../update-ride/update-ride.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ride-history',
@@ -38,7 +39,7 @@ export class RideHistoryComponent implements OnInit {
   selectedRide!: Ride ;
   isRides: boolean = false;
 
-  constructor(private rideService: RideService, private reservationService: ReservationService, private reviewService : ReviewService) {}
+  constructor(private rideService: RideService, private reservationService: ReservationService, private reviewService : ReviewService, private router: Router) {}
 
   ngOnInit(): void {
     const message = localStorage.getItem('successMessage');
@@ -98,7 +99,7 @@ export class RideHistoryComponent implements OnInit {
                 }
   
                 const reservationReviewsRequests = reservations.map((reservation) =>
-                  this.reviewService.getReviewByReviewedAndRide(reservation.passenger.idUser, ride.idRide).pipe(
+                  this.reviewService.getReviewByReviewedAndRide(reservation.passenger?.idUser, ride.idRide).pipe(
                     map((review) => ({
                       reservation,
                       review, // Add the review for the passenger
@@ -149,14 +150,14 @@ export class RideHistoryComponent implements OnInit {
   deleteRide(): void {
     this.isProcessing = true;
     if (this.selectedRide) {
-      this.rideService.deleteRide(this.selectedRide.idRide).subscribe({
-        next: (response) => {
+      this.rideService.deleteRide(this.selectedRide.idRide).subscribe(
+        (response) => {
           this.closeDeleteModal();
-          localStorage.setItem('successMessage', 'Reservation added successfully!');
+          localStorage.setItem('successMessage', 'ride deleted successfully!');
           this.isProcessing = false;
-          window.location.reload();
+          this.router.navigateByUrl(`/profil/${this.user.idUser}`);
         },
-        error :(error) => {
+        (error) => {
           console.error('Failed to delete ride:', error);
           if (error.status === 401){
             this.errorMessage = "can not delete a passed ride";
@@ -164,10 +165,14 @@ export class RideHistoryComponent implements OnInit {
           if (error.status === 404){
             this.errorMessage = "ride not found";
           }
+          if (error.status === 200){
+            localStorage.setItem('successMessage', 'ride deleted successfully!');
+            window.location.reload();
+          }
           this.isProcessing = false;
           this.closeDeleteModal();
         }
-      });}
+      );}
   }
   // Opens the delete modal
   openDeleteModal(ride: Ride): void {

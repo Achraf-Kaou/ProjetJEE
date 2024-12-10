@@ -18,4 +18,6 @@ public interface ReviewRepository extends JpaRepository<Review,Long>{
     Optional<Review> findReviewByReviewerAndReviewedAndRide(User reviewer ,User reviewed, Ride ride);
 
     Optional<Review> findReviewByReviewedAndRide(User reviewed, Ride ride);
+
+    List<Review> findByRide(Ride ride);
 }
