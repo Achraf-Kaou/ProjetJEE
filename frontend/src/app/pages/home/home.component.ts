@@ -10,11 +10,12 @@ import { NavbarComponent } from "../../components/navbar/navbar.component";
 import { RideListComponent } from "../../components/ride-list/ride-list.component";
 import { FilterFormComponent } from "../../components/filter-form/filter-form.component";
 import { Router, RouterModule } from '@angular/router';
+import { AddRideComponent } from "../add-ride/add-ride.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ReviewComponent, CommonModule, NavbarComponent, RideListComponent, FilterFormComponent ],
+  imports: [ReviewComponent, CommonModule, NavbarComponent, RideListComponent, FilterFormComponent, AddRideComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -30,6 +31,7 @@ export class HomeComponent {
   isSearching : boolean = false;
   isLoading: boolean = true;
   successMessage: string | null = null;
+  isRideModalOpen = false;
   openModal() {
     this.isModalVisible = true;
   }
@@ -88,5 +90,12 @@ export class HomeComponent {
   }
   navigateToAddRide() {
     this.router.navigate(['/addRide']); 
+  }
+  openRideModal(): void {
+    this.isRideModalOpen = true; // Open the modal
+  }
+
+  closeRideModal(): void {
+    this.isRideModalOpen = false;
   }
 }

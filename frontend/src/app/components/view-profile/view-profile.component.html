@@ -183,7 +183,7 @@
     [class.show]="isEditModalOpen"
     [ngStyle]="{ display: isEditModalOpen ? 'block' : 'none' }"
     aria-hidden="true"
-    (click)="closeDeleteModal()"
+    (click)="closeEditModal()"
 >
     <div class="modal-dialog modal-lg" role="document" (click)="$event.stopPropagation()">
         <div *ngIf="isProcessing" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-3">

@@ -1,6 +1,4 @@
-<div class="">
-  <app-navbar></app-navbar>
-  <div class="container-fluid  d-flex justify-content-center">
+<div>
     <div *ngIf="errorMessage" class="alert alert-danger my-3">{{ errorMessage }}</div>
 		<div 
 			*ngIf="isProcessing" 
@@ -10,12 +8,6 @@
 			</div>
 		</div>
       <div class="row justify-content-center align-items-center w-100">
-        <div class="col-md-10">
-          <div class="card shadow">
-            <div class="card-header bg-primary text-white text-center">
-              <h3>Add a Ride</h3>
-            </div>
-            <div class="card-body">
               <form [formGroup]="addRideForm" (ngSubmit)="onSubmit()">
                 
     
@@ -204,8 +196,4 @@
               </form>
             </div>
           </div>
-        </div>
-      </div>
-  </div>
-</div>
   

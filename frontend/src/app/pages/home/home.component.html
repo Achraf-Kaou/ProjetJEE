@@ -29,7 +29,29 @@
   </div>
 </ng-template>
 
-<button class="add-button" (click)="navigateToAddRide()">
+<button class="add-button" (click)="openRideModal()">
   <span class="tooltip">Add a Ride</span>
   +
 </button>
+
+<div
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    [class.show]="isRideModalOpen"
+    [ngStyle]="{ display: isRideModalOpen ? 'block' : 'none' }"
+    aria-hidden="true"
+    (click)="closeRideModal()"
+>
+    <div class="modal-dialog modal-lg" role="document" (click)="$event.stopPropagation()">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Ride</h5>
+            <button type="button" class="btn-close" (click)="closeRideModal()"></button>
+          </div>
+          <div class="modal-body">
+            <app-add-ride></app-add-ride>
+          </div>
+        </div>
+      </div>
+</div>

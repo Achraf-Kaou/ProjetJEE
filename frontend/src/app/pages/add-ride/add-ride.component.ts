@@ -88,7 +88,7 @@ export class AddRideComponent {
           next: (response: any) => {
             this.isProcessing = false;
             localStorage.setItem('successMessage', 'ride added successfully!');
-            this.router.navigateByUrl('/home'); 
+            window.location.reload(); 
           },
           error: (error: any) => {
             this.isProcessing = false;
