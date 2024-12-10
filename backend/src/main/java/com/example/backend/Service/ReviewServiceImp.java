@@ -113,7 +113,17 @@ public class ReviewServiceImp implements ReviewService {
         Optional<Ride> oRide = rideRepository.findById(idRide);
         if(oRide.isPresent()) {
             Ride ride = oRide.get();
-            List<Review> reviews = reviewRepository.findReviewByRide(ride);
+            if (ride.getDriver() == null || ride.getDriver().getIdUser() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(null); // Or return a meaningful message
+            }
+
+            Long driverId = ride.getDriver().getIdUser();
+
+            // Filter out reviews where the reviewer is the driver
+            List<Review> reviews = reviewRepository.findReviewByRide(ride).stream()
+                    .filter(review -> !review.getReviewer().getIdUser().equals(driverId))
+                    .toList();
             return ResponseEntity.status(HttpStatus.OK).body(reviews);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

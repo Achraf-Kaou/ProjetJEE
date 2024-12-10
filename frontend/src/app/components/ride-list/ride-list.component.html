@@ -1,3 +1,4 @@
+<!-- Loading Spinner -->
 <div *ngIf="isLoading; else loaded" class="d-flex justify-content-center align-items-center my-3">
   <div class="spinner-border text-primary me-3" role="status">
     <span class="visually-hidden">Loading...</span>
@@ -6,101 +7,114 @@
 
 <ng-template #loaded>
   <div class="container d-flex flex-column align-items-center justify-content-center mt-5" style="width: 80%">
-    
-    <!-- Error message -->
-    <div *ngIf="errorMessage" class="alert alert-danger fade show" role="alert">{{ errorMessage }}</div>
-    
-    <!-- Success message -->
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger fade show" role="alert">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Success Message -->
     <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
       {{ successMessage }}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
-    <!-- Loading state for the entire page -->
-    <div *ngIf="isProcessing" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-2">
+    <!-- Page Processing Spinner -->
+    <div *ngIf="isProcessing" 
+         class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-2">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Processing...</span>
       </div>
     </div>
 
     <!-- Ride Cards -->
-    <div *ngFor="let ride of rides" class="card mb-3 w-100" >
-      <div class="row g-0">
-        <div class="col-md-auto">
-          <img src="images/ride3.png" alt="ride" class="img-fluid rounded-start" style="height: 150px; width: 220px" />
-        </div>
-        <div class="col-md">
-          <div class="card-body">
-            <!-- Title and User Info Row -->
-            <div class="">
-              <h5 class="card-title m-0">
-                From <strong>{{ ride.ride.depart }}</strong> to <strong>{{ ride.ride.destination }}</strong>
-              </h5>
-              <div class="">
-                <img src="images/profile.png" alt="profile" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px" />
-                <small class="text-muted">
-                  by {{ ride.ride.driver?.firstName || "Unknown" }} {{ ride.ride.driver?.lastName || "Driver" }} 
-                </small>
-              </div>
-              <ngb-rating 
-                                [(rate)]="ride.review"
-                                [max]="5" 
-                                [readonly]="true">
-                                <ng-template let-fill="fill" let-index="index">
-                                    <i
-                                    class="bi-star-fill"
-                                    [ngStyle]="{
-                                        background: 'linear-gradient(to right, #ffc107 ' + fill + '%, #e4e5e9 ' + fill + '%)',
-                                        '-webkit-background-clip': 'text',
-                                        '-webkit-text-fill-color': 'transparent',
-                                        'font-size': '1.5em'
-                                    }"
-                                    ></i> 
-                                </ng-template>    
-                            </ngb-rating>
-            </div>
+<div *ngFor="let ride of rides" class="card mb-3 w-100">
+  <div class="row g-0">
 
-            <!-- Ride Details -->
-            <div class="row card-text mt-1">
-              <!-- Price and Available Seats -->
-              <div class="col-md-4">
-                <strong>Price:</strong> {{ ride.ride.price }} dt <br />
-                <strong>Available Seats:</strong> {{ ride.ride.places }}
-              </div>
-            
-              <!-- Date and Hour -->
-              <div class="col-md-4">
-                <strong>Date:</strong> {{ ride.ride.dateRide | date: 'MMM d, y' }}<br />
-                <strong>Hour:</strong> {{ ride.ride.dateRide | date: 'h:mm a' }}
-              </div>
+    <!-- Ride Image -->
+    <div class="col-md-auto">
+      <img src="images/ride3.png" alt="ride" class="img-fluid rounded-start" style="height: 150px; width: 220px" />
+    </div>
 
-              <!-- Book/Cancel Button -->
-              <div class="col-md-4 text-end">
+    <!-- Ride Details -->
+    <div class="col-md">
+      <div class="card-body">
 
-                <button
-                  class="btn btn-primary"
-                  *ngIf="hasReservation(ride.ride) !== 'En-cours'"
-                  (click)="addReservation(ride.ride)"
-                  [disabled]="isProcessing">
-                  Book a Ride
-                </button>
-                <button
-                  class="btn btn-danger"
-                  *ngIf="hasReservation(ride.ride) === 'En-cours'"
-                  (click)="cancelReservation(ride.ride)"
-                  [disabled]="isProcessing">
-                  Cancel Ride
-                </button>
-              </div>
-
-              <!-- Description (full-width row below other fields) -->
-              <div class="col-12 mt-1">
-                <strong>Description:</strong> {{ ride.ride.description }}
-              </div>
-            </div>
+        <!-- Ride Title and Driver Info in One Line -->
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="card-title m-0">
+            From <strong>{{ ride.ride.depart }}</strong> to <strong>{{ ride.ride.destination }}</strong>
+          </h5>
+          <div class="d-flex align-items-center">
+            <img src="images/profile.png" alt="profile" class="rounded-circle me-2" style="width: 40px; height: 40px;" />
+            <small class="text-muted">
+              by {{ ride.ride.driver?.firstName || "Unknown" }} {{ ride.ride.driver?.lastName || "Driver" }}
+            </small>
           </div>
+        </div>
+
+        <!-- Ride Review -->
+        <div class="mt-2">
+          <ngb-rating 
+            [(rate)]="ride.review"
+            [max]="5" 
+            [readonly]="true">
+            <ng-template let-fill="fill" let-index="index">
+              <i class="bi-star-fill"
+                 [ngStyle]="{
+                    background: 'linear-gradient(to right, #ffc107 ' + fill + '%, #e4e5e9 ' + fill + '%)',
+                    '-webkit-background-clip': 'text',
+                    '-webkit-text-fill-color': 'transparent',
+                    'font-size': '1.5em'
+                 }">
+              </i> 
+            </ng-template>    
+          </ngb-rating>
+        </div>
+
+        <!-- Ride Information -->
+        <div class="row card-text mt-3">
+
+          <!-- Price and Seats -->
+          <div class="col-md-4">
+            <strong>Price:</strong> {{ ride.ride.price }} dt<br />
+            <strong>Available Seats:</strong> {{ ride.ride.places }}
+          </div>
+
+          <!-- Date and Hour -->
+          <div class="col-md-4">
+            <strong>Date:</strong> {{ ride.ride.dateRide | date: 'MMM d, y' }}<br />
+            <strong>Hour:</strong> {{ ride.ride.dateRide | date: 'h:mm a' }}
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="col-md-4 text-end">
+            <button 
+              class="btn btn-primary" 
+              *ngIf="hasReservation(ride.ride) !== 'En-cours'" 
+              (click)="addReservation(ride.ride)" 
+              [disabled]="isProcessing">
+              Book a Ride
+            </button>
+            <button 
+              class="btn btn-danger" 
+              *ngIf="hasReservation(ride.ride) === 'En-cours'" 
+              (click)="cancelReservation(ride.ride)" 
+              [disabled]="isProcessing">
+              Cancel Ride
+            </button>
+          </div>
+
+          <!-- Description -->
+          <div class="col-12 mt-3">
+            <strong>Description:</strong> {{ ride.ride.description }}
+          </div>
+
         </div>
       </div>
     </div>
+      </div>
+    </div>
+
   </div>
-  
+</ng-template>

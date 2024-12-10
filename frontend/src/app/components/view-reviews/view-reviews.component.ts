@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { Review } from '../../models/Review';
+import { Ride } from '../../models/Ride';
+import { ReviewService } from '../../services/review.service';
 
 @Component({
   selector: 'app-view-reviews',
@@ -10,90 +12,34 @@ import { Review } from '../../models/Review';
   styleUrl: './view-reviews.component.css'
 })
 export class ViewReviewsComponent {
-  @Input() reviews: Review[] = [ 
-  {
-    idReview: 2,
-    ride: {
-      idRide: 102,
-      depart: 'Sfax',
-      destination: 'Monastir',
-      dateRide: new Date('2024-12-20T14:00:00'),
-      status :"Terminé",
-      driver: {
-        idUser: 3,
-        firstName: 'Khaled',
-        lastName: 'Trabelsi',
-        email: 'khaled.trabelsi@example.com',
-        password: 'password123',
-        address: 'Sfax, Tunisia',
-        phone: '12312345',
+  @Input() ride!: Ride;
+  reviews!: Review[];
+  errorMessage!: string;
+  isLoading: boolean = true;
+  constructor(private reviewService: ReviewService){}
+
+  ngOnInit() {
+    
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['ride']){
+      this.getAllReviewByRide();
+    }
+  }
+  getAllReviewByRide() {
+    console.log(this.ride)
+    this.reviewService.getAllReviewByRide(this.ride.idRide).subscribe({
+      next: (value) => {
+        console.log(value);
+        this.reviews = value;
+        this.isLoading = false;
       },
-      price: 25,
-      places: 2,
-      description: 'Spacious car with air conditioning.',
-    },
-    reviewer: {
-      idUser: 4,firstName: 'Salma',
-      lastName: 'Jemaa',
-      email: 'salma.jemaa@example.com',
-      password: 'password123',
-      address: 'Gabes, Tunisia',
-      phone: '78945612',
-    },
-    reviewed: {
-      idUser: 3,
-      firstName: 'Khaled',
-      lastName: 'Trabelsi',
-      email: 'khaled.trabelsi@example.com',
-      password: 'password123',
-      address: 'Sfax, Tunisia',
-      phone: '12312345',
-    },
-    dateReview: new Date('2024-12-10T16:00:00'),
-    review: 4,
-    comment: 'Excellent driver! The trip was smooth and enjoyable.',
-  },
-  {
-    idReview: 2,
-    ride: {
-      idRide: 102,
-      depart: 'Sfax',
-      destination: 'Monastir',
-      dateRide: new Date('2024-12-20T14:00:00'),
-      status :"Terminé",
-      driver: {
-        idUser: 3,
-        firstName: 'Khaled',
-        lastName: 'Trabelsi',
-        email: 'khaled.trabelsi@example.com',
-        password: 'password123',
-        address: 'Sfax, Tunisia',
-        phone: '12312345',
-      },
-      price: 25,
-      places: 2,
-      description: 'Spacious car with air conditioning.',
-    },
-    reviewer: {
-      idUser: 4,firstName: 'Salma',
-      lastName: 'Jemaa',
-      email: 'salma.jemaa@example.com',
-      password: 'password123',
-      address: 'Gabes, Tunisia',
-      phone: '78945612',
-    },
-    reviewed: {
-      idUser: 3,
-      firstName: 'Khaled',
-      lastName: 'Trabelsi',
-      email: 'khaled.trabelsi@example.com',
-      password: 'password123',
-      address: 'Sfax, Tunisia',
-      phone: '12312345',
-    },
-    dateReview: new Date('2024-12-10T16:00:00'),
-    review: 4,
-    comment: 'Very professional driver, but the car could have been cleaner.',
-  },
-];
+      error: (err) => {
+        this.errorMessage = "Error getting all reviews from Ride"
+        this.isLoading = false;
+      }
+      
+    })
+  }
 }

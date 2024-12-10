@@ -1,11 +1,4 @@
-<div class="container mt-5 pt-0 border rounded p-3 shadow-sm" style="max-width: 600px; max-height: 575px; overflow-y: auto;">
-  <!-- Fixed Header -->
-   <div style="position: sticky; top: 0; z-index: 10;  background-color: white;  padding-top: 15px; ">
-    <h4 class="mb-3" >
-        Reviews
-      </h4>
-      <hr class="my-1" />    
-   </div>
+
   <!-- Reviews List -->
   <div *ngFor="let review of reviews;let last = last" class="card mb-1 border-0">
     <div class="card-body p-2">
@@ -21,7 +14,7 @@
         <!-- Name and Date -->
         <div>
           <h6 class="m-0">
-            <strong>{{ review.reviewer?.firstName }}</strong> {{ review.reviewer?.lastName }}
+            <strong>{{ review.reviewer?.firstName || "Unknown" }}</strong> {{ review.reviewer?.lastName || "Unknown" }}
           </h6>
           <small class="text-muted">Reviewed on {{ review.dateReview | date: 'MMM d, y' }}</small>
         </div>
@@ -47,4 +40,4 @@
     </div>
     <hr *ngIf="!last" class="my-0" style="border: 0; border-top: 1px solid #756f6f;" />
   </div>
-</div>
+

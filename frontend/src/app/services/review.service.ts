@@ -28,8 +28,8 @@ export class ReviewService {
   getMeanReviewByRide(id : object | undefined): Observable<any>{
     return this.http.get<any>(`${this.apiUrl}/getMeanReviewByRide/${id}`)
   }
-  getAllReviewByRide(id : string): Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}/getAllReviewByRide/${id.toString()}`)
+  getAllReviewByRide(id : object| undefined): Observable<any>{
+    return this.http.get<any>(`${this.apiUrl}/getAllReviewByRide/${id?.toString()}`)
   }
   deleteReview(id : string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/deleteReview/${id}`);

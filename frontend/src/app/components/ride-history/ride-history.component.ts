@@ -12,11 +12,12 @@ import { ReviewService } from '../../services/review.service';
 import { Review } from '../../models/Review';
 import { UpdateRideComponent } from "../update-ride/update-ride.component";
 import { Router } from '@angular/router';
+import { ViewReviewsComponent } from "../view-reviews/view-reviews.component";
 
 @Component({
   selector: 'app-ride-history',
   standalone: true,
-  imports: [NgbAccordionModule, CommonModule, NgbRatingModule, UpdateRideComponent],
+  imports: [NgbAccordionModule, CommonModule, NgbRatingModule, UpdateRideComponent, ViewReviewsComponent],
   templateUrl: './ride-history.component.html',
   styleUrl: './ride-history.component.css'
 })
@@ -36,6 +37,7 @@ export class RideHistoryComponent implements OnInit {
   /* @Input()  */ user!: User;
   isDeleteModalOpen = false;
   isEditModalOpen = false;
+  isCommentModalOpen = false;
   selectedRide!: Ride ;
   isRides: boolean = false;
 
@@ -213,6 +215,27 @@ export class RideHistoryComponent implements OnInit {
       status:""
     };
     this.isEditModalOpen = false;
+    this.selectedRide = defaultRide; // Clear the selected ride
+  }
+
+  openCommentModal(ride: Ride): void {
+    this.selectedRide = ride; // Set the ride to be deleted
+    this.isCommentModalOpen = true; // Open the modal
+  }
+
+  closeCommentModal(): void {
+    const defaultRide: Ride = {
+      idRide: 0,
+      depart: "",
+      destination: "",
+      places: 0,
+      price: 0,
+      dateRide: new Date(),
+      description: "",
+      driver: null,
+      status:""
+    };
+    this.isCommentModalOpen = false;
     this.selectedRide = defaultRide; // Clear the selected ride
   }
 }
