@@ -127,9 +127,11 @@ public class ReviewServiceImp implements ReviewService {
             List<Reservation> notReviewedReservations = new ArrayList<>();
             if(reservations != null){
                 for(Reservation r: reservations){
-                    Optional<Review> review = reviewRepository.findReviewByReviewerAndReviewedAndRide(r.getRide().getDriver(),r.getPassenger(),r.getRide());
-                    if(review.isEmpty()){
-                        notReviewedReservations.add(r);
+                    if(r.getPassenger()!=null){
+                        Optional<Review> review = reviewRepository.findReviewByReviewerAndReviewedAndRide(r.getRide().getDriver(),r.getPassenger(),r.getRide());
+                        if(review.isEmpty()){
+                            notReviewedReservations.add(r);
+                        }
                     }
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(notReviewedReservations);
@@ -163,7 +165,15 @@ public class ReviewServiceImp implements ReviewService {
                     if (response.getStatusCode() == HttpStatus.OK) {
                         List<Reservation> res = response.getBody();
                         if (res != null && !res.isEmpty() ){
-                            notReviewedRides.add(ride);
+                            int n = 0;
+                            for(Reservation r: res){
+                                if(r.getPassenger() == null){
+                                    n++;
+                                }
+                            }
+                            if(n != res.size()){
+                                notReviewedRides.add(ride);
+                            }
                         }
                     }
                 }

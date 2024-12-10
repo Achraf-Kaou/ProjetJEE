@@ -1,0 +1,50 @@
+<div class="container mt-5 pt-0 border rounded p-3 shadow-sm" style="max-width: 600px; max-height: 575px; overflow-y: auto;">
+  <!-- Fixed Header -->
+   <div style="position: sticky; top: 0; z-index: 10;  background-color: white;  padding-top: 15px; ">
+    <h4 class="mb-3" >
+        Reviews
+      </h4>
+      <hr class="my-1" />    
+   </div>
+  <!-- Reviews List -->
+  <div *ngFor="let review of reviews;let last = last" class="card mb-1 border-0">
+    <div class="card-body p-2">
+      <!-- Reviewer Info -->
+      <div class="d-flex align-items-center">
+        <!-- Profile Image -->
+        <img
+          src="images/profile.png"
+          alt="profile"
+          class="rounded-circle"
+          style="width: 53px; height: 53px; margin-left: -7px;"
+        />
+        <!-- Name and Date -->
+        <div>
+          <h6 class="m-0">
+            <strong>{{ review.reviewer?.firstName }}</strong> {{ review.reviewer?.lastName }}
+          </h6>
+          <small class="text-muted">Reviewed on {{ review.dateReview | date: 'MMM d, y' }}</small>
+        </div>
+      </div>
+  
+      <!-- Star Rating -->
+      <div class="mt-1">
+        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+          <i
+            class="bi"
+            [ngClass]="{
+              'bi-star-fill text-warning': i < review.review,
+              'bi-star text-muted': i >= review.review
+            }"
+          ></i>
+        </ng-container>
+      </div>
+  
+      <!-- Review Comment -->
+      <p class="mt-2 border rounded p-2 bg-light" style="font-size: 0.9rem; max-width: 100%; overflow-wrap: break-word;">
+        {{ review.comment || 'No comment provided.' }}
+      </p>
+    </div>
+    <hr *ngIf="!last" class="my-0" style="border: 0; border-top: 1px solid #756f6f;" />
+  </div>
+</div>

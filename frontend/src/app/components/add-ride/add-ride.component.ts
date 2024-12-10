@@ -62,10 +62,11 @@ export class AddRideComponent {
       if (this.addRideForm.valid) {
         const date = this.addRideForm.get('dateRide')?.value; 
         const time = this.addRideForm.get('timeRide')?.value; 
-        // if (!this.isFutureDateTime(date, time)) {
-        //   this.errorMessage = "The selected date and time must be in the future. Please choose a valid date and time.";
-        //   return; 
-        // }
+        if (!this.isFutureDateTime(date, time)) {
+          this.errorMessage = "The selected date and time must be in the future. Please choose a valid date and time.";
+          this.isProcessing = false; 
+          return;
+        }
         const formattedDate = `${date.year}-${date.month.toString().padStart(2, '0')}-${date.day.toString().padStart(2, '0')}`;
         const formattedTime = `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}:00`;
 

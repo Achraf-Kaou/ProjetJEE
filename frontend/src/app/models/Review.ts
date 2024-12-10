@@ -2,7 +2,7 @@ import { Ride } from "./Ride";
 import { User } from "./User";
 
 export interface Review {
-    id?: Object;
+    idReview?: Object;
     ride: Ride | null;
     reviewer: User | null;
     reviewed: User | null;
