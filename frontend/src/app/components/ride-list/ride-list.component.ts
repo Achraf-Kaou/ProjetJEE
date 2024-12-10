@@ -30,7 +30,6 @@ export class RideListComponent implements OnInit, OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['ListRides'] && this.changes>0) {
       this.rides = this.ListRides.filter((ride: Ride) => ride.driver?.idUser !== this.user.idUser);
-      console.log('Les données ont été mises à jour:', this.rides);
       if (this.ListRides.length === 0 && this.changes>0) {
         this.errorMessage = "no Ride found with this filter!";
       }
@@ -60,11 +59,13 @@ export class RideListComponent implements OnInit, OnChanges{
       next: (data: Ride[]) => {
         const now = Date.now();
         this.rides = data.filter((ride: Ride) => {
-          console.log(ride)
           if (!ride || !ride.dateRide) return false;
           const rideDate = new Date(ride.dateRide).getTime(); 
-          console.log(ride.idRide,ride.status)
           return rideDate > now  && ride.driver?.idUser !== this.user.idUser;
+        }).sort((a, b) => {
+          const dateA = new Date(a.dateRide).getTime() ; // Convert to Date object
+          const dateB = new Date(b.dateRide).getTime() ; // Convert to Date object
+          return dateA - dateB; // Sort in ascending order
         });
         if (data.length === 0) {
           this.errorMessage = "no rides found"
