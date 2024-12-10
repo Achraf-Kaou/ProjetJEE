@@ -13,7 +13,7 @@ import { AddRideComponent } from './components/add-ride/add-ride.component';
 import { UpdateRideComponent } from './components/update-ride/update-ride.component';
 import { FilterFormComponent } from './components/filter-form/filter-form.component';
 import { SearchListComponent } from './components/search-list/search-list.component';
-
+import {ViewReviewsComponent} from './components/view-reviews/view-reviews.component'
 export const routes: Routes = [
     { path: 'signIn', component: SignInComponent },
     { path: 'signUp', component: SignUpComponent },
@@ -29,5 +29,6 @@ export const routes: Routes = [
     { path: 'updateRide', component: UpdateRideComponent },
     { path: 'filterform', component: FilterFormComponent },
     { path: 'searchlist', component: SearchListComponent },
+    { path: 'viewreview', component: ViewReviewsComponent },
 
 ];
