@@ -39,7 +39,7 @@
               <div class="d-flex align-items-center">
                 <img src="images/profile.png" alt="profile" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px" />
                 <small class="text-muted">
-                  by {{ ride.driver.firstName || "Unknown" }} {{ ride.driver.lastName || "Driver" }}
+                  by {{ ride.driver?.firstName || "Unknown" }} {{ ride.driver?.lastName || "Driver" }} 
                 </small>
               </div>
             </div>

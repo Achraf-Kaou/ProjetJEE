@@ -17,7 +17,7 @@ import { dateTimestampProvider } from 'rxjs/internal/scheduler/dateTimestampProv
   styleUrl: './ride-list.component.css'
 })
 export class RideListComponent implements OnInit, OnChanges{
-  /* @Input()  */user!: User
+  user!: User
   rides: Ride[] = [];
   isLoading: boolean = true;
   isProcessing: boolean = false;
@@ -29,7 +29,7 @@ export class RideListComponent implements OnInit, OnChanges{
 
   constructor(private rideService: RideService, private reservationService: ReservationService){}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['ListRides']) {
+    if (changes['ListRides'] && this.changes>0) {
       this.rides=this.ListRides
       console.log('Les données ont été mises à jour:', this.rides);
       if (this.ListRides.length === 0 && this.changes>0) {
@@ -47,6 +47,7 @@ export class RideListComponent implements OnInit, OnChanges{
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
     }
+    console.log(userFromLocalStorage);
     this.getAllRide();
     this.changes ++;
   }
@@ -55,7 +56,10 @@ export class RideListComponent implements OnInit, OnChanges{
     this.rideService.getAllRide().subscribe({
       next: (data: Ride[]) => {
         const now = Date.now();
+        console.log(data);
         this.rides = data.filter((ride: Ride) => {
+          console.log(ride)
+          if (!ride || !ride.dateRide) return false;
           const rideDate = new Date(ride.dateRide).getTime(); 
           return rideDate > now;
         });

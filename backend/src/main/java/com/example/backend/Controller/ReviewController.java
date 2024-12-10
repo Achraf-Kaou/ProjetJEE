@@ -54,4 +54,9 @@ public class ReviewController {
         return reviewService.getNotReviewedRides(idUser);
     }
 
+    @GetMapping("/getReviewByReviewedAndRide/{idPassenger}/{idRide}")
+    public ResponseEntity<Review> getReviewByReviewerAndReviewedAndRide(@PathVariable Long idPassenger, @PathVariable Long idRide) {
+        return reviewService.getReviewByReviewedAndRide(idPassenger, idRide);
+    }
+
 }

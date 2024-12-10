@@ -159,6 +159,19 @@ public class ReviewServiceImp implements ReviewService {
         }
         return ResponseEntity.status(HttpStatus.OK).body(notReviewedRides);
     }
+
+    @Override
+    public ResponseEntity<Review> getReviewByReviewedAndRide(Long idReviewed, Long idRide){
+        Optional<User> oReviewed = userRepository.findById(idReviewed);
+        Optional<Ride> oRide = rideRepository.findById(idRide);
+        if(oReviewed.isPresent() && oRide.isPresent()){
+            User reviewed = oReviewed.get();
+            Ride ride = oRide.get();
+            Optional<Review> review = reviewRepository.findReviewByReviewedAndRide(reviewed, ride);
+            return review.map(value -> ResponseEntity.status(HttpStatus.OK).body(value)).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
 }
 
 

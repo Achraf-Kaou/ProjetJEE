@@ -4,9 +4,9 @@ import { User } from "./User";
 export interface Review {
     id?: Object;
     ride: Ride;
-    reviewer: User;
-    reviewed: User;
-    dateReview: Date;
+    reviewer: User | null;
+    reviewed: User | null;
+    dateReview: Date | null;
     review: number;
     comment: String;
 }

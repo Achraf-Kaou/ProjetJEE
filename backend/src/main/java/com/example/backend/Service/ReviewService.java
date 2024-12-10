@@ -16,4 +16,5 @@ public interface ReviewService {
     ResponseEntity<List<Review>> getAllReviewByRide(Long idRide);
     ResponseEntity<List<Ride>> getNotReviewedRides(Long idUser);
     ResponseEntity<List<Reservation>> getNotReviewedPassengerByRide(Long idRide);
+    ResponseEntity<Review> getReviewByReviewedAndRide(Long idReviewed, Long ride);
 }

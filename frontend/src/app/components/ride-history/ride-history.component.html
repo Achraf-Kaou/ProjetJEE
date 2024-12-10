@@ -24,19 +24,38 @@
     <div ngbAccordion>
         <div ngbAccordionItem>
             <h2 ngbAccordionHeader>
-                <button ngbAccordionButton class="d-flex justify-content-between align-items-center w-100">
+                <button ngbAccordionButton class="row w-100">
                     <!-- Texte aligné à gauche -->
-                    <span class="text-start">
+                    <span class="text-start col-7">
                       Ride from <b>{{ ride.ride.depart }}</b> to <b>{{ ride.ride.destination }}</b> 
                       on <b>{{ ride.ride.dateRide | date: 'short' }}</b>
                     </span>
-                  
+                    <div class="col-2">
+                      <ngb-rating 
+                                [(rate)]="ride.review"
+                                [max]="5" 
+                                [readonly]="true">
+                                <ng-template let-fill="fill" let-index="index">
+                                    <i
+                                    class="bi-star-fill"
+                                    [ngStyle]="{
+                                        background: 'linear-gradient(to right, #ffc107 ' + fill + '%, #e4e5e9 ' + fill + '%)',
+                                        '-webkit-background-clip': 'text',
+                                        '-webkit-text-fill-color': 'transparent',
+                                        'font-size': '1.5em'
+                                    }"
+                                    ></i> 
+                                </ng-template>    
+                            </ngb-rating>
+                    </div>
                     <!-- Icône alignée à droite -->
+                     <div class="col-2">
                     <i 
                       class="bi bi-trash custom-delete-icon text-end ms-5" 
                       (click)="openDeleteModal(ride.ride); $event.stopPropagation();" 
                       title="Delete Ride">
                     </i>
+                  </div>
                   </button>                  
               </h2>              
         <div ngbAccordionCollapse>
@@ -49,14 +68,33 @@
                             <th scope="col">passenger</th>
                             <th scope="col">date</th>
                             <th scope="col">status</th>
+                            <th scope="col">rate</th>
                         </tr>
                     </thead>
                     <tbody *ngFor="let res of ride.reservations; let i = index">
                             <tr>
                                 <th scope="row">{{i}}</th>
-                                <td>{{res.passenger.firstName}} {{res.passenger.lastName}}</td>
-                                <td>{{res.dateReservation |date: 'short' }}</td>
-                                <td>{{res.status}}</td>
+                                <td>{{res.reservation.passenger.firstName}} {{res.reservation.passenger.lastName}}</td>
+                                <td>{{res.reservation.dateReservation|date: 'short' }}</td>
+                                <td>{{res.reservation.status}}</td>
+                                <td>
+                                  <ngb-rating 
+                                    [(rate)]="res.review.review"
+                                    [max]="5" 
+                                    [readonly]="true">
+                                    <ng-template let-fill="fill" let-index="index">
+                                        <i
+                                        class="bi-star-fill"
+                                        [ngStyle]="{
+                                            background: 'linear-gradient(to right, #ffc107 ' + fill + '%, #e4e5e9 ' + fill + '%)',
+                                            '-webkit-background-clip': 'text',
+                                            '-webkit-text-fill-color': 'transparent',
+                                            'font-size': '1.5em'
+                                        }"
+                                        ></i> 
+                                    </ng-template>    
+                                  </ngb-rating>
+                                </td>
                             </tr>
                     </tbody>
                 </table>

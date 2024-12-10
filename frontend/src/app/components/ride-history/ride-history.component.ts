@@ -1,23 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap'
+import { NgbAccordionModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap'
 import { Ride } from '../../models/Ride';
 import { ReservationService } from '../../services/reservation.service';
 import { RideService } from '../../services/ride.service';
-import { forkJoin, map, Observable, switchMap } from 'rxjs';
+import { catchError, forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Reservation } from '../../models/Reservation';
 import { User } from '../../models/User';
-import { response } from 'express';
+
+import { ReviewService } from '../../services/review.service';
+import { Review } from '../../models/Review';
 
 @Component({
   selector: 'app-ride-history',
   standalone: true,
-  imports: [NgbAccordionModule, CommonModule],
+  imports: [NgbAccordionModule, CommonModule, NgbRatingModule],
   templateUrl: './ride-history.component.html',
   styleUrl: './ride-history.component.css'
 })
 export class RideHistoryComponent implements OnInit {
-  rides: {ride: Ride; reservations: Reservation[]}[] = [];
+  rides: {
+    ride: Ride;
+    review: number;
+    reservations: {
+      reservation: Reservation;
+      review: Review;
+    }[];
+  }[] = [];
   isLoading: boolean = true;
   isProcessing: boolean = false;
   errorMessage: string = '';
@@ -26,7 +35,7 @@ export class RideHistoryComponent implements OnInit {
   isDeleteModalOpen = false;
   selectedRide: Ride | null = null;
 
-  constructor(private rideService: RideService, private reservationService: ReservationService) {}
+  constructor(private rideService: RideService, private reservationService: ReservationService, private reviewService : ReviewService) {}
 
   ngOnInit(): void {
     const message = localStorage.getItem('successMessage');
@@ -40,6 +49,8 @@ export class RideHistoryComponent implements OnInit {
     }
     this.getRidesWithReservations().subscribe({
       next: (data) => {
+        console.log("test 12 12 ")
+        console.log(data);
         this.rides = data;
         this.isLoading = false;
       },
@@ -50,31 +61,85 @@ export class RideHistoryComponent implements OnInit {
       }
     });  
   }
-
-  getRidesWithReservations(): Observable<any[]> {
-    return this.rideService.getAllRideByUser(this.user.idUser).pipe(
-      switchMap((rides: any[]) => {
+  getRidesWithReservations() {
+    const defaultReview: Review = {
+      id: 0,
+      ride: {} as Ride, // Provide an empty object cast as `Ride`
+      reviewer: null,
+      reviewed: null,
+      dateReview: null,
+      review: 0,
+      comment: ""
+    };
+    return this.rideService.getAllRideByUser (this.user.idUser ).pipe(
+      switchMap((rides: Ride[]) => {
+        console.log('Fetched Rides:', rides); // Debugging: Check fetched rides
+  
         if (rides.length === 0) {
+          console.log('No rides found.');
           this.errorMessage = 'No rides found for this user.';
           this.isLoading = false;
-          return [];  // Return an empty array to stop further requests
+          return of([]); // Return an empty array as observable
         }
-
-        const requests = rides.map((ride) =>
-          this.reservationService.getAllReservationByRide(ride.idRide).pipe(
-            map((reservations) => ({
+  
+        const rideRequests = rides.map((ride) =>
+          forkJoin({
+            // Fetch reservations for the ride
+            reservations: this.reservationService.getAllReservationByRide(ride.idRide).pipe(
+              tap((reservations) => console.log(`Reservations for Ride ${ride.idRide}:`, reservations)),
+              switchMap((reservations: Reservation[]) => {
+                if (reservations.length === 0) {
+                  return of([]); // Return empty array if no reservations
+                }
+  
+                const reservationReviewsRequests = reservations.map((reservation) =>
+                  this.reviewService.getReviewByReviewedAndRide(reservation.passenger.idUser, ride.idRide).pipe(
+                    map((review) => ({
+                      reservation,
+                      review, // Add the review for the passenger
+                    })),
+                    catchError((err) => {
+                      console.error('Error fetching passenger review:', err);
+                      return of({ reservation, review : defaultReview }); // Return null review on error
+                    }) // Handle errors for missing reviews
+                  )
+                );
+                return forkJoin(reservationReviewsRequests);
+              }),
+              catchError((err) => {
+                console.error('Error fetching reservations:', err);
+                return of([]); // Handle errors for reservations
+              })
+            ),
+            // Fetch review for the ride
+            rideReview: this.reviewService.getMeanReviewByRide(ride.idRide).pipe(
+              tap((review) => console.log(`Review for Ride ${ride.idRide}:`, review)),
+              catchError((err) => {
+                console.error('Error fetching ride review:', err);
+                return of(null); // Handle errors for missing ride reviews
+              })
+            ),
+          }).pipe(
+            map(({ reservations, rideReview }) => ({
               ride,
-              reservations,
-              errorMessage: reservations.length === 0 
-                ? 'No reservations found for this ride' 
-                : null,
+              review: rideReview, // Add the review for the ride
+              reservations, // Include reservations with their passenger reviews
             }))
           )
         );
-        return forkJoin(requests);
+  
+        return forkJoin(rideRequests); // Wait for all rides to complete
+      }),
+      catchError((err) => {
+        console.error('Error in getRidesWithReservations:', err);
+        this.errorMessage = 'An error occurred while fetching data.';
+        this.isLoading = false;
+        return of([]); // Return an empty array in case of errors
       })
     );
   }
+
+  
 
   deleteRide(): void {
     this.isProcessing = true;
