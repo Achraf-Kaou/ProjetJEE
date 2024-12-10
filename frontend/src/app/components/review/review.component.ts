@@ -79,7 +79,7 @@ export class ReviewComponent {
         localStorage.setItem('successMessage', 'review added successfully!');
         this.isProcessing = false;
         this.closeModal()
-        this.router.navigate(['/home']);
+        window.location.reload();
       },
       (error: any) => {
         this.isProcessing = false;

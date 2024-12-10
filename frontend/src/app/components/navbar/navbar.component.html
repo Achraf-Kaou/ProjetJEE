@@ -15,37 +15,57 @@
       class="collapse navbar-collapse justify-content-between"
       id="navbarSupportedContent"  
     >
-      <form class="d-flex me-auto w-40 " role="search">
+    <div class="search-container" style="position: relative;">
+      <form class="d-flex me-auto w-40" role="search">
         <input
           class="form-control me-2"
           type="search"
           placeholder="John Doe"
           aria-label="Search"
           [formControl]="searchControl"
-          id="searsh"
+          id="search"
+          (focus)="onSearchFocus()"
         />
         <button class="btn btn-outline-dark" type="button" (click)="onSearch()">Search</button>
       </form>
-
+    
+      <!-- Liste des résultats de recherche -->
+      <ul
+        *ngIf="isSearchOpen "
+        class="list-group"
+        style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; position: absolute; top: 100%; left: 0; right: 0; z-index: 999;"
+      >
+        <li *ngFor="let u of users" class="list-group-item d-flex align-items-center">
+          <div>
+            <img
+              src="images/profile.png"
+              alt="profile"
+              class="rounded-circle"
+              style="width: 40px; height: 40px; margin-right: 10px"
+            />
+            <button *ngIf="u.idUser !== undefined" (click)="navigateToProfile(u.idUser.toString())" class="btn btn-link">
+              {{ u.firstName }} {{ u.lastName }}
+            </button>  
+          </div>
+        </li>
+        <li *ngIf="users.length === 0" class="list-group-item text-center">
+          No User Found By This Name
+        </li>
+      </ul>
+      
+    </div>
+    
       <ul class="navbar-nav ms-auto  mb-lg-0 ">
         <li class="nav-item me-3">
           <a class="nav-link active" aria-current="page" href="/home">Home</a>
         </li>
         <li class="nav-item me-3">
           <a class="nav-link" [routerLink]="['/profil', user.idUser]">Profil</a>
-        </li>
+        </li>    
         <li class="nav-item me-3">
-          <a class="nav-link" href="/histRes">Historique Reservation</a>
+          <button class="btn btn-outline-dark ms-5" type="button" (click)="logout()">Logout</button>
         </li>
-        <li class="nav-item me-3">
-          <a class="nav-link" href="/addRide">Add a Ride</a>
-        </li>
-        <li class="nav-item me-3">
-          <a class="nav-link" href="/histRides">Histrorique Rides</a>
-        </li>
-        <li class="nav-item me-3">
-          <button class="btn btn-outline-dark ms-5" type="button">logout</button>
-        </li>
+        
       </ul>
     </div>
    

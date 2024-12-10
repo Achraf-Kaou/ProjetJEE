@@ -5,7 +5,7 @@
 </div>
 
 <ng-template #loaded>
-  <div class="container d-flex flex-column align-items-center justify-content-center">
+  <div class="container d-flex flex-column align-items-center justify-content-center mt-5" style="width: 80%">
     
     <!-- Error message -->
     <div *ngIf="errorMessage" class="alert alert-danger fade show" role="alert">{{ errorMessage }}</div>
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Ride Cards -->
-    <div *ngFor="let ride of rides" class="card mb-3" style="width: 70%">
+    <div *ngFor="let ride of rides" class="card mb-3 w-100" >
       <div class="row g-0">
         <div class="col-md-auto">
           <img src="images/ride3.png" alt="ride" class="img-fluid rounded-start" style="height: 150px; width: 220px" />

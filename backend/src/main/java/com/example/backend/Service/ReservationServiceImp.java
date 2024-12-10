@@ -30,7 +30,7 @@ public class ReservationServiceImp implements ReservationService {
     private ReservationRepository reservationRepository;
     private RideRepository rideRepository;
     private UserRepository userRepository;
-    private ReviewRepository reviewRepository;
+    private NotificationService notificationService;
     private RideService rideService;
     @Override
     public ResponseEntity<List<Reservation>> getAllReservations() {
@@ -58,6 +58,7 @@ public class ReservationServiceImp implements ReservationService {
                 reservation.setDateReservation(Timestamp.valueOf(LocalDateTime.now()));
                 reservation.setStatus("En-cours");
                 rideService.updateRidePlaces(reservation.getRide().getIdRide() , 0);
+                notificationService.notifyDriverAboutRidePlaces(reservation);
                 return ResponseEntity.status(HttpStatus.OK).body(reservationRepository.save(reservation));
             }else{
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);

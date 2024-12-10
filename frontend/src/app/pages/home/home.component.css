@@ -23,3 +23,50 @@
   height: 100vh; /* Hauteur pleine page */
   overflow-y: auto; /* Permet le défilement si nécessaire */
 }
+
+.add-button {
+  position: fixed;
+  bottom: 40px; /* Distance du bas de la page */
+  right: 40px; /* Distance du bord droit */
+  width: 60px; /* Largeur du bouton */
+  height: 60px; /* Hauteur du bouton */
+  background-color: #007bff; /* Couleur bleue */
+  color: white; /* Couleur du texte (+) */
+  font-size: 40px; /* Taille du texte augmentée */
+  font-weight: 300; /* Plus fin et plus élégant */
+  text-align: center; /* Centre le texte */
+  border: none; /* Pas de bordure */
+  border-radius: 50%; /* Forme circulaire */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ombre pour un meilleur rendu */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer; /* Curseur pour cliquer */
+  z-index: 1000; /* Priorité d'affichage */
+  transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+  background-color: #086cd6; /* Changement de couleur au survol */
+}
+
+.add-button .tooltip {
+  visibility: hidden; /* Masque le texte par défaut */
+  position: absolute;
+  bottom: 80px; /* Positionne le texte au-dessus du bouton */
+  left: 50%;
+  transform: translateX(-50%); /* Centre le texte */
+  background-color: rgba(0, 0, 0, 0.7); /* Fond semi-transparent */
+  color: white; /* Couleur du texte */
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  white-space: nowrap; /* Empêche le texte de se couper en plusieurs lignes */
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out; /* Transition pour un effet fluide */
+}
+
+.add-button:hover .tooltip {
+  visibility: visible; /* Affiche le texte au survol */
+  opacity: 1; /* Rend le texte visible */
+}

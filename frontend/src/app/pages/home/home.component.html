@@ -6,7 +6,7 @@
   [isDriver]="isDriver" 
   [user]="user">
 </app-review>
-<app-navbar (onListUsersUpdate)="handleListUsersUpdate($event)"></app-navbar>
+<app-navbar ></app-navbar>
 <div *ngIf="isLoading; else loaded" class="d-flex justify-content-center align-items-center my-3">
 	<div class="spinner-border text-primary me-3" role="status">
 		<span class="visually-hidden">Loading...</span>
@@ -24,9 +24,12 @@
     </div>
 
     <div class="ride-list" >
-      <app-search-list *ngIf="isSearching" [users]="ListUser" class="d-flex justify-content-center"></app-search-list>
-      <app-ride-list [ListRides] ="ListRides"></app-ride-list>
+        <app-ride-list [ListRides] ="ListRides"></app-ride-list>
     </div>
   </div>
 </ng-template>
 
+<button class="add-button" (click)="navigateToAddRide()">
+  <span class="tooltip">Add a Ride</span>
+  +
+</button>

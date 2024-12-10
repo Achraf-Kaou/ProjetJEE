@@ -18,24 +18,29 @@ export class NavbarComponent {
   constructor(private userService: UserService, private router: Router){}
   searchControl = new FormControl('');
   isNavbarOpen = false; 
-  @Output() onListUsersUpdate = new EventEmitter<User[]>();
   user!: User;
-
+  users : User[] = []
+  isSearchOpen = false; 
   ngOnInit() {
     const userFromLocalStorage = localStorage.getItem('user');
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);
     }
+   
   }
   toggleNavbar() {
     this.isNavbarOpen = !this.isNavbarOpen; 
     console.log('navbar open:',this.isNavbarOpen);
   }
- 
+  onSearchFocus() {
+    this.isSearchOpen = false; 
+    this.searchControl.setValue(''); 
+    this.users =[]; // Close the search results when the input is focused
+  }
   onSearch() {
-    console.log('onSearch() called');
+   
     const searchValue = this.searchControl.value;
-    console.log('Search Value:', searchValue);
+  
   
     if (searchValue != null && searchValue.trim() !== '') {
       
@@ -53,16 +58,27 @@ export class NavbarComponent {
         .subscribe(
           (response: any) => {
             console.log('Search Results:', response);
-            this.onListUsersUpdate.emit(response);
+            this.users = response;
+            this.isSearchOpen = true;
           },
           (error: any) => {
             console.error('Search Error:', error);
+            this.isSearchOpen = true;
           }
         );
-      
     } else {
       console.warn('Search value is empty!');
     }
+  }
+  logout() {
+    localStorage.removeItem('user');
+    this.router.navigate(['/signIn']);
+  }
+  navigateToProfile(userId: string | undefined) {  
+    this.router.navigate(['/profil', userId]);
+    this.isSearchOpen = false;
+    this.searchControl.setValue(''); 
+    this.users =[];
   }
   
   

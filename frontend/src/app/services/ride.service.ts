@@ -16,9 +16,6 @@ export class RideService {
       'Content-Type': 'application/json'
     })})
   }
-  getAllRide(): Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}/all`);
-  }
   updateRide(ride : Ride ): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/updateRide`, ride, {
     headers: new HttpHeaders({

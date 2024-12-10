@@ -1,0 +1,203 @@
+<div class="">
+    
+    <div class="container-fluid  d-flex justify-content-center">
+        <div class="row justify-content-center align-items-center w-100">
+          <div class="col-md-10">
+            <div class="card shadow">
+              <div class="card-header bg-primary text-white text-center">
+                <h3>update the Ride</h3>
+              </div>
+              <div class="card-body">
+                <form [formGroup]="updateRideForm" (ngSubmit)="onSubmit()">
+                  
+      
+                  <div class="d-flex justify-content-between">
+                    <!-- Depart -->
+                    <div class="form-group mb-3 w-50 me-2">
+                      <label for="depart" class="form-label">Depart <span class="text-danger">*</span></label>
+                      <input
+                        type="text"
+                        id="depart"
+                        class="form-control"
+                        formControlName="depart"
+                        placeholder="Enter departure location"
+                        [class.is-invalid]="
+                          updateRideForm.get('depart')?.invalid &&
+                          updateRideForm.get('depart')?.touched
+                        "
+                      />
+                      <div
+                        *ngIf="updateRideForm.get('depart')?.invalid && updateRideForm.get('depart')?.touched"
+                        class="invalid-feedback"
+                      >
+                        Depart is required.
+                      </div>
+                    </div>
+      
+                    <!-- Destination -->
+                    <div class="form-group mb-3  w-50">
+                      <label for="destination" class="form-label">Destination <span class="text-danger">*</span></label>
+                      <input
+                        type="text"
+                        id="destination"
+                        class="form-control"
+                        formControlName="destination"
+                        placeholder="Enter destination"
+                        [class.is-invalid]="
+                          updateRideForm.get('destination')?.invalid &&
+                          updateRideForm.get('destination')?.touched
+                        "
+                      />
+                      <div
+                        *ngIf="updateRideForm.get('destination')?.invalid && updateRideForm.get('destination')?.touched"
+                        class="invalid-feedback"
+                      >
+                        Destination is required.
+                      </div>
+                    </div>
+                  </div>
+      
+                  <!-- Row for aligned inputs -->
+                <div class="row g-3 align-items-center justify-content-between">
+                  <!-- Date -->
+                  <div class="col-md-3">
+                    <label for="dateRide" class="form-label">Date <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <input 
+                        type="text" 
+                        ngbDatepicker 
+                        #d="ngbDatepicker" 
+                        class="form-control"
+                        placeholder="YYYY-MM-DD"
+                        formControlName="dateRide"
+                        [class.is-invalid]="
+                          updateRideForm.get('dateRide')?.invalid &&
+                          updateRideForm.get('dateRide')?.touched"
+                      />
+                      <button (click)="d.toggle()" type="button" class="btn btn-primary">📅</button>
+                    </div>
+                    <div
+                      *ngIf="updateRideForm.get('dateRide')?.invalid && updateRideForm.get('dateRide')?.touched"
+                      class="invalid-feedback"
+                    >
+                      Date is required.
+                    </div>
+    
+                  </div>
+  
+                  <!-- Time Picker -->
+                  <div class="col-md-2">
+                    <!-- <label for="timeRide" class="form-label">Time <span class="text-danger">*</span></label> -->
+                    <ngb-timepicker
+                      formControlName="timeRide"
+                      [spinners]="true"
+                      [meridian]="false"
+                      class="form-control"
+                      [class.is-invalid]="
+                        updateRideForm.get('timeRide')?.invalid &&
+                        updateRideForm.get('timeRide')?.touched
+                      "
+                    ></ngb-timepicker>
+                    <div
+                      *ngIf="updateRideForm.get('timeRide')?.invalid && updateRideForm.get('timeRide')?.touched"
+                      class="invalid-feedback"
+                    >
+                      Time is required.
+                    </div>
+                  </div>
+  
+                  <!-- Price -->
+                  <div class="col-md-3">
+                    <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
+                    <input
+                      type="text"
+                      id="price"
+                      class="form-control"
+                      formControlName="price"
+                      placeholder="$"
+                      [class.is-invalid]="
+                        updateRideForm.get('price')?.invalid && updateRideForm.get('price')?.touched
+                      "
+                    />
+                    <div
+                      *ngIf="updateRideForm.get('price')?.invalid && updateRideForm.get('price')?.touched"
+                      class="invalid-feedback"
+                    >
+                      <!-- Cas où le champ est requis -->
+                      <div *ngIf="updateRideForm.get('price')?.errors?.['required']">
+                        Price is required.
+                      </div>
+                      
+                      <!-- Cas où la valeur est inférieure au minimum -->
+                      <div *ngIf="updateRideForm.get('price')?.errors?.['min']">
+                        Price must be a non-negative number.
+                      </div>
+                    </div>
+  
+                  </div>
+  
+                  <!-- Places -->
+                  <div class="col-md-3">
+                    <label for="places" class="form-label">Places <span class="text-danger">*</span></label>
+                    <input
+                      type="number"
+                      id="places"
+                      class="form-control"
+                      formControlName="places"
+                      min="1"
+                      max="4"
+                      placeholder="#"
+                      [class.is-invalid]="
+                        updateRideForm.get('places')?.invalid &&
+                        updateRideForm.get('places')?.touched
+                      "
+                    />
+                    <div
+                      *ngIf="updateRideForm.get('places')?.invalid && updateRideForm.get('places')?.touched"
+                      class="invalid-feedback"
+                    >
+                    <div *ngIf="updateRideForm.get('places')?.errors?.['required']">
+                      number of places is required.
+                    </div>
+                    
+                    <!-- Cas où la valeur est inférieure au minimum -->
+                    <div *ngIf="updateRideForm.get('places')?.errors?.['min'] || updateRideForm.get('places')?.errors?.['max']">
+                      number of places must be between 1 and 4.
+                    </div>
+                    <div *ngIf="updateRideForm.get('places')?.errors?.['pattern'] ">
+                      number of places must be an integer .
+                  </div>
+                    </div>
+                    
+                  </div>
+                </div>
+      
+                  <!-- Description -->
+                  <div class="form-group mb-3">
+                    <label for="description" class="form-label">Description (optional)</label>
+                    <textarea
+                      id="description"
+                      class="form-control"
+                      formControlName="description"
+                      placeholder="Add any additional details about the ride"
+                    ></textarea>
+                  </div>
+      
+                  <!-- Submit Button -->
+                  <div class="form-group text-center">
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-lg"
+                      [disabled]="updateRideForm.invalid"
+                    >
+                      update Ride
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+    

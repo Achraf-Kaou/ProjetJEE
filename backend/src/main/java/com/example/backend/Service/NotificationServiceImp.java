@@ -8,6 +8,11 @@ import com.example.backend.Repository.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+
+
 import java.util.List;
 
 @Service
@@ -30,7 +35,7 @@ public class NotificationServiceImp implements NotificationService {
                 String message = "Dear " + passenger.getFirstName() + " " + passenger.getLastName()+ ",\n\n"
                         + "The ride you reserved has been updated to " + ride.getDateRide() + ", "
                         + ride.getDepart() + ", " + ride.getDestination() + ", " + ride.getPrice()
-                        +". Please log in to your account to check the latest details.\n\n"
+                        + "Please log in to your account to check the latest details.\n\n"
                         + "Thank you!";
                 emailService.sendEmail(passenger.getEmail(), subject, message);
             }
@@ -56,13 +61,20 @@ public class NotificationServiceImp implements NotificationService {
     }
 
     @Override
-    public void notifyDriverAboutRidePlaces(Ride ride) {
-            User driver = ride.getDriver();
+    public void notifyDriverAboutRidePlaces(Reservation res) {
+            User driver = res.getRide().getDriver();
+            Ride ride = res.getRide();
+            User passenger = res.getPassenger();
             if (driver.getEmail() != null) {
+
                 String subject = "Update on Your Ride Places";
-                String message = "Dear " + driver.getFirstName() + " " + driver.getLastName()+ ",\n\n"
-                        + "The places of your ride has been updated to " + ride.getPlaces()
-                        +". Please log in to your account to check the latest details.\n\n"
+                String message = "Dear " + driver.getFirstName() + " " + driver.getLastName() + ",\n\n"
+                        + "A reservation has been made for your ride by " + passenger.getFirstName() + " " + passenger.getLastName() + ".\n"
+                        + "Departure: " + ride.getDepart() + "\n"
+                        + "Destination: " + ride.getDestination() + "\n"
+                        + "Date: " + ride.getDateRide() + "\n"
+                        + "You now have only "
+                        + ride.getPlaces() + " available places left. Please log in to your account to check the latest details.\n\n"
                         + "Thank you!";
                 emailService.sendEmail(driver.getEmail(), subject, message);
             }
