@@ -1,5 +1,5 @@
 import { CommonModule, JsonPipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbAlertModule, NgbDatepickerModule, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { Ride } from '../../models/Ride';
@@ -13,30 +13,14 @@ import { User } from '../../models/User';
   templateUrl: './update-ride.component.html',
   styleUrl: './update-ride.component.css'
 })
-export class UpdateRideComponent implements OnInit {
+export class UpdateRideComponent implements OnInit, OnChanges {
   updateRideForm !: FormGroup ;
-  ride:Ride={
-    idRide: 54,
-    depart: "bou ja3fer",
-    destination: "ras tabiya",
-    places: 0,
-    price: 20.0,
-    description: "",
-    dateRide: new Date("2024-12-09T14:19:00.000+00:00"),
-    status: "Terminé",
-    driver: {
-      idUser: 22,
-      firstName: "test",
-      lastName: "test",
-      email: "achraf03achref@gmail.com",
-      password: "123456789",
-      phone: "52279555",
-      address: "om doniya"
-    }
-  }
+  @Input() ride: any = {};
   user!: User;
 
-  constructor(private rideService: RideService) {}
+  constructor(private rideService: RideService) {
+    this.initializeForm();
+  }
   isFutureDateTime(date: any, time: any): boolean {
     if (!date || !time) {
       return false; 
@@ -54,22 +38,31 @@ export class UpdateRideComponent implements OnInit {
   
 
   ngOnInit(): void {
+    
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['ride']) {
+      this.initializeForm();
+    }
+  }
+
+  private initializeForm(): void {
     this.updateRideForm = new FormGroup({
-      depart: new FormControl(this.ride.depart, [Validators.required]),
-      destination: new FormControl(this.ride.destination, [Validators.required]),
-      places: new FormControl(this.ride.places, [
+      depart: new FormControl(this.ride.depart ?? "", [Validators.required]),
+      destination: new FormControl(this.ride.destination ?? "", [Validators.required]),
+      places: new FormControl(this.ride.places ?? 0, [
         Validators.required,
         Validators.min(1),
         Validators.max(4),
         Validators.pattern('^[0-9]*$')
       ]),
-      price: new FormControl(this.ride.price, [Validators.required, Validators.min(0)]),
+      price: new FormControl(this.ride.price ?? 0, [Validators.required, Validators.min(0)]),
       dateRide: new FormControl(this.formatDate(this.ride.dateRide), [Validators.required]),
       timeRide: new FormControl(this.formatTime(this.ride.dateRide), Validators.required),
-      description: new FormControl(this.ride.description)
+      description: new FormControl(this.ride.description ?? "")
     });
   }
-
 
   // Formater la date pour le pré-remplissage du formulaire
   private formatDate(dateRide: string | Date): any {
@@ -127,6 +120,7 @@ export class UpdateRideComponent implements OnInit {
         },
         (error: any) => {
           console.error('Update error:', error);
+          
         }
       );
     }

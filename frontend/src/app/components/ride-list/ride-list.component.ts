@@ -29,7 +29,7 @@ export class RideListComponent implements OnInit, OnChanges{
   constructor(private rideService: RideService, private reservationService: ReservationService){}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['ListRides'] && this.changes>0) {
-      this.rides = this.ListRides.filter((ride: Ride) => ride.driver.idUser !== this.user.idUser);
+      this.rides = this.ListRides.filter((ride: Ride) => ride.driver?.idUser !== this.user.idUser);
       console.log('Les données ont été mises à jour:', this.rides);
       if (this.ListRides.length === 0 && this.changes>0) {
         this.errorMessage = "no Ride found with this filter!";
@@ -65,7 +65,7 @@ export class RideListComponent implements OnInit, OnChanges{
           if (!ride || !ride.dateRide) return false;
           const rideDate = new Date(ride.dateRide).getTime(); 
           console.log(ride.idRide,ride.status)
-          return rideDate > now  && ride.driver.idUser !== this.user.idUser;
+          return rideDate > now  && ride.driver?.idUser !== this.user.idUser;
         });
         console.log(this.rides)
         this.loadReservationStatuses();

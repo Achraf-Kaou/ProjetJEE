@@ -10,11 +10,12 @@ import { User } from '../../models/User';
 
 import { ReviewService } from '../../services/review.service';
 import { Review } from '../../models/Review';
+import { UpdateRideComponent } from "../update-ride/update-ride.component";
 
 @Component({
   selector: 'app-ride-history',
   standalone: true,
-  imports: [NgbAccordionModule, CommonModule, NgbRatingModule],
+  imports: [NgbAccordionModule, CommonModule, NgbRatingModule, UpdateRideComponent],
   templateUrl: './ride-history.component.html',
   styleUrl: './ride-history.component.css'
 })
@@ -33,7 +34,9 @@ export class RideHistoryComponent implements OnInit {
   successMessage: string | null = null;
   /* @Input()  */ user!: User;
   isDeleteModalOpen = false;
-  selectedRide: Ride | null = null;
+  isEditModalOpen = false;
+  selectedRide!: Ride ;
+  isRides: boolean = false;
 
   constructor(private rideService: RideService, private reservationService: ReservationService, private reviewService : ReviewService) {}
 
@@ -49,9 +52,11 @@ export class RideHistoryComponent implements OnInit {
     }
     this.getRidesWithReservations().subscribe({
       next: (data) => {
-        console.log("test 12 12 ")
-        console.log(data);
-        this.rides = data;
+        this.rides = data.sort((a, b) => {
+          const dateA = new Date(a.ride.dateRide).getTime() ; // Convert to Date object
+          const dateB = new Date(b.ride.dateRide).getTime() ; // Convert to Date object
+          return dateB - dateA; // Sort in ascending order
+        });
         this.isLoading = false;
       },
       error: (error) => {
@@ -74,14 +79,14 @@ export class RideHistoryComponent implements OnInit {
     return this.rideService.getAllRideByUser (this.user.idUser ).pipe(
       switchMap((rides: Ride[]) => {
         console.log('Fetched Rides:', rides); // Debugging: Check fetched rides
-  
+        this.selectedRide = rides[0];
         if (rides.length === 0) {
           console.log('No rides found.');
           this.errorMessage = 'No rides found for this user.';
           this.isLoading = false;
           return of([]); // Return an empty array as observable
         }
-  
+        this.isRides = true
         const rideRequests = rides.map((ride) =>
           forkJoin({
             // Fetch reservations for the ride
@@ -171,8 +176,39 @@ export class RideHistoryComponent implements OnInit {
   }
 
   closeDeleteModal(): void {
+    const defaultRide: Ride = {
+      idRide: 0,
+      depart: "",
+      destination: "",
+      places: 0,
+      price: 0,
+      dateRide: new Date(),
+      description: "",
+      driver: null,
+      status:""
+    };
     this.isDeleteModalOpen = false;
-    this.selectedRide = null; // Clear the selected ride
+    this.selectedRide = defaultRide; // Clear the selected ride
+  }
+  openEditModal(ride: Ride): void {
+    this.selectedRide = ride; // Set the ride to be deleted
+    this.isEditModalOpen = true; // Open the modal
+  }
+
+  closeEditModal(): void {
+    const defaultRide: Ride = {
+      idRide: 0,
+      depart: "",
+      destination: "",
+      places: 0,
+      price: 0,
+      dateRide: new Date(),
+      description: "",
+      driver: null,
+      status:""
+    };
+    this.isEditModalOpen = false;
+    this.selectedRide = defaultRide; // Clear the selected ride
   }
 }
 

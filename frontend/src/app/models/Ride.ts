@@ -8,6 +8,6 @@ export interface Ride {
     price: number; 
     dateRide: Date; 
     description: string;
-    driver: User;
+    driver: User | null;
     status:string;
 }

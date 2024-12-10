@@ -56,8 +56,12 @@ export class ReviewComponent {
     this.stars = this.stars.map((_, index) => index < starIndex);
   }
 
-  submitReview(reviewed : User) {
+  submitReview(reviewed : User | null) {
     this.isProcessing = true;
+    if (reviewed === null){
+      this.isProcessing = false;
+      this.errorMessage = "driver null ! "
+    }
     const userFromLocalStorage = localStorage.getItem('user');
     if (userFromLocalStorage) {
       this.user = JSON.parse(userFromLocalStorage);

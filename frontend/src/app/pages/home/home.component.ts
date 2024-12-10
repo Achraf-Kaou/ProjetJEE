@@ -50,7 +50,7 @@ export class HomeComponent {
       (response: any) => {
         if (Array.isArray(response) && response.length > 0) {
           this.ride = response[0]; 
-          if(this.ride.driver.idUser == this.user.idUser){
+          if(this.ride.driver?.idUser == this.user.idUser){
             this.isDriver = true;
             this.reviewService.getNotReviewedPassengerByRide(this.ride.idRide)
             .subscribe(

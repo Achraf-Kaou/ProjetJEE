@@ -26,7 +26,7 @@
             <h2 ngbAccordionHeader>
                 <button ngbAccordionButton class="row w-100">
                     <!-- Texte aligné à gauche -->
-                    <span class="text-start col-7">
+                    <span class="text-start col-5">
                       Ride from <b>{{ ride.ride.depart }}</b> to <b>{{ ride.ride.destination }}</b> 
                       on <b>{{ ride.ride.dateRide | date: 'short' }}</b>
                     </span>
@@ -49,13 +49,22 @@
                             </ngb-rating>
                     </div>
                     <!-- Icône alignée à droite -->
-                     <div class="col-2">
+                    <div class="col-auto">
+                      <button class="btn btn-light ms-2" (click)="openEditModal(ride.ride); $event.stopPropagation();">
+                        <i 
+                        class="bi bi-pencil text-end ms-5" 
+                        title="Edit Ride">
+                      </i>
+                      </button>
+                      </div>
+                      <div>
+                      <button class="btn btn-light ms-2 hover-color-red" (click)="openDeleteModal(ride.ride); $event.stopPropagation();">
                     <i 
                       class="bi bi-trash custom-delete-icon text-end ms-5" 
-                      (click)="openDeleteModal(ride.ride); $event.stopPropagation();" 
                       title="Delete Ride">
                     </i>
-                  </div>
+                </button>
+              </div>
                   </button>                  
               </h2>              
         <div ngbAccordionCollapse>
@@ -130,11 +139,40 @@
           <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
         </div>
         <div class="modal-body">
-          <p>Are you sure you want to delete the ride from <b>{{ selectedRide?.depart }}</b> to <b>{{ selectedRide?.destination }}</b>?</p>
+          <p>Are you sure you want to delete the ride from <b>{{ selectedRide.depart }}</b> to <b>{{ selectedRide.destination }}</b>?</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
           <button type="button" class="btn btn-danger" (click)="deleteRide()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- model delete-->
+  <div
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    [class.show]="isEditModalOpen"
+    [ngStyle]="{ display: isEditModalOpen ? 'block' : 'none' }"
+    aria-hidden="true"
+    (click)="closeEditModal()"
+    *ngIf="isRides"
+  >
+    <div class="modal-dialog modal-lg" role="document" (click)="$event.stopPropagation()">
+      <div *ngIf="isProcessing" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Processing...</span>
+        </div>
+      </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Update ride</h5>
+          <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+        </div>
+        <div class="modal-body">
+          <app-update-ride [ride]="selectedRide"></app-update-ride>
         </div>
       </div>
     </div>

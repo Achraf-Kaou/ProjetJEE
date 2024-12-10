@@ -68,7 +68,11 @@ export class ReservationHistoryComponent {
   
         forkJoin(reservationWithReviews$).subscribe({
           next: (results) => {
-            this.reservations = results;
+            this.reservations = results.sort((a, b) => {
+              const dateA = new Date(a.reservation.ride.dateRide).getTime() ; // Convert to Date object
+              const dateB = new Date(b.reservation.ride.dateRide).getTime() ; // Convert to Date object
+              return dateB - dateA; // Sort in ascending order
+            });;
             this.isLoading = false;
           },
           error: (error) => {
