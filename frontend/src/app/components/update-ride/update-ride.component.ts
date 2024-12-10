@@ -17,6 +17,9 @@ export class UpdateRideComponent implements OnInit, OnChanges {
   updateRideForm !: FormGroup ;
   @Input() ride: any = {};
   user!: User;
+  isProcessing!: boolean;
+  errorMessage: string = "";
+  successMessage: string | null = null;
 
   constructor(private rideService: RideService) {
     this.initializeForm();
@@ -87,6 +90,7 @@ export class UpdateRideComponent implements OnInit, OnChanges {
 
    // Méthode pour soumettre les données mises à jour
    onSubmit(): void {
+    this.isProcessing = true;
     this.updateRideForm.markAllAsTouched();
 
     const userFromLocalStorage = localStorage.getItem('user');
@@ -116,11 +120,16 @@ export class UpdateRideComponent implements OnInit, OnChanges {
 
       this.rideService.updateRide(this.ride).subscribe(
         (response: any) => {
-          console.log('Ride updated successfully:', response);
+          this.isProcessing = false;
+          localStorage.setItem('successMessage', 'ride updated successfully!');
+          window.location.reload(); 
         },
         (error: any) => {
-          console.error('Update error:', error);
-          
+          this.isProcessing = false;
+          if (error.status === 401)
+            this.errorMessage = "can't update a passed ride!";
+          else 
+            this.errorMessage = "failed to update ride, try again later";
         }
       );
     }

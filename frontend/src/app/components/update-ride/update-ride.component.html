@@ -1,7 +1,16 @@
 
         <div class="row justify-content-center align-items-center w-100">
+          
           <div class="col-md-10">
               <div class="card-body">
+                <div *ngIf="errorMessage" class="alert alert-danger m-1">{{ errorMessage }}</div>
+		<div 
+			*ngIf="isProcessing" 
+			class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-2">
+			<div class="spinner-border text-primary" role="status">
+				<span class="visually-hidden">Processing...</span>
+			</div>
+		</div>
                 <form [formGroup]="updateRideForm" (ngSubmit)="onSubmit()">
                   
       

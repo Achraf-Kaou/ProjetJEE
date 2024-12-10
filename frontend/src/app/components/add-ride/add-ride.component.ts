@@ -8,12 +8,12 @@ import { debounceTime, Subject, tap } from 'rxjs';
 import { Ride } from '../../models/Ride';
 import { RideService } from '../../services/ride.service';
 import { User } from '../../models/User';
-import { NavbarComponent } from "../../components/navbar/navbar.component";
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
   selector: 'app-add-ride',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NgbAlertModule, NgbTimepickerModule, NgbDatepickerModule, NavbarComponent],
+  imports: [ReactiveFormsModule, CommonModule, NgbAlertModule, NgbTimepickerModule, NgbDatepickerModule],
   templateUrl: './add-ride.component.html',
   styleUrl: './add-ride.component.css'
 })

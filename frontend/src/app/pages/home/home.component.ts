@@ -10,7 +10,7 @@ import { NavbarComponent } from "../../components/navbar/navbar.component";
 import { RideListComponent } from "../../components/ride-list/ride-list.component";
 import { FilterFormComponent } from "../../components/filter-form/filter-form.component";
 import { Router, RouterModule } from '@angular/router';
-import { AddRideComponent } from "../add-ride/add-ride.component";
+import { AddRideComponent } from "../../components/add-ride/add-ride.component";
 
 @Component({
   selector: 'app-home',
