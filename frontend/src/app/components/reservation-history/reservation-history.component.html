@@ -24,23 +24,42 @@
 					<th scope="col">Ride Date</th>
 					<th scope="col">Ride</th>
 					<th scope="col">Status</th>
+					<th scope="col">Stars</th>
 					<th scope="col">Action</th>
 				</tr>
 			</thead>
 			<tbody *ngFor="let reservation of reservations">
 					<tr>
-						<td>{{reservation.dateReservation | date:'short'}}</td>
-						<td>{{reservation.ride.dateRide | date:'short'}}</td>
-						<td>from {{reservation.ride.depart}} to {{reservation.ride.destination}}</td>
-						<td>{{reservation.status}}</td>
+						<td>{{reservation.reservation.dateReservation| date:'short'}}</td>
+						<td>{{reservation.reservation.ride.dateRide | date:'short'}}</td>
+						<td>from {{reservation.reservation.ride.depart}} to {{reservation.reservation.ride.destination}}</td>
+						<td>{{reservation.reservation.status}}</td>
 						<td>
 							<button 
-								*ngIf="reservation.status === 'En-cours'" 
+								*ngIf="reservation.reservation.status === 'En-cours'" 
 								class="btn btn-danger btn-sm"
-								(click)="cancelReservation(reservation)"
+								(click)="cancelReservation(reservation.reservation)"
 								[disabled]="isProcessing">
 									Cancel
 						  	</button>
+						</td>
+						<td>
+							<ngb-rating 
+                                [(rate)]="reservation.review.review"
+                                [max]="5" 
+                                [readonly]="true">
+                                <ng-template let-fill="fill" let-index="index">
+                                    <i
+                                    class="bi-star-fill"
+                                    [ngStyle]="{
+                                        background: 'linear-gradient(to right, #ffc107 ' + fill + '%, #e4e5e9 ' + fill + '%)',
+                                        '-webkit-background-clip': 'text',
+                                        '-webkit-text-fill-color': 'transparent',
+                                        'font-size': '1.5em'
+                                    }"
+                                    ></i> 
+                                </ng-template>    
+                            </ngb-rating>
 						</td>
 					</tr>
 			</tbody>

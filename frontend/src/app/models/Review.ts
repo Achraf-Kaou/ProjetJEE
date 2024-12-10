@@ -3,7 +3,7 @@ import { User } from "./User";
 
 export interface Review {
     id?: Object;
-    ride: Ride;
+    ride: Ride | null;
     reviewer: User | null;
     reviewed: User | null;
     dateReview: Date | null;

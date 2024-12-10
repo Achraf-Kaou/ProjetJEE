@@ -5,8 +5,6 @@ import { RideService } from '../../services/ride.service';
 import { User } from '../../models/User';
 import { ReservationService } from '../../services/reservation.service';
 import { Reservation } from '../../models/Reservation';
-
-import { dateTimestampProvider } from 'rxjs/internal/scheduler/dateTimestampProvider';
 import { HttpParams } from '@angular/common/http';
 
 
