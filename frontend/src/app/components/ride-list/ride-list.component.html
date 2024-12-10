@@ -32,30 +32,46 @@
         <div class="col-md">
           <div class="card-body">
             <!-- Title and User Info Row -->
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="">
               <h5 class="card-title m-0">
-                From <strong>{{ ride.depart }}</strong> to <strong>{{ ride.destination }}</strong>
+                From <strong>{{ ride.ride.depart }}</strong> to <strong>{{ ride.ride.destination }}</strong>
               </h5>
-              <div class="d-flex align-items-center">
+              <div class="">
                 <img src="images/profile.png" alt="profile" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px" />
                 <small class="text-muted">
-                  by {{ ride.driver?.firstName || "Unknown" }} {{ ride.driver?.lastName || "Driver" }} 
+                  by {{ ride.ride.driver?.firstName || "Unknown" }} {{ ride.ride.driver?.lastName || "Driver" }} 
                 </small>
               </div>
+              <ngb-rating 
+                                [(rate)]="ride.review"
+                                [max]="5" 
+                                [readonly]="true">
+                                <ng-template let-fill="fill" let-index="index">
+                                    <i
+                                    class="bi-star-fill"
+                                    [ngStyle]="{
+                                        background: 'linear-gradient(to right, #ffc107 ' + fill + '%, #e4e5e9 ' + fill + '%)',
+                                        '-webkit-background-clip': 'text',
+                                        '-webkit-text-fill-color': 'transparent',
+                                        'font-size': '1.5em'
+                                    }"
+                                    ></i> 
+                                </ng-template>    
+                            </ngb-rating>
             </div>
 
             <!-- Ride Details -->
             <div class="row card-text mt-1">
               <!-- Price and Available Seats -->
               <div class="col-md-4">
-                <strong>Price:</strong> {{ ride.price }} dt <br />
-                <strong>Available Seats:</strong> {{ ride.places }}
+                <strong>Price:</strong> {{ ride.ride.price }} dt <br />
+                <strong>Available Seats:</strong> {{ ride.ride.places }}
               </div>
             
               <!-- Date and Hour -->
               <div class="col-md-4">
-                <strong>Date:</strong> {{ ride.dateRide | date: 'MMM d, y' }}<br />
-                <strong>Hour:</strong> {{ ride.dateRide | date: 'h:mm a' }}
+                <strong>Date:</strong> {{ ride.ride.dateRide | date: 'MMM d, y' }}<br />
+                <strong>Hour:</strong> {{ ride.ride.dateRide | date: 'h:mm a' }}
               </div>
 
               <!-- Book/Cancel Button -->
@@ -63,15 +79,15 @@
 
                 <button
                   class="btn btn-primary"
-                  *ngIf="hasReservation(ride) !== 'En-cours'"
-                  (click)="addReservation(ride)"
+                  *ngIf="hasReservation(ride.ride) !== 'En-cours'"
+                  (click)="addReservation(ride.ride)"
                   [disabled]="isProcessing">
                   Book a Ride
                 </button>
                 <button
                   class="btn btn-danger"
-                  *ngIf="hasReservation(ride) === 'En-cours'"
-                  (click)="cancelReservation(ride)"
+                  *ngIf="hasReservation(ride.ride) === 'En-cours'"
+                  (click)="cancelReservation(ride.ride)"
                   [disabled]="isProcessing">
                   Cancel Ride
                 </button>
@@ -79,7 +95,7 @@
 
               <!-- Description (full-width row below other fields) -->
               <div class="col-12 mt-1">
-                <strong>Description:</strong> {{ ride.description }}
+                <strong>Description:</strong> {{ ride.ride.description }}
               </div>
             </div>
           </div>
