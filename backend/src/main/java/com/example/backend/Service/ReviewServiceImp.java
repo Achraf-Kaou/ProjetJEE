@@ -53,6 +53,8 @@ public class ReviewServiceImp implements ReviewService {
 
     @Override
     public ResponseEntity<Review> updateReview(Review review) {
+        review.setDateReview(Timestamp.valueOf(LocalDateTime.now()));
+        System.out.println(review);
         return ResponseEntity.status(HttpStatus.OK).body(reviewRepository.save(review));
     }
 
