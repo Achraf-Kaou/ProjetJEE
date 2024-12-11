@@ -14,6 +14,7 @@
                     <th scope="col">price</th>
 					<th scope="col">Status</th>
 					<th scope="col">stars</th>
+					<th scope="col"></th>
 				</tr>
 			</thead>
 			<tbody *ngFor="let ride of rides">
@@ -40,8 +41,41 @@
                                 </ng-template>    
                             </ngb-rating>
                         </td>
+						<td>
+							<div class="col-1 ms-1">
+								<button class="btn btn-light " (click)="openCommentModal(ride.ride); $event.stopPropagation();">
+								  <i 
+									class="bi bi bi-chat text-end " 
+									title="Comment and Review">
+								  </i>
+								</button>
+							  </div>
+						</td>
 					</tr>
 			</tbody>
 		</table>
 	</div>
+
+	<!-- model comment-->
+	<div
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    [class.show]="isCommentModalOpen"
+    [ngStyle]="{ display: isCommentModalOpen ? 'block' : 'none' }"
+    aria-hidden="true"
+    (click)="closeCommentModal()"
+  >
+    <div class="modal-dialog modal-lg" role="document" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Reviews</h5>
+          <button type="button" class="btn-close" (click)="closeCommentModal()"></button>
+        </div>
+        <div class="modal-body">
+          <app-view-reviews [ride]="selectedRide"></app-view-reviews>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
