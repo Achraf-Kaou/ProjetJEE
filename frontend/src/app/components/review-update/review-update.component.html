@@ -1,16 +1,10 @@
-<div *ngIf="isModalVisible" class="modal fade show d-block " tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-    <div class="modal-dialog" style="max-width: 45%;"> <!-- Réduire la largeur de la modal -->
+
         <div 
             *ngIf="isProcessing" 
             class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-2">
             <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Processing...</span>
             </div>
-        </div>
-      <div class="modal-content">
-        <div class="modal-header" style="height: 40px;">
-          <h5 class="modal-title" style="font-size: 18px;">Update Review</h5> <!-- Titre modifié -->
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
         </div>
         
         <div *ngIf="errorMessage" class="alert alert-danger my-3">{{ errorMessage }}</div>
@@ -64,5 +58,3 @@
             </div>
             
           </div>
-    </div>
-  </div> 

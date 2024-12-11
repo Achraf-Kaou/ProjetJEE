@@ -38,15 +38,6 @@
 						to {{ reservation.reservation.ride?.destination || 'unknown' }}
 					</td>
 					<td>{{ reservation.reservation.status }}</td>
-					<td>
-							<button 
-								*ngIf="reservation.reservation.status === 'En-cours'" 
-								class="btn btn-danger btn-sm"
-								(click)="cancelReservation(reservation.reservation)"
-								[disabled]="isProcessing">
-									Cancel
-						  	</button>
-						</td>
 						<td>
 							<ngb-rating 
                                 [(rate)]="reservation.review.review"
@@ -65,8 +56,56 @@
                                 </ng-template>    
                             </ngb-rating>
 						</td>
+						<td>
+							<button 
+								*ngIf="reservation.reservation.status === 'En-cours'" 
+								class="btn btn-danger btn-sm"
+								(click)="cancelReservation(reservation.reservation)"
+								[disabled]="isProcessing">
+									<i 
+									class="bi bi-x-lg bi-x-danger"
+									title="cancel reservation"></i>
+						  	</button>
+							  <button 
+							  *ngIf="reservation.reservation.status === 'Terminé'" 
+							  class="btn btn-warning btn-sm"
+							  (click)="openReviewModal(reservation.review)"
+							  [disabled]="isProcessing">
+							  <i 
+							  	class="bi bi-star"
+								title="review edit"></i>
+							</button>
+						</td>
 					</tr>
 			</tbody>
 		</table>
 	</div>
+
+	<!-- model comment-->
+	<div
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    [class.show]="isReviewModalOpen"
+    [ngStyle]="{ display: isReviewModalOpen ? 'block' : 'none' }"
+    aria-hidden="true"
+    (click)="closeReviewModal()"
+  >
+    <div class="modal-dialog modal-lg" role="document" (click)="$event.stopPropagation()">
+      <div *ngIf="isProcessing" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Processing...</span>
+        </div>
+      </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Reviews edit</h5>
+          <button type="button" class="btn-close" (click)="closeReviewModal()"></button>
+        </div>
+        <div class="modal-body">
+			<app-review-update [review]="selectedReview"></app-review-update>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
