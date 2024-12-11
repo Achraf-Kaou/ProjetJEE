@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -79,12 +80,20 @@ public class ReviewServiceImp implements ReviewService {
     @Override
     public ResponseEntity<Double> getMeanReviewByRide(Long idRide) {
         double meanReview = 0.0;
+
+        // Fetch the ride using its ID
         Optional<Ride> oRide = rideRepository.findById(idRide);
-        if(oRide.isPresent()) {
+        if (oRide.isPresent()) {
             Ride ride = oRide.get();
-            List<Review> reviews = reviewRepository.findReviewByRide(ride);
-            if (reviews != null && !reviews.isEmpty()) {
-                meanReview = reviews.stream()
+
+            // Retrieve reviews for the ride and exclude those made by the driver
+            List<Review> passengerReviews = reviewRepository.findReviewByRide(ride).stream()
+                    .filter(review -> !review.getReviewer().getIdUser().equals(ride.getDriver().getIdUser()))
+                    .collect(Collectors.toList());
+
+            // Calculate the mean review only for passenger reviews
+            if (passengerReviews != null && !passengerReviews.isEmpty()) {
+                meanReview = passengerReviews.stream()
                         .mapToInt(Review::getReview)
                         .average()
                         .orElse(0.0);
@@ -93,6 +102,7 @@ public class ReviewServiceImp implements ReviewService {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
 
     @Override
     public ResponseEntity<String> deleteReview(Long idReview) {
@@ -105,7 +115,17 @@ public class ReviewServiceImp implements ReviewService {
         Optional<Ride> oRide = rideRepository.findById(idRide);
         if(oRide.isPresent()) {
             Ride ride = oRide.get();
-            List<Review> reviews = reviewRepository.findReviewByRide(ride);
+            if (ride.getDriver() == null || ride.getDriver().getIdUser() == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(null); // Or return a meaningful message
+            }
+
+            Long driverId = ride.getDriver().getIdUser();
+
+            // Filter out reviews where the reviewer is the driver
+            List<Review> reviews = reviewRepository.findReviewByRide(ride).stream()
+                    .filter(review -> !review.getReviewer().getIdUser().equals(driverId))
+                    .toList();
             return ResponseEntity.status(HttpStatus.OK).body(reviews);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

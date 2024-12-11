@@ -7,11 +7,12 @@ import { Review } from '../../models/Review';
 import { catchError, of, map, forkJoin } from 'rxjs';
 import { ReviewService } from '../../services/review.service';
 import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReviewUpdateComponent } from "../review-update/review-update.component";
 
 @Component({
   selector: 'app-reservation-history',
   standalone: true,
-  imports: [CommonModule, NgbRatingModule],
+  imports: [CommonModule, NgbRatingModule, ReviewUpdateComponent],
   templateUrl: './reservation-history.component.html',
   styleUrl: './reservation-history.component.css'
 })
@@ -22,6 +23,8 @@ export class ReservationHistoryComponent {
   isProcessing: boolean = false;
   errorMessage: string = '';
   successMessage: string | null = null;
+  isReviewModalOpen: boolean = false;
+  selectedReview!:Review;
 
   constructor(private reservationService: ReservationService, private reviewService: ReviewService){}
   ngOnInit(): void {
@@ -49,7 +52,7 @@ export class ReservationHistoryComponent {
   
         // Use forkJoin to fetch reviews for each reservation
         const reservationWithReviews$ = reservations.map((reservation) =>
-          this.reviewService.getReviewByReviewedAndRide(user.idUser, reservation.ride.idRide).pipe(
+          this.reviewService.getReviewByReviewedAndRide(user.idUser, reservation.ride?.idRide).pipe(
             catchError(() => 
               // Return a default review in case of error
               of({
@@ -69,8 +72,8 @@ export class ReservationHistoryComponent {
         forkJoin(reservationWithReviews$).subscribe({
           next: (results) => {
             this.reservations = results.sort((a, b) => {
-              const dateA = new Date(a.reservation.ride.dateRide).getTime() ; // Convert to Date object
-              const dateB = new Date(b.reservation.ride.dateRide).getTime() ; // Convert to Date object
+              const dateA = new Date(a.reservation.ride?.dateRide).getTime() ; // Convert to Date object
+              const dateB = new Date(b.reservation.ride?.dateRide).getTime() ; // Convert to Date object
               return dateB - dateA; // Sort in ascending order
             });;
             this.isLoading = false;
@@ -105,5 +108,24 @@ export class ReservationHistoryComponent {
         }
       }
     );
+  }
+
+  openReviewModal(review: Review): void {
+    this.selectedReview = review; // Set the ride to be deleted
+    this.isReviewModalOpen = true; // Open the modal
+  }
+
+  closeReviewModal(): void {
+    const defaultReview: Review = {
+      idReview: 0,
+      reviewer: null,
+      reviewed: null,
+      ride: null,
+      review: 0,
+      comment: "",
+      dateReview: new Date()  // Ajoute la date actuelle ici
+    };
+    this.isReviewModalOpen = false;
+    this.selectedReview = defaultReview; // Clear the selected ride
   }
 }

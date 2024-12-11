@@ -11,11 +11,14 @@ import { User } from '../../models/User';
 import { ReviewService } from '../../services/review.service';
 import { Review } from '../../models/Review';
 import { UpdateRideComponent } from "../update-ride/update-ride.component";
+import { Router } from '@angular/router';
+import { ViewReviewsComponent } from "../view-reviews/view-reviews.component";
+import { ReviewUpdateComponent } from "../review-update/review-update.component";
 
 @Component({
   selector: 'app-ride-history',
   standalone: true,
-  imports: [NgbAccordionModule, CommonModule, NgbRatingModule, UpdateRideComponent],
+  imports: [NgbAccordionModule, CommonModule, NgbRatingModule, UpdateRideComponent, ViewReviewsComponent, ReviewUpdateComponent],
   templateUrl: './ride-history.component.html',
   styleUrl: './ride-history.component.css'
 })
@@ -35,10 +38,21 @@ export class RideHistoryComponent implements OnInit {
   /* @Input()  */ user!: User;
   isDeleteModalOpen = false;
   isEditModalOpen = false;
+  isCommentModalOpen = false;
   selectedRide!: Ride ;
   isRides: boolean = false;
+  isReviewModalOpen: boolean = false;
+  selectedReview:Review= {
+    idReview: 0,
+    reviewer: null,
+    reviewed: null,
+    ride: null,
+    review: 0,
+    comment: "",
+    dateReview: new Date()  // Ajoute la date actuelle ici
+  };
 
-  constructor(private rideService: RideService, private reservationService: ReservationService, private reviewService : ReviewService) {}
+  constructor(private rideService: RideService, private reservationService: ReservationService, private reviewService : ReviewService, private router: Router) {}
 
   ngOnInit(): void {
     const message = localStorage.getItem('successMessage');
@@ -98,7 +112,7 @@ export class RideHistoryComponent implements OnInit {
                 }
   
                 const reservationReviewsRequests = reservations.map((reservation) =>
-                  this.reviewService.getReviewByReviewedAndRide(reservation.passenger.idUser, ride.idRide).pipe(
+                  this.reviewService.getReviewByReviewedAndRide(reservation.passenger?.idUser, ride.idRide).pipe(
                     map((review) => ({
                       reservation,
                       review, // Add the review for the passenger
@@ -149,14 +163,14 @@ export class RideHistoryComponent implements OnInit {
   deleteRide(): void {
     this.isProcessing = true;
     if (this.selectedRide) {
-      this.rideService.deleteRide(this.selectedRide.idRide).subscribe({
-        next: (response) => {
+      this.rideService.deleteRide(this.selectedRide.idRide).subscribe(
+        (response) => {
           this.closeDeleteModal();
-          localStorage.setItem('successMessage', 'Reservation added successfully!');
+          localStorage.setItem('successMessage', 'ride deleted successfully!');
           this.isProcessing = false;
-          window.location.reload();
+          this.router.navigateByUrl(`/profil/${this.user.idUser}`);
         },
-        error :(error) => {
+        (error) => {
           console.error('Failed to delete ride:', error);
           if (error.status === 401){
             this.errorMessage = "can not delete a passed ride";
@@ -164,10 +178,14 @@ export class RideHistoryComponent implements OnInit {
           if (error.status === 404){
             this.errorMessage = "ride not found";
           }
+          if (error.status === 200){
+            localStorage.setItem('successMessage', 'ride deleted successfully!');
+            window.location.reload();
+          }
           this.isProcessing = false;
           this.closeDeleteModal();
         }
-      });}
+      );}
   }
   // Opens the delete modal
   openDeleteModal(ride: Ride): void {
@@ -209,6 +227,46 @@ export class RideHistoryComponent implements OnInit {
     };
     this.isEditModalOpen = false;
     this.selectedRide = defaultRide; // Clear the selected ride
+  }
+
+  openCommentModal(ride: Ride): void {
+    this.selectedRide = ride; // Set the ride to be deleted
+    this.isCommentModalOpen = true; // Open the modal
+  }
+
+  closeCommentModal(): void {
+    const defaultRide: Ride = {
+      idRide: 0,
+      depart: "",
+      destination: "",
+      places: 0,
+      price: 0,
+      dateRide: new Date(),
+      description: "",
+      driver: null,
+      status:""
+    };
+    this.isCommentModalOpen = false;
+    this.selectedRide = defaultRide; // Clear the selected ride
+  }
+  openReviewModal(review: Review): void {
+    this.selectedReview = review; // Set the ride to be deleted
+    this.isReviewModalOpen = true; // Open the modal
+    console.log(this.selectedReview); //
+  }
+
+  closeReviewModal(): void {
+    const defaultReview: Review = {
+      idReview: 0,
+      reviewer: null,
+      reviewed: null,
+      ride: null,
+      review: 0,
+      comment: "",
+      dateReview: new Date()  // Ajoute la date actuelle ici
+    };
+    this.isReviewModalOpen = false;
+    this.selectedReview = defaultReview; // Clear the selected ride
   }
 }
 

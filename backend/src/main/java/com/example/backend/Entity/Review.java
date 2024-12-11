@@ -21,10 +21,10 @@ public class Review {
     @JoinColumn(name = "idReviwer", nullable = true)
     private User reviewer;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn(name = "idReviwed")
+    @JoinColumn(name = "idReviwed", nullable = true)
     private User reviewed;
     @ManyToOne
-    @JoinColumn(name = "idRide")
+    @JoinColumn(name = "idRide", nullable = true)
     private Ride ride;
     @Column
     private int review;

@@ -22,7 +22,20 @@ export class UpdateRideComponent implements OnInit, OnChanges {
   successMessage: string | null = null;
 
   constructor(private rideService: RideService) {
-    this.initializeForm();
+    this.updateRideForm = new FormGroup({
+      depart: new FormControl("", [Validators.required]),
+      destination: new FormControl("", [Validators.required]),
+      places: new FormControl(0, [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(4),
+        Validators.pattern('^[0-9]*$')
+      ]),
+      price: new FormControl( 0, [Validators.required, Validators.min(0)]),
+      dateRide: new FormControl(this.formatDate(this.ride.dateRide), [Validators.required]),
+      timeRide: new FormControl(this.formatTime(this.ride.dateRide), Validators.required),
+      description: new FormControl("")
+    });
   }
   isFutureDateTime(date: any, time: any): boolean {
     if (!date || !time) {
@@ -50,21 +63,23 @@ export class UpdateRideComponent implements OnInit, OnChanges {
     }
   }
 
-  private initializeForm(): void {
-    this.updateRideForm = new FormGroup({
-      depart: new FormControl(this.ride.depart ?? "", [Validators.required]),
-      destination: new FormControl(this.ride.destination ?? "", [Validators.required]),
-      places: new FormControl(this.ride.places ?? 0, [
-        Validators.required,
-        Validators.min(1),
-        Validators.max(4),
-        Validators.pattern('^[0-9]*$')
-      ]),
-      price: new FormControl(this.ride.price ?? 0, [Validators.required, Validators.min(0)]),
-      dateRide: new FormControl(this.formatDate(this.ride.dateRide), [Validators.required]),
-      timeRide: new FormControl(this.formatTime(this.ride.dateRide), Validators.required),
-      description: new FormControl(this.ride.description ?? "")
-    });
+  initializeForm(): void {
+      console.log("test")
+      this.updateRideForm = new FormGroup({
+        depart: new FormControl(this.ride.depart ?? "", [Validators.required]),
+        destination: new FormControl(this.ride.destination ?? "", [Validators.required]),
+        places: new FormControl(this.ride.places ?? 0, [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(4),
+          Validators.pattern('^[0-9]*$')
+        ]),
+        price: new FormControl(this.ride.price ?? 0, [Validators.required, Validators.min(0)]),
+        dateRide: new FormControl(this.formatDate(this.ride.dateRide), [Validators.required]),
+        timeRide: new FormControl(this.formatTime(this.ride.dateRide), Validators.required),
+        description: new FormControl(this.ride.description ?? "")
+      });
+    
   }
 
   // Formater la date pour le pré-remplissage du formulaire

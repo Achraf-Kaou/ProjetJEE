@@ -107,6 +107,25 @@ public class RideServiceImp implements RideService{
             Ride ride = or.get();
             LocalDateTime currentDate = LocalDateTime.now();
             LocalDateTime rideDate = ride.getDateRide().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            List<Review> reviews = reviewRepository.findByRide(ride);
+            if (!reviews.isEmpty()){
+                for (Review review : reviews){
+                    review.setRide(null);
+                    reviewRepository.save(review);
+                }
+            }
+            List<Reservation> reservations = reservationRepository.findReservationsByRide(ride);
+            if (!reservations.isEmpty()) {
+                for (Reservation reservation : reservations) {
+                    if (reservation.getStatus().equals("En-cours")) {
+                        reservation.setStatus("Annulée");
+                        this.updateRidePlaces(reservation.getRide().getIdRide(), 1);
+                        reservationRepository.save(reservation);
+                    }
+                    reservation.setRide(null);
+                    reservationRepository.save(reservation);
+                }
+            }
             if (rideDate.isAfter(currentDate)) {
                 rideRepository.deleteById(idRide);
                 return ResponseEntity.status(HttpStatus.OK).body("Ride deleted Successfully");
