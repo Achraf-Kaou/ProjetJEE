@@ -13,7 +13,7 @@
             <!-- Section de notation en étoiles -->
             <div style="font-size: 14px;"  >
               <div class="star-rating d-flex flex-row ">
-                <h6 class="me-1 pt-1">Rate the Driver ({{ review.reviewed?.firstName }} {{ review.reviewed?.lastName }}):</h6>
+                <h6 class="me-1 pt-1">Rate the Driver ({{ review.reviewed?.firstName || "unknown" }} {{ review.reviewed?.lastName || "unknown" }}):</h6>
                 <!-- <ngb-rating [(rate)]="rating" [max]="5" class="large-rating"></ngb-rating> -->
                   <ngb-rating [(rate)]="rating" [max]="5" >
                     <ng-template let-fill="fill" let-index="index">
@@ -40,7 +40,7 @@
                   
                   <!-- Passenger Name -->
                   <div class="d-flex justify-content-between w-50">
-                    <span>{{ review.reviewer?.firstName}} {{  review.reviewer?.lastName }}</span>
+                    <span>{{ review.reviewer?.firstName  || "unknown" }} {{  review.reviewer?.lastName  || "unknown" }}</span>
                     <ngb-rating  [(rate)]="rating" [max]="5"  class="me-2">
                       <ng-template let-fill="fill" let-index="index">
                         <i class="bi-star{{ fill === 100 ? '-fill' : '' }}" [class.filled]="fill === 100"></i>

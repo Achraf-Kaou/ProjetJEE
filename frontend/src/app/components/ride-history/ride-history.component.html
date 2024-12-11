@@ -92,16 +92,16 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
                             <th scope="col">passenger</th>
                             <th scope="col">date</th>
                             <th scope="col">status</th>
-                            <th scope="col">rate</th>
+                            <th scope="col">rate by you</th>
+                            <th scope="col"></th>
+
                         </tr>
                     </thead>
-                    <tbody *ngFor="let res of ride.reservations; let i = index">
+                    <tbody *ngFor="let res of ride.reservations">
                             <tr>
-                                <th scope="row">{{i}}</th>
                                 <td>{{res.reservation.passenger.firstName}} {{res.reservation.passenger.lastName}}</td>
                                 <td>{{res.reservation.dateReservation|date: 'short' }}</td>
                                 <td>{{res.reservation.status}}</td>
@@ -122,6 +122,17 @@
                                         ></i> 
                                     </ng-template>    
                                   </ngb-rating>
+                                </td>
+                                <td> 
+                                  <button 
+                                    *ngIf="res.reservation.status === 'Terminé'" 
+                                    class="btn btn-warning btn-sm"
+                                    (click)="openReviewModal(res.review)"
+                                    [disabled]="isProcessing">
+                                    <i 
+                                      class="bi bi-star"
+                                    title="review edit"></i>
+                                  </button>
                                 </td>
                             </tr>
                     </tbody>
@@ -224,4 +235,31 @@
       </div>
     </div>
   </div>
+  <!-- model comment-->
+	<div
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  [class.show]="isReviewModalOpen"
+  [ngStyle]="{ display: isReviewModalOpen ? 'block' : 'none' }"
+  aria-hidden="true"
+  (click)="closeReviewModal()"
+>
+  <div class="modal-dialog modal-lg" role="document" (click)="$event.stopPropagation()">
+    <div *ngIf="isProcessing" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Processing...</span>
+      </div>
+    </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reviews edit</h5>
+        <button type="button" class="btn-close" (click)="closeReviewModal()"></button>
+      </div>
+      <div class="modal-body">
+    <app-review-update [review]="selectedReview" [isDriver]=true></app-review-update>
+      </div>
+    </div>
+  </div>
+</div>
 </ng-template>

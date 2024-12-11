@@ -17,7 +17,15 @@ export class ReviewUpdateComponent {
   constructor(private reviewService: ReviewService, private router: Router) {}
 
   rating: number = 0;
-  @Input() review!: Review;
+  @Input() review: Review= {
+    idReview: 0,
+    reviewer: null,
+    reviewed: null,
+    ride: null,
+    review: 0,
+    comment: "",
+    dateReview: new Date()  // Ajoute la date actuelle ici
+  };;
   @Input() isDriver: boolean = false;
 
 
@@ -32,6 +40,7 @@ export class ReviewUpdateComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['review']){
       if (this.review) {
+        console.log(this.review);
         if(!this.isDriver){
           this.reviewText = this.review.comment;
         }

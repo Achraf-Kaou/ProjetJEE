@@ -13,11 +13,12 @@ import { Review } from '../../models/Review';
 import { UpdateRideComponent } from "../update-ride/update-ride.component";
 import { Router } from '@angular/router';
 import { ViewReviewsComponent } from "../view-reviews/view-reviews.component";
+import { ReviewUpdateComponent } from "../review-update/review-update.component";
 
 @Component({
   selector: 'app-ride-history',
   standalone: true,
-  imports: [NgbAccordionModule, CommonModule, NgbRatingModule, UpdateRideComponent, ViewReviewsComponent],
+  imports: [NgbAccordionModule, CommonModule, NgbRatingModule, UpdateRideComponent, ViewReviewsComponent, ReviewUpdateComponent],
   templateUrl: './ride-history.component.html',
   styleUrl: './ride-history.component.css'
 })
@@ -40,6 +41,16 @@ export class RideHistoryComponent implements OnInit {
   isCommentModalOpen = false;
   selectedRide!: Ride ;
   isRides: boolean = false;
+  isReviewModalOpen: boolean = false;
+  selectedReview:Review= {
+    idReview: 0,
+    reviewer: null,
+    reviewed: null,
+    ride: null,
+    review: 0,
+    comment: "",
+    dateReview: new Date()  // Ajoute la date actuelle ici
+  };
 
   constructor(private rideService: RideService, private reservationService: ReservationService, private reviewService : ReviewService, private router: Router) {}
 
@@ -237,6 +248,25 @@ export class RideHistoryComponent implements OnInit {
     };
     this.isCommentModalOpen = false;
     this.selectedRide = defaultRide; // Clear the selected ride
+  }
+  openReviewModal(review: Review): void {
+    this.selectedReview = review; // Set the ride to be deleted
+    this.isReviewModalOpen = true; // Open the modal
+    console.log(this.selectedReview); //
+  }
+
+  closeReviewModal(): void {
+    const defaultReview: Review = {
+      idReview: 0,
+      reviewer: null,
+      reviewed: null,
+      ride: null,
+      review: 0,
+      comment: "",
+      dateReview: new Date()  // Ajoute la date actuelle ici
+    };
+    this.isReviewModalOpen = false;
+    this.selectedReview = defaultReview; // Clear the selected ride
   }
 }
 
