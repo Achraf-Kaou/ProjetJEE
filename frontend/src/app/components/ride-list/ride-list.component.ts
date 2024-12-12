@@ -43,7 +43,7 @@ export class RideListComponent implements OnInit, OnChanges{
         this.rides = []; // Clear the rides array if no rides match the filter
         return;
       }
-
+      this.errorMessage = "";
     // Map the filtered rides to the new rides structure
     const rideObservables = filteredRides.map((ride) =>
       this.reviewService.getMeanReviewByUser(ride.driver?.idUser) // Assume this method fetches the average review as a number

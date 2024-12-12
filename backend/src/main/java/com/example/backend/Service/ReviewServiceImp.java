@@ -39,8 +39,9 @@ public class ReviewServiceImp implements ReviewService {
         Optional<User> managedReviewed = userRepository.findById(review.getReviewed().getIdUser());
         Optional<Ride> oRide = rideRepository.findById(review.getRide().getIdRide());
         if (managedReviewer.isPresent() && managedReviewed.isPresent() && oRide.isPresent()) {
+            System.out.println("kollech tamem");
             Optional<Review> testReview = reviewRepository.findReviewByReviewerAndReviewedAndRide(review.getReviewer(),review.getReviewed(),review.getRide());
-            System.out.println(testReview.isPresent());
+            System.out.println("test review"+testReview.isPresent());
             if(testReview.isEmpty()){
                 review.setReviewer(managedReviewer.get());
                 review.setReviewed(managedReviewed.get());

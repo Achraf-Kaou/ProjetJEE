@@ -7,4 +7,13 @@
   .custom-delete-icon:hover {
     transform: scale(1.2); /* Agrandissement au survol */
   }
-  
+  .modal-open {
+    background-color: rgba(0, 0, 0, 0.5); /* Fond sombre semi-transparent */
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Désactive le défilement */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1030; /* Assurez-vous que le z-index est inférieur à celui du modal */
+  }

@@ -8,11 +8,14 @@ import { catchError, of, map, forkJoin } from 'rxjs';
 import { ReviewService } from '../../services/review.service';
 import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReviewUpdateComponent } from "../review-update/review-update.component";
+import { Ride } from '../../models/Ride';
+import { ReviewComponent } from "../review/review.component";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-reservation-history',
   standalone: true,
-  imports: [CommonModule, NgbRatingModule, ReviewUpdateComponent],
+  imports: [CommonModule, NgbRatingModule, ReviewUpdateComponent, FormsModule],
   templateUrl: './reservation-history.component.html',
   styleUrl: './reservation-history.component.css'
 })
@@ -24,7 +27,13 @@ export class ReservationHistoryComponent {
   errorMessage: string = '';
   successMessage: string | null = null;
   isReviewModalOpen: boolean = false;
-  selectedReview!:Review;
+  selectedReview: Review | undefined; 
+  selectedRide!: Ride ;    
+
+  rating : number = 0;
+  review! : Review ;
+  reviewText: string = '';
+  stars: boolean[] = [false, false, false, false, false];  
 
   constructor(private reservationService: ReservationService, private reviewService: ReviewService){}
   ngOnInit(): void {
@@ -41,6 +50,15 @@ export class ReservationHistoryComponent {
   }
 
   getAllReservationsByUser(user: User) {
+    const defaultReview: Review = {
+      idReview: 0,
+      reviewer: null,
+      reviewed: null,
+      ride: null,
+      review: 0,
+      comment: "",
+      dateReview: null  // Ajoute la date actuelle ici
+    };
     this.isLoading = true;
     this.reservationService.getAllReservationByUser(user.idUser).subscribe({
       next: (reservations: Reservation[]) => {
@@ -55,15 +73,7 @@ export class ReservationHistoryComponent {
           this.reviewService.getReviewByReviewedAndRide(user.idUser, reservation.ride?.idRide).pipe(
             catchError(() => 
               // Return a default review in case of error
-              of({
-                id: 0,
-                ride: null,
-                reviewer: null,
-                reviewed: null,
-                dateReview: null,
-                review: 0,
-                comment: ''
-              })
+              of(defaultReview)
             ),
             map((review) => ({ reservation, review }))
           )
@@ -110,11 +120,27 @@ export class ReservationHistoryComponent {
     );
   }
 
-  openReviewModal(review: Review): void {
-    this.selectedReview = review; // Set the ride to be deleted
-    this.isReviewModalOpen = true; // Open the modal
+  openReviewModal(review: Review , ride: Ride): void {
+    const defaultReview: Review = {
+      idReview: 0,
+      reviewer: null,
+      reviewed: null,
+      ride: null,
+      review: 0,
+      comment: "",
+      dateReview: null  // Ajoute la date actuelle ici
+    };
+    console.log(review)
+    console.log(defaultReview)
+    console.log(JSON.stringify(review) === JSON.stringify(defaultReview))
+    if (JSON.stringify(review) === JSON.stringify(defaultReview)) {
+      this.selectedRide = ride; 
+    } else {
+      this.selectedReview = review; 
+    }
+    this.isReviewModalOpen = true; 
   }
-
+  
   closeReviewModal(): void {
     const defaultReview: Review = {
       idReview: 0,
@@ -123,9 +149,51 @@ export class ReservationHistoryComponent {
       ride: null,
       review: 0,
       comment: "",
-      dateReview: new Date()  // Ajoute la date actuelle ici
+      dateReview: null  // Ajoute la date actuelle ici
     };
     this.isReviewModalOpen = false;
-    this.selectedReview = defaultReview; // Clear the selected ride
+    this.selectedReview = undefined; // Clear the selected ride
   }
+  rate(starIndex: number , passenger : any) {
+    
+    this.rating = starIndex;
+    this.stars = this.stars.map((_, index) => index < starIndex);
+  }
+
+  submitReview(reviewed : User | null) {
+    this.isProcessing = true;
+    if (reviewed === null){
+      this.isProcessing = false;
+      this.errorMessage = "driver null ! "
+    }
+    const userFromLocalStorage = localStorage.getItem('user');
+    if (userFromLocalStorage) {
+      this.user = JSON.parse(userFromLocalStorage);
+    }
+
+    this.review = { 
+      review: this.rating, 
+      ride: this.selectedRide, 
+      reviewer: this.user, 
+      comment: this.reviewText || '', 
+      reviewed: reviewed, 
+      dateReview: new Date() 
+    };
+    console.log(this.review);
+    
+    this.reviewService.addReview(this.review)
+    .subscribe(
+      (response: any) => {
+        localStorage.setItem('successMessage', 'review added successfully!');
+        this.isProcessing = false;
+        this.closeReviewModal()
+        window.location.reload();
+      },
+      (error: any) => {
+        this.isProcessing = false;
+        this.errorMessage = 'Failed to add the review. Please try again.'; 
+      }
+    );
+  }
+  
 }

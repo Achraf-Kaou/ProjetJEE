@@ -146,7 +146,7 @@
   </div>
 
 
-
+<div [class.modal-open]="isDeleteModalOpen">
   <!-- model delete-->
   <div
     class="modal fade"
@@ -169,7 +169,7 @@
           <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
         </div>
         <div class="modal-body">
-          <p>Are you sure you want to delete the ride from <b>{{ selectedRide?.depart || ""}}</b> to <b>{{ selectedRide?.destination || "" }}</b>?</p>
+          <p>Are you sure you want to delete the ride from <b>{{ selectedRide.depart || ""}}</b> to <b>{{ selectedRide.destination || "" }}</b>?</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
@@ -178,8 +178,10 @@
       </div>
     </div>
   </div>
+</div>
 
   <!-- model Edit-->
+<div [class.modal-open]="isEditModalOpen">   
   <div
     class="modal fade"
     tabindex="-1"
@@ -201,13 +203,15 @@
           <h5 class="modal-title">Update ride</h5>
           <button type="button" class="btn-close" (click)="closeEditModal()"></button>
         </div>
-        <div class="modal-body">
-          <app-update-ride [ride]="selectedRide"></app-update-ride>
+        <div class="modal-body w-100">
+          <app-update-ride [ride]="selectedRide" class="d-flex justify-content-center align-items-center w-100"></app-update-ride>
         </div>
       </div>
     </div>
   </div>
+</div>
   <!-- model comment-->
+<div [class.modal-open]="isCommentModalOpen">
   <div
     class="modal fade"
     tabindex="-1"
@@ -235,7 +239,9 @@
       </div>
     </div>
   </div>
+</div>  
   <!-- model comment-->
+<div [class.modal-open]="isReviewModalOpen">
 	<div
   class="modal fade"
   tabindex="-1"
@@ -261,5 +267,6 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 </ng-template>

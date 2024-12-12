@@ -70,3 +70,15 @@
   visibility: visible; /* Affiche le texte au survol */
   opacity: 1; /* Rend le texte visible */
 }
+/* Arrière-plan sombre appliqué lorsque le modal est ouvert */
+.modal-open {
+  background-color: rgba(0, 0, 0, 0.5); /* Fond sombre semi-transparent */
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Empêche le défilement */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1030; /* Ajustez selon vos besoins */
+}
+
