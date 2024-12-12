@@ -35,26 +35,26 @@ export class RideListComponent implements OnInit, OnChanges{
 
   constructor(private rideService: RideService, private reservationService: ReservationService, private reviewService: ReviewService){}
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.changes);
     if (changes['ListRides'] && this.changes>0) {
       const filteredRides: Ride[] = this.ListRides.filter((ride: Ride) => ride.driver?.idUser !== this.user.idUser);
-
-    if (filteredRides.length === 0) {
-      this.errorMessage = "No ride found with this filter!";
-      this.rides = []; // Clear the rides array if no rides match the filter
-      return;
-    }
+      if (filteredRides.length === 0) {
+        this.errorMessage = "No ride found with this filter!";
+        this.rides = []; // Clear the rides array if no rides match the filter
+        return;
+      }
 
     // Map the filtered rides to the new rides structure
     const rideObservables = filteredRides.map((ride) =>
-      this.reviewService.getMeanReviewByRide(ride.idRide) // Assume this method fetches the average review as a number
+      this.reviewService.getMeanReviewByUser(ride.driver?.idUser) // Assume this method fetches the average review as a number
     );
-
     forkJoin(rideObservables).subscribe({
       next: (reviews: number[]) => {
         this.rides = filteredRides.map((ride, index) => ({
           ride,
           review: reviews[index] || 0, // Use the fetched review or default to 0
         }));
+        console.log(this.rides)
       },
       error: (error) => {
         console.error('Error fetching reviews:', error);
@@ -62,10 +62,10 @@ export class RideListComponent implements OnInit, OnChanges{
         this.rides = [];
       },
     });
-        this.errorMessage = "no Ride found with this filter!";
       }
     }
   ngOnInit() {
+    this.changes++;
     const message = localStorage.getItem('successMessage');
     if (message) {
       this.successMessage = message;
