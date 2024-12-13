@@ -66,7 +66,6 @@ export class FilterFormComponent {
       console.log(params)
       this.rideService.all(params ).subscribe({
         next:(response) => {
-          console.log(response);
           this.onListRidesUpdate.emit(response); 
           this.isProcessing = false;
         },

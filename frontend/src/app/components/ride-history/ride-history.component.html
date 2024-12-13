@@ -156,6 +156,7 @@
     [ngStyle]="{ display: isDeleteModalOpen ? 'block' : 'none' }"
     aria-hidden="true"
     (click)="closeDeleteModal()"
+    *ngIf="selectedRide"
   >
     <div class="modal-dialog" role="document" (click)="$event.stopPropagation()">
       <div *ngIf="isProcessing" class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-3">
