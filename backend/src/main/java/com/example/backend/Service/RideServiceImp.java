@@ -15,10 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,9 +56,11 @@ public class RideServiceImp implements RideService{
         System.out.println("price="+price);
         System.out.println("dateRide="+dateRide);
         List<Ride> ListRide = new ArrayList<>();
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        Timestamp finalDateRide = (dateRide != null && dateRide.after(now)) ? dateRide : now;
-        List<Ride> rides  = rideRepository.findRidesByFilters(depart, destination, price, finalDateRide);
+        //Timestamp now = new Timestamp(System.currentTimeMillis());
+        //Timestamp finalDateRide = (dateRide != null && dateRide.after(now)) ? dateRide : now;
+        System.out.println("Date envoyée à la base de données : " + dateRide);
+        List<Ride> rides  = rideRepository.findRidesByFilters(depart, destination, price, dateRide);
+
         for(Ride ride : rides) {
             if(ride.getDriver()!=null){
                 ListRide.add(ride);
