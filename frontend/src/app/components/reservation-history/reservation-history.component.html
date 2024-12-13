@@ -24,7 +24,7 @@
 					<th scope="col">Ride Date</th>
 					<th scope="col">Ride</th>
 					<th scope="col">Status</th>
-					<th scope="col">Stars</th>
+					<th scope="col">By driver</th>
 					<th scope="col">Action</th>
 				</tr>
 			</thead>
@@ -85,7 +85,7 @@
 	<!-- model comment-->
 	
 	<div
-	*ngIf="selectedReview"
+	*ngIf="selectedReview !== defaultReview"
     class="modal fade"
     tabindex="-1"
     role="dialog"
@@ -112,12 +112,12 @@
           <button type="button" class="btn-close" (click)="closeReviewModal()"></button>
         </div>
         <div class="modal-body">
-			<app-review-update    [review]="selectedReview"></app-review-update>
+			<app-review-update    [review]="selectedReview || defaultReview"></app-review-update>
         </div>
       </div>
     </div>
   </div>
-  <div *ngIf="!selectedReview" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div *ngIf="selectedReview === defaultReview" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
     <div class="modal-dialog" style="max-width: 45%;">  <!-- Réduire la largeur de la modal -->
       <div 
         *ngIf="isProcessing" 

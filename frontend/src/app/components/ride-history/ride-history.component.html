@@ -127,7 +127,7 @@
                                   <button 
                                     *ngIf="res.reservation.status === 'Terminé'" 
                                     class="btn btn-warning btn-sm"
-                                    (click)="openReviewModal(res.review)"
+                                    (click)="openReviewModal(res.review, res.reservation.ride, res.reservation.passenger)"
                                     [disabled]="isProcessing">
                                     <i 
                                       class="bi bi-star"
@@ -243,6 +243,7 @@
   <!-- model comment-->
 <div [class.modal-open]="isReviewModalOpen">
 	<div
+  *ngIf="selectedReview !== defaultReview"
   class="modal fade"
   tabindex="-1"
   role="dialog"
@@ -263,10 +264,61 @@
         <button type="button" class="btn-close" (click)="closeReviewModal()"></button>
       </div>
       <div class="modal-body">
-    <app-review-update [review]="selectedReview" [isDriver]=true></app-review-update>
+    <app-review-update [review]="selectedReview || defaultReview" [isDriver]=true></app-review-update>
       </div>
     </div>
   </div>
 </div>
+<div *ngIf="selectedReview === defaultReview" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog" style="max-width: 45%;">  <!-- Réduire la largeur de la modal -->
+    <div 
+      *ngIf="isProcessing" 
+      class="position-absolute top-0 start-0 w-100 h-100 bg-light bg-opacity-75 d-flex justify-content-center align-items-center z-2">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Processing...</span>
+      </div>
+    </div>
+    <div class="modal-content ">
+      <div class="modal-header" style="height: 40px;">
+        <h5 class="modal-title" style="font-size: 18px;">Review Ride</h5> <!-- Diminuer la taille du titre -->
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeReviewModal()"></button>
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger my-3">{{ errorMessage }}</div>
+      <div class="modal-body" style="padding: 15px;" >
+        <!-- Affichage du message de trajet avec les détails et le nom du conducteur -->
+        <div class="ride-message" style="font-size: 14px;"  >
+          <p><strong>{{ user.firstName }} {{ user.lastName }}:</strong> "We hope you enjoyed your ride from {{ selectedRide.depart }} to {{ selectedRide.destination }} on 
+            {{ selectedRide.dateRide | date:'short' }}. Please take a moment to rate your experience with the passanger <p>
+        </div>
+        
+        <!-- Section de notation en étoiles -->
+        <div style="font-size: 14px;"  >
+          <div class="star-rating d-flex flex-row ">
+            <h6 class="me-1 pt-1">Rate the Passenger ({{passenger.firstName }} {{ passenger.lastName }}):</h6>  
+            <!-- <ngb-rating [(rate)]="rating" [max]="5" class="large-rating"></ngb-rating> -->
+              <ngb-rating [(rate)]="rating" [max]="5" >
+                <ng-template let-fill="fill" let-index="index">
+                  <i class="bi-star{{ fill === 100 ? '-fill' : '' }}" [class.filled]="fill === 100" ></i>
+                </ng-template>
+              </ngb-rating>
+          </div>
+        </div>
+        
+        <!-- Section pour un commentaire -->
+        <div class="row" >
+          <div class="col-md-10">
+            <!-- <label for="reviewText" style="font-size: 14px;">Leave a Review:</label> -->
+            <input id="reviewText" class="form-control" [(ngModel)]="reviewText" placeholder="Write your review here..." style="font-size: 14px; padding: 5px;" >
+          </div>
+          <button type="button" class="btn btn-primary col-md-2 " (click)="submitReview(passenger)" style="font-size: 14px; ">Submit </button>
+        </div>
+      
+      
+      </div>
+      
+  </div>
+</div>
+</div>
+
 </div>
 </ng-template>

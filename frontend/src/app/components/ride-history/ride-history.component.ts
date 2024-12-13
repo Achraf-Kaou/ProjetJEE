@@ -14,11 +14,12 @@ import { UpdateRideComponent } from "../update-ride/update-ride.component";
 import { Router } from '@angular/router';
 import { ViewReviewsComponent } from "../view-reviews/view-reviews.component";
 import { ReviewUpdateComponent } from "../review-update/review-update.component";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-ride-history',
   standalone: true,
-  imports: [NgbAccordionModule, CommonModule, NgbRatingModule, UpdateRideComponent, ViewReviewsComponent, ReviewUpdateComponent],
+  imports: [NgbAccordionModule, CommonModule, FormsModule, NgbRatingModule, UpdateRideComponent, ViewReviewsComponent, ReviewUpdateComponent],
   templateUrl: './ride-history.component.html',
   styleUrl: './ride-history.component.css'
 })
@@ -49,8 +50,22 @@ export class RideHistoryComponent implements OnInit {
     ride: null,
     review: 0,
     comment: "",
-    dateReview: new Date()  // Ajoute la date actuelle ici
+    dateReview: null  // Ajoute la date actuelle ici
   };
+  defaultReview: Review = {
+    idReview: 0,
+    reviewer: null,
+    reviewed: null,
+    ride: null,
+    review: 0,
+    comment: "",
+    dateReview: null  // Ajoute la date actuelle ici
+  };
+  rating : number = 0;
+  review! : Review ;
+  reviewText: string = '';
+  stars: boolean[] = [false, false, false, false, false];  
+  passenger!: User;
 
   constructor(private rideService: RideService, private reservationService: ReservationService, private reviewService : ReviewService, private router: Router) {}
 
@@ -92,10 +107,8 @@ export class RideHistoryComponent implements OnInit {
     };
     return this.rideService.getAllRideByUser (this.user.idUser ).pipe(
       switchMap((rides: Ride[]) => {
-        console.log('Fetched Rides:', rides); // Debugging: Check fetched rides
         this.selectedRide = rides[0];
         if (rides.length === 0) {
-          console.log('No rides found.');
           this.errorMessage = 'No rides found for this user.';
           this.isLoading = false;
           return of([]); // Return an empty array as observable
@@ -105,7 +118,7 @@ export class RideHistoryComponent implements OnInit {
           forkJoin({
             // Fetch reservations for the ride
             reservations: this.reservationService.getAllReservationByRide(ride.idRide).pipe(
-              tap((reservations) => console.log(`Reservations for Ride ${ride.idRide}:`, reservations)),
+              /* tap((reservations) => console.log(`Reservations for Ride ${ride.idRide}:`, reservations)), */
               switchMap((reservations: Reservation[]) => {
                 if (reservations.length === 0) {
                   return of([]); // Return empty array if no reservations
@@ -118,7 +131,7 @@ export class RideHistoryComponent implements OnInit {
                       review, // Add the review for the passenger
                     })),
                     catchError((err) => {
-                      console.error('Error fetching passenger review:', err);
+                      /* console.error('Error fetching passenger review:', err); */
                       return of({ reservation, review : defaultReview }); // Return null review on error
                     }) // Handle errors for missing reviews
                   )
@@ -249,13 +262,7 @@ export class RideHistoryComponent implements OnInit {
     this.isCommentModalOpen = false;
     this.selectedRide = defaultRide; // Clear the selected ride
   }
-  openReviewModal(review: Review): void {
-    this.selectedReview = review; // Set the ride to be deleted
-    this.isReviewModalOpen = true; // Open the modal
-    console.log(this.selectedReview); //
-  }
-
-  closeReviewModal(): void {
+  openReviewModal(review: Review , ride: Ride, passenger: User): void {
     const defaultReview: Review = {
       idReview: 0,
       reviewer: null,
@@ -263,10 +270,71 @@ export class RideHistoryComponent implements OnInit {
       ride: null,
       review: 0,
       comment: "",
-      dateReview: new Date()  // Ajoute la date actuelle ici
+      dateReview: null  // Ajoute la date actuelle ici
     };
+    this.passenger = passenger;
+    this.reviewService.getReviewByReviewedAndRide(passenger.idUser, ride.idRide).subscribe({
+      next: (review: Review) => {
+        console.log(review);
+        console.log("reviewed",review.reviewed);
+        console.log("reviewer",review.reviewer);
+        this.selectedReview = review; 
+        this.isReviewModalOpen = true;
+      },
+      error: (err: any) => {
+        console.log(err)
+        this.selectedRide = ride; 
+        this.selectedReview = this.defaultReview;  
+        this.isReviewModalOpen = true; 
+      }
+    })
+  }
+
+  closeReviewModal(): void {
     this.isReviewModalOpen = false;
-    this.selectedReview = defaultReview; // Clear the selected ride
+    this.selectedReview = this.defaultReview; // Clear the selected ride
+  }
+
+  rate(starIndex: number , passenger : any) {
+    
+    this.rating = starIndex;
+    this.stars = this.stars.map((_, index) => index < starIndex);
+  }
+
+  submitReview(reviewed : User | null) {
+    this.isProcessing = true;
+    if (reviewed === null){
+      this.isProcessing = false;
+      this.errorMessage = "driver null ! "
+    }
+    const userFromLocalStorage = localStorage.getItem('user');
+    if (userFromLocalStorage) {
+      this.user = JSON.parse(userFromLocalStorage);
+    }
+
+    this.review = { 
+      review: this.rating, 
+      ride: this.selectedRide, 
+      reviewer: this.user, 
+      comment: this.reviewText || '', 
+      reviewed: reviewed, 
+      dateReview: new Date() 
+    };
+    console.log(this.review);
+    
+    this.reviewService.addReview(this.review)
+    .subscribe(
+      (response: any) => {
+        localStorage.setItem('successMessage', 'review added successfully!');
+        this.isProcessing = false;
+        this.closeReviewModal()
+        window.location.reload();
+      },
+      (error: any) => {
+        this.isProcessing = false;
+        this.errorMessage = 'Failed to add the review. Please try again.'; 
+      }
+    );
   }
 }
 

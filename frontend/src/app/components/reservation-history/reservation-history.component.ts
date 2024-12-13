@@ -34,6 +34,15 @@ export class ReservationHistoryComponent {
   review! : Review ;
   reviewText: string = '';
   stars: boolean[] = [false, false, false, false, false];  
+  defaultReview: Review = {
+    idReview: 0,
+    reviewer: null,
+    reviewed: null,
+    ride: null,
+    review: 0,
+    comment: "",
+    dateReview: null  // Ajoute la date actuelle ici
+  };
 
   constructor(private reservationService: ReservationService, private reviewService: ReviewService){}
   ngOnInit(): void {
@@ -69,7 +78,8 @@ export class ReservationHistoryComponent {
         }
   
         // Use forkJoin to fetch reviews for each reservation
-        const reservationWithReviews$ = reservations.map((reservation) =>
+        const reservationWithReviews$ = reservations.map((reservation) => 
+          
           this.reviewService.getReviewByReviewedAndRide(user.idUser, reservation.ride?.idRide).pipe(
             catchError(() => 
               // Return a default review in case of error
@@ -81,6 +91,7 @@ export class ReservationHistoryComponent {
   
         forkJoin(reservationWithReviews$).subscribe({
           next: (results) => {
+            console.log(results);
             this.reservations = results.sort((a, b) => {
               const dateA = new Date(a.reservation.ride?.dateRide).getTime() ; // Convert to Date object
               const dateB = new Date(b.reservation.ride?.dateRide).getTime() ; // Convert to Date object
@@ -130,15 +141,22 @@ export class ReservationHistoryComponent {
       comment: "",
       dateReview: null  // Ajoute la date actuelle ici
     };
-    console.log(review)
-    console.log(defaultReview)
-    console.log(JSON.stringify(review) === JSON.stringify(defaultReview))
-    if (JSON.stringify(review) === JSON.stringify(defaultReview)) {
-      this.selectedRide = ride; 
-    } else {
-      this.selectedReview = review; 
-    }
-    this.isReviewModalOpen = true; 
+    let review0: Review = defaultReview;
+    this.reviewService.getReviewByReviewedAndRide(ride.driver?.idUser, ride.idRide).subscribe({
+      next: (review: Review) => {
+        console.log(review);
+        console.log("reviewed",review.reviewed);
+        console.log("reviewer",review.reviewer);
+        this.selectedReview = review; 
+        this.isReviewModalOpen = true;
+      },
+      error: (err: any) => {
+        console.log(err)
+        this.selectedRide = ride; 
+        this.selectedReview = this.defaultReview;  
+        this.isReviewModalOpen = true; 
+      }
+    })
   }
   
   closeReviewModal(): void {

@@ -64,7 +64,6 @@ export class UpdateRideComponent implements OnInit, OnChanges {
   }
 
   initializeForm(): void {
-      console.log("test")
       this.updateRideForm = new FormGroup({
         depart: new FormControl(this.ride.depart ?? "", [Validators.required]),
         destination: new FormControl(this.ride.destination ?? "", [Validators.required]),
