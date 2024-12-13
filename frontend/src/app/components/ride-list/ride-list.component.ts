@@ -44,6 +44,8 @@ export class RideListComponent implements OnInit, OnChanges{
         return;
       }
       this.errorMessage = "";
+      filteredRides.sort((a, b) => new Date(a.dateRide).getTime() - new Date(b.dateRide).getTime());
+
     // Map the filtered rides to the new rides structure
     const rideObservables = filteredRides.map((ride) =>
       this.reviewService.getMeanReviewByUser(ride.driver?.idUser) // Assume this method fetches the average review as a number
@@ -78,6 +80,7 @@ export class RideListComponent implements OnInit, OnChanges{
     if(this.ListRides.length === 0){
       this.getAllRide();
     }else{
+      console.log('true')
       // Transform ListRides to match the rides structure
     const filteredRides: Ride[] = this.ListRides.filter(
       (ride: Ride) => ride.driver?.idUser !== this.user.idUser
@@ -204,17 +207,17 @@ export class RideListComponent implements OnInit, OnChanges{
 
   loadReservationStatuses() {
     this.rides.forEach((ride) => {
+      console.log(ride)
       this.reservationService.getReservationByPassangerAndRide(this.user.idUser, ride.ride.idRide)
         .subscribe({
           next: (reservation) => {
+            console.log(reservation)
             this.reservationStatus.set(ride.ride.idRide, reservation[reservation.length - 1] ? reservation[reservation.length - 1].status : null);
             this.isLoading = false;
           },
           error: () => {
             this.reservationStatus.set(ride.ride.idRide, null);
             this.isLoading = false;
-            this.errorMessage = 'Failed to check the status of the ride and reservation. Please try again.';
-
           },
         });
     });
